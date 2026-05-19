@@ -2,19 +2,13 @@ import Link from "next/link";
 import {
   Facebook,
   Instagram,
-  Mail,
   MapPin,
   Phone,
   Youtube,
+  ArrowUpRight,
 } from "lucide-react";
-import MobileNav from "@/components/layout/mobile-nav";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-
-const NAV_LINKS = [
-  { label: "Home", href: "/" },
-  { label: "Practice Test", href: "/exam-library/listening" },
-  { label: "Speaking", href: "/dashboard/student/speaking" },
-];
+import MarketingNav from "@/components/marketing/marketing-nav";
 
 const FOOTER_GROUPS = [
   {
@@ -27,7 +21,7 @@ const FOOTER_GROUPS = [
     ],
   },
   {
-    title: "Company Links",
+    title: "Company",
     links: [
       { label: "About", href: "/" },
       { label: "Features", href: "/" },
@@ -63,172 +57,104 @@ export default async function MarketingLayout({
   const isLoggedIn = Boolean(user);
 
   return (
-    <div className="min-h-screen bg-[#f7f8fc] text-slate-900">
-      <div className="bg-gradient-to-r from-brand-purple to-brand-purple-light text-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 text-xs sm:text-sm">
-          <div className="inline-flex items-center gap-2 text-white/90">
-            <Mail size={14} />
-            <span>support@ieltsflow.ai</span>
-          </div>
-          <div className="flex items-center gap-3 text-white/85">
-            <a
-              href="https://facebook.com"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Facebook"
-            >
-              <Facebook size={14} />
-            </a>
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Instagram"
-            >
-              <Instagram size={14} />
-            </a>
-            <a
-              href="https://youtube.com"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="YouTube"
-            >
-              <Youtube size={14} />
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <header className="sticky top-0 z-40 w-full border-b border-white/20 bg-gradient-to-r from-brand-purple to-brand-purple-light text-white backdrop-blur">
-        <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-4 px-4">
-          <Link href="/" className="inline-flex items-center gap-2">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white/15 text-xs font-bold text-white ring-1 ring-white/30">
-              IF
-            </span>
-            <span className="text-base font-bold tracking-tight text-white">
-              IELTS Flow
-            </span>
-          </Link>
-
-          <nav className="hidden flex-1 items-center justify-center gap-8 md:flex">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="text-sm font-medium text-white transition hover:text-white/85"
-              >
-                {link.label}
-              </Link>
-            ))}
-            <Link
-              href="/pricing"
-              className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:shadow-md hover:brightness-110"
-            >
-              Plans
-            </Link>
-          </nav>
-
-          <div className="hidden items-center gap-2 md:flex">
-            {isLoggedIn ? (
-              <Link
-                href="/dashboard/student/overview"
-                className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-brand-purple shadow-sm transition hover:bg-slate-100"
-              >
-                Dashboard
-              </Link>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="rounded-xl border border-white/60 bg-white/15 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/25"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/register"
-                  className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-brand-purple shadow-sm transition hover:bg-slate-100"
-                >
-                  Get Started
-                </Link>
-              </>
-            )}
-          </div>
-
-          <div className="ml-auto md:hidden">
-            <MobileNav />
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-white text-slate-900">
+      <MarketingNav isLoggedIn={isLoggedIn} />
 
       <main>{children}</main>
 
-      <footer className="mt-16 bg-slate-900 text-white">
-        <div className="mx-auto grid w-full max-w-7xl gap-10 px-4 py-14 md:grid-cols-2 lg:grid-cols-4">
-          <div className="space-y-4">
-            <Link href="/" className="inline-flex items-center gap-2">
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-purple to-brand-teal text-xs font-bold text-white">
-                IF
-              </span>
-              <span className="text-base font-bold text-white">IELTS Flow</span>
-            </Link>
-            <p className="text-sm text-slate-300">
-              AI-powered IELTS preparation with mock tests, speaking
-              simulations, and progress analytics.
-            </p>
-            <div className="space-y-2 text-sm text-slate-300">
-              <p className="inline-flex items-center gap-2">
-                <MapPin size={14} />
-                Dhaka, Bangladesh
+      <footer className="relative bg-brand-navy text-white overflow-hidden">
+        <div className="absolute inset-0 grid-bg opacity-50" />
+        <div className="relative z-10 mx-auto max-w-[1400px] px-6 lg:px-12 pt-20 pb-8">
+          <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+            <div className="space-y-5">
+              <Link href="/" className="inline-flex items-center gap-3">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-purple to-brand-teal text-sm font-bold text-white">
+                  IF
+                </span>
+                <span className="text-lg font-bold tracking-tight text-white">
+                  IELTS Flow
+                </span>
+              </Link>
+              <p className="text-sm text-white/60 leading-relaxed max-w-xs">
+                AI-powered IELTS preparation with mock tests, speaking
+                simulations, and progress analytics.
               </p>
-              <p className="inline-flex items-center gap-2">
-                <Phone size={14} />
-                +880-1700-000000
-              </p>
+              <div className="space-y-2 text-sm text-white/50">
+                <p className="inline-flex items-center gap-2">
+                  <MapPin size={14} />
+                  Dhaka, Bangladesh
+                </p>
+                <p className="inline-flex items-center gap-2">
+                  <Phone size={14} />
+                  +880-1700-000000
+                </p>
+              </div>
+              <div className="flex items-center gap-3 pt-2">
+                {[
+                  { icon: Facebook, href: "https://facebook.com", label: "Facebook" },
+                  { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
+                  { icon: Youtube, href: "https://youtube.com", label: "YouTube" },
+                ].map((social) => (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={social.label}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-white/50 transition-all hover:border-white/25 hover:text-white hover:bg-white/5"
+                  >
+                    <social.icon size={15} />
+                  </a>
+                ))}
+              </div>
             </div>
+
+            {FOOTER_GROUPS.map((group) => (
+              <div key={group.title}>
+                <h3 className="mb-5 text-xs font-mono-brand font-semibold uppercase tracking-[0.2em] text-white/40">
+                  {group.title}
+                </h3>
+                <ul className="space-y-3 text-sm">
+                  {group.links.map((link) => (
+                    <li key={link.label}>
+                      {link.external ? (
+                        <a
+                          href={link.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="group inline-flex items-center gap-1 text-white/60 transition-colors hover:text-white"
+                        >
+                          {link.label}
+                          <ArrowUpRight size={12} className="opacity-0 -translate-y-0.5 translate-x-0.5 transition-all group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0" />
+                        </a>
+                      ) : (
+                        <Link
+                          href={link.href}
+                          className="text-white/60 transition-colors hover:text-white"
+                        >
+                          {link.label}
+                        </Link>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
 
-          {FOOTER_GROUPS.map((group) => (
-            <div key={group.title}>
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-white/95">
-                {group.title}
-              </h3>
-              <ul className="space-y-2 text-sm text-slate-300">
-                {group.links.map((link) => (
-                  <li key={link.label}>
-                    {link.external ? (
-                      <a
-                        href={link.href}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="transition hover:text-white"
-                      >
-                        {link.label}
-                      </a>
-                    ) : (
-                      <Link
-                        href={link.href}
-                        className="transition hover:text-white"
-                      >
-                        {link.label}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        <div className="border-t border-white/10">
-          <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-3 px-4 py-4 text-xs text-slate-400 sm:flex-row sm:items-center">
+          <div className="mt-16 border-t border-white/10 pt-6 flex flex-col items-start justify-between gap-3 text-xs text-white/40 sm:flex-row sm:items-center">
             <p>© {new Date().getFullYear()} IELTS Flow. All rights reserved.</p>
-            <div className="flex items-center gap-4">
-              <Link href="/" className="hover:text-slate-200">
+            <div className="flex items-center gap-6">
+              <Link href="/" className="hover:text-white/70 transition-colors">
                 Privacy
               </Link>
-              <Link href="/" className="hover:text-slate-200">
+              <Link href="/" className="hover:text-white/70 transition-colors">
                 Terms
               </Link>
+              <span className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse-slow" />
+                All systems operational
+              </span>
             </div>
           </div>
         </div>
