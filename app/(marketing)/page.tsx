@@ -238,18 +238,18 @@ export default function MarketingHomePage() {
         {/* Stats marquee */}
         <div className="relative z-10 border-t border-white/5 mt-auto animate-fade-up" style={{ animationDelay: "700ms" }}>
           <div className="overflow-hidden">
-            <div className="flex gap-0 marquee whitespace-nowrap py-6">
+            <div className="flex gap-0 marquee whitespace-nowrap py-5 lg:py-6">
               {[...Array(2)].map((_, setIdx) => (
                 <div key={setIdx} className="flex gap-0 shrink-0">
                   {stats.map((stat) => (
                     <div
                       key={`${stat.label}-${setIdx}`}
-                      className="flex items-baseline gap-3 px-10 border-r border-white/5"
+                      className="flex items-baseline gap-2 sm:gap-3 px-6 sm:px-10 border-r border-white/5"
                     >
-                      <span className="text-3xl lg:text-4xl font-display text-white">
+                      <span className="text-2xl sm:text-3xl lg:text-4xl font-display text-white">
                         {stat.value}
                       </span>
-                      <span className="text-xs text-white/40 font-mono">
+                      <span className="text-[10px] sm:text-xs text-white/40 font-mono">
                         {stat.label}
                       </span>
                     </div>

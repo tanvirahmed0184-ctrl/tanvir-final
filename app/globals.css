@@ -213,4 +213,20 @@
       linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
     background-size: 60px 60px;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-up,
+    .animate-char-in,
+    .marquee,
+    .marquee-reverse {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+    }
+
+    .hover-lift:hover {
+      transform: none;
+    }
+  }
 }

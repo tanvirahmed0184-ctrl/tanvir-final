@@ -132,7 +132,7 @@ export default function MarketingNav({ isLoggedIn }: { isLoggedIn: boolean }) {
             )}
           </div>
 
-          <div className="ml-auto md:hidden">
+          <div className={`ml-auto md:hidden ${isScrolled ? "[&_button]:border-slate-200 [&_button]:bg-slate-100 [&_button]:text-slate-700" : ""}`}>
             <MobileNav />
           </div>
         </div>
