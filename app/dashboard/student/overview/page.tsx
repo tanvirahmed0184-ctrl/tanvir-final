@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
   Line,
   LineChart,
@@ -101,36 +101,25 @@ const FALLBACK_WEAKNESSES = [
 
 export default function StudentOverviewPage() {
   const { user, loading: authLoading } = useAuth();
-  const [loading, setLoading] = useState(true);
-  const [name, setName] = useState("Student");
-  const [currentBand, setCurrentBand] = useState<number | null>(null);
-  const [targetBand, setTargetBand] = useState<number | null>(null);
 
-  useEffect(() => {
-    if (authLoading) return;
+  const loading = authLoading;
 
-    if (user) {
-      setName(
-        typeof user.name === "string" && user.name.trim()
-          ? user.name
-          : "Student",
-      );
+  const name = useMemo(() => {
+    if (!user) return "Student";
+    return typeof user.name === "string" && user.name.trim() ? user.name : "Student";
+  }, [user]);
 
-      const profile =
-        user.profile && typeof user.profile === "object"
-          ? (user.profile as Record<string, unknown>)
-          : null;
-
-      setCurrentBand(
-        typeof profile?.currentBand === "number" ? profile.currentBand : null,
-      );
-      setTargetBand(
-        typeof profile?.targetBand === "number" ? profile.targetBand : null,
-      );
-    }
-
-    setLoading(false);
-  }, [authLoading, user]);
+  const { currentBand, targetBand } = useMemo(() => {
+    if (!user) return { currentBand: null as number | null, targetBand: null as number | null };
+    const profile =
+      user.profile && typeof user.profile === "object"
+        ? (user.profile as Record<string, unknown>)
+        : null;
+    return {
+      currentBand: typeof profile?.currentBand === "number" ? profile.currentBand : null,
+      targetBand: typeof profile?.targetBand === "number" ? profile.targetBand : null,
+    };
+  }, [user]);
 
   const readiness = useMemo(() => {
     const current = currentBand ?? 0;
@@ -151,107 +140,116 @@ export default function StudentOverviewPage() {
 
   if (loading) {
     return (
-      <div className="grid gap-4">
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="space-y-4">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
-              className="h-28 animate-pulse rounded-2xl bg-slate-200"
+              className="h-24 animate-pulse rounded-xl bg-dash-border/50"
             />
           ))}
         </div>
-        <div className="h-72 animate-pulse rounded-2xl bg-slate-200" />
+        <div className="h-72 animate-pulse rounded-xl bg-dash-border/50" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <h1 className="text-2xl font-bold">Welcome back, {name}</h1>
-        <p className="mt-1 text-sm text-white/85">
+    <div className="space-y-6">
+      {/* Page header */}
+      <div>
+        <h1 className="text-2xl font-semibold text-dash-text">
+          Welcome back, {name}
+        </h1>
+        <p className="mt-1 text-sm text-dash-text-muted">
           Here is your latest IELTS readiness snapshot.
         </p>
-      </section>
+      </div>
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <Card
+      {/* KPI Cards */}
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <MetricCard
           title="Current Band"
           value={(currentBand ?? 0).toFixed(1)}
           note="Latest measured score"
         />
-        <Card
+        <MetricCard
           title="Target Band"
           value={(targetBand ?? 7).toFixed(1)}
           note="Your profile target"
         />
-        <Card
+        <MetricCard
           title="Readiness"
           value={`${readiness}%`}
           note="Progress toward target"
         />
-        <Card
+        <MetricCard
           title="Tests Taken"
           value={`${FALLBACK_ATTEMPTS.length}`}
           note="Across all modules"
         />
       </section>
 
+      {/* Charts */}
       <section className="grid gap-4 xl:grid-cols-2">
-        <div className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <div className="rounded-xl border border-dash-border bg-dash-surface p-5">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted mb-4">
             Band Score Trend
           </h2>
-          <div className="mt-3 h-72">
+          <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={FALLBACK_TREND}>
-                <XAxis dataKey="date" />
-                <YAxis domain={[4, 9]} />
+                <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#8fa89c" />
+                <YAxis domain={[4, 9]} tick={{ fontSize: 12 }} stroke="#8fa89c" />
                 <Tooltip />
                 <Line
                   type="monotone"
                   dataKey="reading"
-                  stroke="#6C3FC5"
-                  strokeWidth={2.5}
+                  stroke="#2d7a5f"
+                  strokeWidth={2}
+                  dot={{ r: 3 }}
                 />
                 <Line
                   type="monotone"
                   dataKey="listening"
                   stroke="#0EA5A0"
-                  strokeWidth={2.5}
+                  strokeWidth={2}
+                  dot={{ r: 3 }}
                 />
                 <Line
                   type="monotone"
                   dataKey="writing"
-                  stroke="#06B6D4"
-                  strokeWidth={2.5}
+                  stroke="#6C3FC5"
+                  strokeWidth={2}
+                  dot={{ r: 3 }}
                 />
                 <Line
                   type="monotone"
                   dataKey="speaking"
-                  stroke="#F59E0B"
-                  strokeWidth={2.5}
+                  stroke="#d97706"
+                  strokeWidth={2}
+                  dot={{ r: 3 }}
                 />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <div className="rounded-xl border border-dash-border bg-dash-surface p-5">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted mb-4">
             Skill Balance
           </h2>
-          <div className="mt-3 h-72">
+          <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart data={radarData}>
-                <PolarGrid />
-                <PolarAngleAxis dataKey="skill" />
+                <PolarGrid stroke="#e8eeeb" />
+                <PolarAngleAxis dataKey="skill" tick={{ fontSize: 12 }} />
                 <Radar
                   name="Band"
                   dataKey="band"
-                  stroke="#6C3FC5"
-                  fill="#6C3FC5"
-                  fillOpacity={0.45}
+                  stroke="#2d7a5f"
+                  fill="#2d7a5f"
+                  fillOpacity={0.15}
                 />
                 <Tooltip />
               </RadarChart>
@@ -260,30 +258,31 @@ export default function StudentOverviewPage() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+      {/* Recent Tests */}
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted mb-4">
           Recent Tests
         </h2>
-        <div className="mt-3 overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-200 text-sm">
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-sm">
             <thead>
-              <tr>
-                <th className="px-3 py-2 text-left">Attempt</th>
-                <th className="px-3 py-2 text-left">Module</th>
-                <th className="px-3 py-2 text-left">Band</th>
-                <th className="px-3 py-2 text-left">Date</th>
-                <th className="px-3 py-2 text-left">Status</th>
+              <tr className="border-b border-dash-border">
+                <th className="px-3 py-2.5 text-left text-xs font-medium text-dash-text-muted">Attempt</th>
+                <th className="px-3 py-2.5 text-left text-xs font-medium text-dash-text-muted">Module</th>
+                <th className="px-3 py-2.5 text-left text-xs font-medium text-dash-text-muted">Band</th>
+                <th className="px-3 py-2.5 text-left text-xs font-medium text-dash-text-muted">Date</th>
+                <th className="px-3 py-2.5 text-left text-xs font-medium text-dash-text-muted">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-dash-border">
               {FALLBACK_ATTEMPTS.slice(0, 5).map((row) => (
-                <tr key={row.id}>
-                  <td className="px-3 py-2">{row.id}</td>
-                  <td className="px-3 py-2">{row.module}</td>
-                  <td className="px-3 py-2">{row.score.toFixed(1)}</td>
-                  <td className="px-3 py-2">{row.date}</td>
-                  <td className="px-3 py-2">
-                    <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">
+                <tr key={row.id} className="hover:bg-dash-bg transition-colors">
+                  <td className="px-3 py-2.5 font-mono text-xs text-dash-text">{row.id}</td>
+                  <td className="px-3 py-2.5 text-dash-text">{row.module}</td>
+                  <td className="px-3 py-2.5 font-semibold text-dash-text">{row.score.toFixed(1)}</td>
+                  <td className="px-3 py-2.5 text-dash-text-muted">{row.date}</td>
+                  <td className="px-3 py-2.5">
+                    <span className="inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">
                       {row.status}
                     </span>
                   </td>
@@ -294,11 +293,12 @@ export default function StudentOverviewPage() {
         </div>
       </section>
 
+      {/* Weaknesses */}
       <section className="grid gap-4 lg:grid-cols-3">
         {FALLBACK_WEAKNESSES.map((item) => (
           <article
             key={item.title}
-            className="rounded-2xl border border-amber-200 bg-amber-50 p-4"
+            className="rounded-xl border border-amber-200/60 bg-amber-50/40 p-4"
           >
             <h3 className="text-sm font-semibold text-amber-900">
               {item.title}
@@ -306,26 +306,36 @@ export default function StudentOverviewPage() {
             <p className="mt-1 text-xs font-semibold text-amber-700">
               {item.value}
             </p>
-            <p className="mt-2 text-sm text-amber-800">{item.action}</p>
+            <p className="mt-2 text-[13px] text-amber-800">{item.action}</p>
           </article>
         ))}
       </section>
 
-      <section className="rounded-2xl border border-brand-teal/25 bg-brand-teal/5 p-4">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-700">
+      {/* Recommended Actions */}
+      <section className="rounded-xl border border-dash-accent/15 bg-dash-accent-light/30 p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-accent mb-3">
           Recommended Actions
         </h2>
-        <ul className="mt-3 space-y-2 text-sm text-slate-700">
-          <li>1. Complete one full reading simulation this week.</li>
-          <li>2. Do two writing Task 2 evaluations with AI feedback.</li>
-          <li>3. Practice listening Section 4 drills for 20 minutes daily.</li>
+        <ul className="space-y-2 text-sm text-dash-text">
+          <li className="flex items-start gap-2">
+            <span className="mt-1 h-1.5 w-1.5 rounded-full bg-dash-accent shrink-0" />
+            Complete one full reading simulation this week.
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="mt-1 h-1.5 w-1.5 rounded-full bg-dash-accent shrink-0" />
+            Do two writing Task 2 evaluations with AI feedback.
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="mt-1 h-1.5 w-1.5 rounded-full bg-dash-accent shrink-0" />
+            Practice listening Section 4 drills for 20 minutes daily.
+          </li>
         </ul>
       </section>
     </div>
   );
 }
 
-function Card({
+function MetricCard({
   title,
   value,
   note,
@@ -335,12 +345,12 @@ function Card({
   note: string;
 }) {
   return (
-    <article className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+    <article className="rounded-xl border border-dash-border bg-dash-surface p-4">
+      <p className="text-[11px] font-semibold uppercase tracking-wider text-dash-text-muted">
         {title}
       </p>
-      <p className="mt-2 text-3xl font-black text-slate-900">{value}</p>
-      <p className="mt-1 text-xs text-slate-600">{note}</p>
+      <p className="mt-2 text-2xl font-bold text-dash-text">{value}</p>
+      <p className="mt-0.5 text-xs text-dash-text-light">{note}</p>
     </article>
   );
 }

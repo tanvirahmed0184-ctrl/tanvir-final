@@ -3,47 +3,72 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { LogOut, Search, UserCircle2, X } from "lucide-react";
+import {
+  LogOut,
+  Search,
+  X,
+  LayoutDashboard,
+  BookOpen,
+  Mic,
+  BarChart3,
+  Users,
+  Settings,
+  Archive,
+  TrendingUp,
+  Calendar,
+  ClipboardList,
+  User,
+  CalendarCheck,
+  FileText,
+  Target,
+  ChevronRight,
+} from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 type Role = "STUDENT" | "INSTRUCTOR" | "ADMIN" | "SUPER_ADMIN";
 
-const LINKS: Record<Role, Array<{ label: string; href: string }>> = {
+type NavLink = {
+  label: string;
+  href: string;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+};
+
+const LINKS: Record<Role, NavLink[]> = {
   STUDENT: [
-    { label: "Overview", href: "/dashboard/student/overview" },
-    { label: "Practice", href: "/exam-library/reading" },
-    { label: "Speaking", href: "/dashboard/student/speaking" },
-    { label: "Progress", href: "/dashboard/student/progress" },
-    { label: "Book Instructor", href: "/dashboard/student/book" },
-    { label: "My Bookings", href: "/dashboard/student/bookings" },
-    { label: "Settings", href: "/dashboard/student/settings" },
+    { label: "Overview", href: "/dashboard/student/overview", icon: LayoutDashboard },
+    { label: "Practice", href: "/exam-library/reading", icon: BookOpen },
+    { label: "Speaking", href: "/dashboard/student/speaking", icon: Mic },
+    { label: "Progress", href: "/dashboard/student/progress", icon: TrendingUp },
+    { label: "Book Instructor", href: "/dashboard/student/book", icon: Calendar },
+    { label: "My Bookings", href: "/dashboard/student/bookings", icon: CalendarCheck },
+    { label: "Settings", href: "/dashboard/student/settings", icon: Settings },
   ],
   INSTRUCTOR: [
-    { label: "Availability", href: "/dashboard/instructor/availability" },
-    { label: "Sessions", href: "/dashboard/instructor/sessions" },
-    { label: "Evaluations", href: "/dashboard/instructor/evaluations" },
-    { label: "Public Profile", href: "/dashboard/instructor/profile" },
+    { label: "Availability", href: "/dashboard/instructor/availability", icon: Calendar },
+    { label: "Sessions", href: "/dashboard/instructor/sessions", icon: ClipboardList },
+    { label: "Evaluations", href: "/dashboard/instructor/evaluations", icon: FileText },
+    { label: "Public Profile", href: "/dashboard/instructor/profile", icon: User },
   ],
   ADMIN: [
-    { label: "Studio Hub", href: "/dashboard/admin" },
-    { label: "Content Studio", href: "/dashboard/admin/content-studio" },
-    { label: "Test Studio", href: "/dashboard/admin/test-studio" },
-    { label: "Speaking Studio", href: "/dashboard/admin/speaking-studio" },
-    { label: "Analytics", href: "/dashboard/admin/analytics" },
-    { label: "Users", href: "/dashboard/admin/users" },
-    { label: "Settings", href: "/dashboard/admin/settings" },
-    { label: "Legacy Tools", href: "/dashboard/admin/legacy" },
+    { label: "Studio Hub", href: "/dashboard/admin", icon: LayoutDashboard },
+    { label: "Content Studio", href: "/dashboard/admin/content-studio", icon: BookOpen },
+    { label: "Test Studio", href: "/dashboard/admin/test-studio", icon: Target },
+    { label: "Speaking Studio", href: "/dashboard/admin/speaking-studio", icon: Mic },
+    { label: "Analytics", href: "/dashboard/admin/analytics", icon: BarChart3 },
+    { label: "Users", href: "/dashboard/admin/users", icon: Users },
+    { label: "Settings", href: "/dashboard/admin/settings", icon: Settings },
+    { label: "Legacy Tools", href: "/dashboard/admin/legacy", icon: Archive },
   ],
   SUPER_ADMIN: [
-    { label: "Studio Hub", href: "/dashboard/admin" },
-    { label: "Content Studio", href: "/dashboard/admin/content-studio" },
-    { label: "Test Studio", href: "/dashboard/admin/test-studio" },
-    { label: "Speaking Studio", href: "/dashboard/admin/speaking-studio" },
-    { label: "Analytics", href: "/dashboard/admin/analytics" },
-    { label: "Users", href: "/dashboard/admin/users" },
-    { label: "Settings", href: "/dashboard/admin/settings" },
-    { label: "Legacy Tools", href: "/dashboard/admin/legacy" },
+    { label: "Studio Hub", href: "/dashboard/admin", icon: LayoutDashboard },
+    { label: "Content Studio", href: "/dashboard/admin/content-studio", icon: BookOpen },
+    { label: "Test Studio", href: "/dashboard/admin/test-studio", icon: Target },
+    { label: "Speaking Studio", href: "/dashboard/admin/speaking-studio", icon: Mic },
+    { label: "Analytics", href: "/dashboard/admin/analytics", icon: BarChart3 },
+    { label: "Users", href: "/dashboard/admin/users", icon: Users },
+    { label: "Settings", href: "/dashboard/admin/settings", icon: Settings },
+    { label: "Legacy Tools", href: "/dashboard/admin/legacy", icon: Archive },
   ],
 };
 
@@ -76,12 +101,14 @@ function buildBreadcrumb(pathname: string): Array<{ label: string; href: string 
 
 function SidebarSkeleton() {
   return (
-    <aside className="w-full rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm lg:w-72">
-      <div className="mb-4 h-8 w-32 animate-pulse rounded bg-slate-200" />
-      <div className="space-y-2">
-        {Array.from({ length: 7 }).map((_, i) => (
-          <div key={i} className="h-9 animate-pulse rounded-lg bg-slate-100" />
-        ))}
+    <aside className="hidden lg:flex lg:w-64 lg:flex-col bg-dash-sidebar">
+      <div className="flex h-full flex-col px-4 py-6">
+        <div className="mb-8 h-8 w-28 animate-pulse rounded bg-white/10" />
+        <div className="space-y-1.5">
+          {Array.from({ length: 7 }).map((_, i) => (
+            <div key={i} className="h-9 animate-pulse rounded-lg bg-white/5" />
+          ))}
+        </div>
       </div>
     </aside>
   );
@@ -102,6 +129,7 @@ export default function DashboardLayout({
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchItems, setSearchItems] = useState<GlobalSearchItem[]>([]);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -245,139 +273,239 @@ export default function DashboardLayout({
       .slice(0, 50);
   }, [searchItems, searchQuery]);
 
+  const roleLabel = role === "SUPER_ADMIN" ? "Super Admin" : role === "ADMIN" ? "Admin" : role === "INSTRUCTOR" ? "Instructor" : "Student";
+
   return (
-    <div className="mx-auto max-w-350 px-4 py-6">
-      <div className="grid gap-4 lg:grid-cols-[288px_1fr]">
-        {loading ? (
-          <SidebarSkeleton />
-        ) : (
-          <aside className="h-fit rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm lg:sticky lg:top-4">
-            <h2 className="mb-3 text-base font-bold text-slate-900">
-              Dashboard
-            </h2>
-            <nav className="space-y-1">
+    <div className="flex h-screen overflow-hidden bg-dash-bg">
+      {/* Desktop Sidebar */}
+      {loading ? (
+        <SidebarSkeleton />
+      ) : (
+        <aside className="hidden lg:flex lg:w-64 lg:flex-col bg-dash-sidebar">
+          <div className="flex h-full flex-col">
+            {/* Sidebar header */}
+            <div className="flex items-center gap-3 px-5 py-5 border-b border-white/8">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-dash-accent text-xs font-bold text-white">
+                IF
+              </span>
+              <div>
+                <p className="text-sm font-semibold text-white">IELTS Flow</p>
+                <p className="text-[11px] text-white/40">{roleLabel} Workspace</p>
+              </div>
+            </div>
+
+            {/* Navigation */}
+            <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
               {links.map((link) => {
                 const active = pathname === link.href;
+                const Icon = link.icon;
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
                     className={[
-                      "block rounded-lg px-3 py-2 text-sm font-medium transition",
+                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-medium transition-all duration-150",
                       active
-                        ? "bg-brand-purple text-white"
-                        : "text-slate-700 hover:bg-brand-purple/5 hover:text-brand-purple",
+                        ? "bg-dash-sidebar-active text-white shadow-sm"
+                        : "text-white/60 hover:bg-dash-sidebar-hover hover:text-white/90",
                     ].join(" ")}
                   >
+                    <Icon size={16} className={active ? "text-white" : "text-white/40"} />
                     {link.label}
                   </Link>
                 );
               })}
             </nav>
-          </aside>
-        )}
 
-        <section className="space-y-4">
-          <header className="flex items-center justify-between rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-            <div className="min-w-0 space-y-1">
-              <div className="inline-flex items-center gap-2 text-slate-800">
-                <UserCircle2 className="text-brand-purple" size={20} />
-                <span className="text-sm font-semibold">
-                  {loading ? "Loading..." : name}
-                </span>
+            {/* Sidebar footer */}
+            <div className="border-t border-white/8 px-3 py-4">
+              <div className="flex items-center gap-3 px-3 py-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-dash-accent/20 text-xs font-semibold text-dash-accent">
+                  {name.charAt(0).toUpperCase()}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[13px] font-medium text-white/80">{name}</p>
+                  <p className="text-[11px] text-white/35">{roleLabel}</p>
+                </div>
               </div>
-              {breadcrumbs.length ? (
-                <nav className="flex flex-wrap items-center gap-1 text-xs text-slate-500">
-                  {breadcrumbs.map((crumb, idx) => (
-                    <span key={crumb.href} className="inline-flex items-center gap-1">
-                      {idx > 0 ? <span>/</span> : null}
-                      {idx === breadcrumbs.length - 1 ? (
-                        <span className="font-semibold text-slate-700">{crumb.label}</span>
-                      ) : (
-                        <Link href={crumb.href} className="hover:text-brand-purple">
-                          {crumb.label}
-                        </Link>
-                      )}
-                    </span>
-                  ))}
-                </nav>
-              ) : null}
             </div>
+          </div>
+        </aside>
+      )}
 
-            <div className="inline-flex items-center gap-2">
-              {isAdminLike ? (
+      {/* Mobile sidebar overlay */}
+      {mobileNavOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <button
+            type="button"
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setMobileNavOpen(false)}
+            aria-label="Close menu"
+          />
+          <aside className="absolute left-0 top-0 h-full w-72 bg-dash-sidebar shadow-2xl">
+            <div className="flex h-full flex-col">
+              <div className="flex items-center justify-between px-5 py-5 border-b border-white/8">
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-dash-accent text-xs font-bold text-white">
+                    IF
+                  </span>
+                  <p className="text-sm font-semibold text-white">IELTS Flow</p>
+                </div>
                 <button
                   type="button"
-                  onClick={() => {
-                    setSearchQuery("");
-                    setSearchOpen(true);
-                  }}
-                  className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                  onClick={() => setMobileNavOpen(false)}
+                  className="rounded-md p-1.5 text-white/50 hover:text-white"
                 >
-                  <Search size={16} />
-                  Global Search
+                  <X size={18} />
                 </button>
-              ) : null}
+              </div>
+              <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
+                {links.map((link) => {
+                  const active = pathname === link.href;
+                  const Icon = link.icon;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMobileNavOpen(false)}
+                      className={[
+                        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-medium transition-all duration-150",
+                        active
+                          ? "bg-dash-sidebar-active text-white"
+                          : "text-white/60 hover:bg-dash-sidebar-hover hover:text-white/90",
+                      ].join(" ")}
+                    >
+                      <Icon size={16} className={active ? "text-white" : "text-white/40"} />
+                      {link.label}
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+          </aside>
+        </div>
+      )}
+
+      {/* Main content */}
+      <div className="flex flex-1 flex-col overflow-hidden">
+        {/* Top header */}
+        <header className="flex items-center justify-between border-b border-dash-border bg-dash-surface px-4 lg:px-8 h-14 shrink-0">
+          <div className="flex items-center gap-3 min-w-0">
+            {/* Mobile hamburger */}
+            <button
+              type="button"
+              className="lg:hidden rounded-md p-1.5 text-dash-text-muted hover:text-dash-text hover:bg-dash-accent-light"
+              onClick={() => setMobileNavOpen(true)}
+              aria-label="Open menu"
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+            </button>
+
+            {/* Breadcrumbs */}
+            {breadcrumbs.length > 0 && (
+              <nav className="hidden sm:flex items-center gap-1 text-[13px] text-dash-text-muted">
+                {breadcrumbs.map((crumb, idx) => (
+                  <span key={crumb.href} className="inline-flex items-center gap-1">
+                    {idx > 0 && <ChevronRight size={12} className="text-dash-text-light" />}
+                    {idx === breadcrumbs.length - 1 ? (
+                      <span className="font-medium text-dash-text">{crumb.label}</span>
+                    ) : (
+                      <Link href={crumb.href} className="hover:text-dash-accent transition-colors">
+                        {crumb.label}
+                      </Link>
+                    )}
+                  </span>
+                ))}
+              </nav>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            {isAdminLike && (
               <button
                 type="button"
-                onClick={signOut}
-                disabled={signingOut}
-                className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-70"
+                onClick={() => {
+                  setSearchQuery("");
+                  setSearchOpen(true);
+                }}
+                className="inline-flex items-center gap-2 rounded-lg border border-dash-border bg-dash-bg px-3 py-1.5 text-[13px] text-dash-text-muted hover:border-dash-accent/30 hover:text-dash-accent transition-colors"
               >
-                <LogOut size={16} />
-                {signingOut ? "Signing Out..." : "Sign Out"}
+                <Search size={14} />
+                <span className="hidden sm:inline">Search</span>
+                <kbd className="hidden sm:inline ml-2 text-[11px] font-mono text-dash-text-light bg-dash-surface border border-dash-border rounded px-1 py-0.5">⌘K</kbd>
               </button>
-            </div>
-          </header>
+            )}
+            <button
+              type="button"
+              onClick={signOut}
+              disabled={signingOut}
+              className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[13px] font-medium text-dash-text-muted hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50"
+            >
+              <LogOut size={14} />
+              <span className="hidden sm:inline">{signingOut ? "Signing Out..." : "Sign Out"}</span>
+            </button>
+          </div>
+        </header>
 
-          <div>{children}</div>
-        </section>
+        {/* Page content */}
+        <main className="flex-1 overflow-y-auto">
+          <div className="mx-auto max-w-[1400px] px-4 lg:px-8 py-6">
+            {children}
+          </div>
+        </main>
       </div>
 
-      {searchOpen ? (
-        <div className="fixed inset-0 z-60 grid place-items-center bg-slate-950/45 p-4">
-          <div className="w-full max-w-3xl rounded-2xl border border-brand-purple/20 bg-white p-4 shadow-2xl">
-            <div className="flex items-center justify-between gap-3">
-              <h2 className="text-base font-bold text-slate-900">Global Search</h2>
+      {/* Global Search Modal */}
+      {searchOpen && (
+        <div className="fixed inset-0 z-60 flex items-start justify-center pt-[15vh] bg-black/30 backdrop-blur-sm p-4">
+          <div className="w-full max-w-2xl rounded-xl border border-dash-border bg-dash-surface shadow-2xl">
+            <div className="flex items-center gap-3 border-b border-dash-border px-4 py-3">
+              <Search size={16} className="text-dash-text-muted shrink-0" />
+              <input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search passages, questions, tests, speaking sets..."
+                className="flex-1 bg-transparent text-sm outline-none placeholder:text-dash-text-light"
+                autoFocus
+              />
               <button
                 type="button"
                 onClick={() => setSearchOpen(false)}
-                className="rounded-md border border-slate-300 p-1 text-slate-600"
+                className="shrink-0 rounded-md border border-dash-border px-2 py-0.5 text-xs text-dash-text-muted hover:bg-dash-bg"
               >
-                <X size={16} />
+                ESC
               </button>
             </div>
 
-            <input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search passages, questions, tests, speaking sets..."
-              className="mt-3 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
-              autoFocus
-            />
-
-            <div className="mt-3 max-h-[55vh] overflow-y-auto rounded-xl border border-slate-200">
+            <div className="max-h-[50vh] overflow-y-auto">
               {searchLoading ? (
-                <div className="p-4 text-sm text-slate-500">Loading search data...</div>
+                <div className="p-6 text-center text-sm text-dash-text-muted">Loading...</div>
               ) : filteredSearchItems.length ? (
-                filteredSearchItems.map((item) => (
-                  <Link
-                    key={item.id}
-                    href={item.href}
-                    onClick={() => setSearchOpen(false)}
-                    className="block border-b border-slate-100 px-3 py-2 hover:bg-slate-50"
-                  >
-                    <p className="text-sm font-semibold text-slate-900">{item.title}</p>
-                    <p className="text-xs text-slate-500">{item.subtitle}</p>
-                  </Link>
-                ))
+                <div className="py-2">
+                  {filteredSearchItems.map((item) => (
+                    <Link
+                      key={item.id}
+                      href={item.href}
+                      onClick={() => setSearchOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-dash-accent-light/50 transition-colors"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium text-dash-text">{item.title}</p>
+                        <p className="truncate text-xs text-dash-text-muted">{item.subtitle}</p>
+                      </div>
+                      <ChevronRight size={14} className="text-dash-text-light shrink-0" />
+                    </Link>
+                  ))}
+                </div>
               ) : (
-                <div className="p-4 text-sm text-slate-500">No matches found.</div>
+                <div className="p-6 text-center text-sm text-dash-text-muted">
+                  No results found.
+                </div>
               )}
             </div>
           </div>
         </div>
-      ) : null}
+      )}
     </div>
   );
 }
