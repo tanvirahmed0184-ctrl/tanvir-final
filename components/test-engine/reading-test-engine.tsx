@@ -327,12 +327,20 @@ export default function ReadingTestEngine({
   });
 
   return (
-    <div className="space-y-4">
-      <div className="sticky top-16 z-20 rounded-2xl border border-brand-purple/20 bg-white p-3 shadow-sm">
+    <div className="min-h-screen space-y-4 bg-[#f7f8f5] p-3 text-slate-900 sm:p-4">
+      <div className="sticky top-0 z-20 rounded-[1.5rem] border border-slate-200/80 bg-white/95 p-3 shadow-[0_18px_55px_-38px_rgba(15,23,42,0.7)] backdrop-blur">
         <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+              IELTS Reading
+            </p>
+            <p className="mt-1 text-sm font-semibold text-slate-800">
+              Split passage workspace
+            </p>
+          </div>
           <div
             className={[
-              "rounded-xl px-3 py-2 text-sm font-semibold",
+              "rounded-2xl px-4 py-2 text-sm font-semibold tabular-nums",
               secondsLeft < 300
                 ? "bg-rose-100 text-rose-700"
                 : "bg-slate-100 text-slate-700",
@@ -341,14 +349,14 @@ export default function ReadingTestEngine({
             Time Left: {formatTime(secondsLeft)}
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="hidden flex-wrap gap-2 md:flex">
             {navItems.slice(0, 12).map((item) => (
               <button
                 key={item.id}
                 type="button"
                 onClick={() => jumpToQuestion(item.id)}
                 className={[
-                  "h-8 w-8 rounded-full text-xs font-bold",
+                  "h-8 w-8 rounded-full text-xs font-bold transition hover:scale-105",
                   item.answered
                     ? "bg-emerald-500 text-white"
                     : item.visited
@@ -365,7 +373,7 @@ export default function ReadingTestEngine({
             type="button"
             onClick={handleSubmit}
             disabled={submitting}
-            className="rounded-xl bg-gradient-to-r from-brand-purple to-brand-teal px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+            className="rounded-2xl bg-gradient-to-r from-slate-900 to-teal-800 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {submitting ? "Submitting..." : "Submit"}
           </button>
@@ -378,11 +386,17 @@ export default function ReadingTestEngine({
         </div>
       ) : null}
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <section className="h-[70vh] overflow-y-auto rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-          <h2 className="mb-3 text-lg font-bold text-slate-900">
-            {currentSection?.title || "Reading Passage"}
-          </h2>
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="grid gap-4 lg:grid-cols-2">
+        <section className="h-[calc(100vh-150px)] overflow-y-auto rounded-[1.75rem] border border-slate-200/80 bg-white/95 p-5 shadow-[0_20px_70px_-48px_rgba(15,23,42,0.75)]">
+          <div className="sticky -top-5 z-10 -mx-5 mb-4 border-b border-slate-100 bg-white/95 px-5 py-4 backdrop-blur">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+              Passage
+            </p>
+            <h2 className="mt-1 text-xl font-display tracking-tight text-slate-950">
+              {currentSection?.title || "Reading Passage"}
+            </h2>
+          </div>
 
           {currentSection?.media?.filter((item) => item.type === "IMAGE").length ? (
             <div className="mb-4 grid gap-3">
@@ -413,7 +427,15 @@ export default function ReadingTestEngine({
           </p>
         </section>
 
-        <section className="h-[70vh] space-y-4 overflow-y-auto rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+        <section className="h-[calc(100vh-150px)] space-y-4 overflow-y-auto rounded-[1.75rem] border border-slate-200/80 bg-white/95 p-5 shadow-[0_20px_70px_-48px_rgba(15,23,42,0.75)]">
+          <div className="sticky -top-5 z-10 -mx-5 mb-4 border-b border-slate-100 bg-white/95 px-5 py-4 backdrop-blur">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+              Questions
+            </p>
+            <h2 className="mt-1 text-xl font-display tracking-tight text-slate-950">
+              Answer workspace
+            </h2>
+          </div>
           {sections.map((section) => (
             <div key={section.id} className="space-y-3">
               <h3 className="text-base font-semibold text-slate-900">
@@ -527,9 +549,17 @@ export default function ReadingTestEngine({
             </div>
           ))}
         </section>
+        </div>
+        <QuestionNavPanel
+          items={navItems}
+          activeQuestionId={activeQuestionId}
+          onJump={jumpToQuestion}
+          onToggleReview={toggleReview}
+          className="h-fit"
+        />
       </div>
 
-      <section className="space-y-4 rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+      <section className="space-y-4 rounded-[1.5rem] border border-slate-200/80 bg-white/90 p-4 shadow-sm">
         <h2 className="text-base font-semibold text-slate-900">
           All Reading Passages
         </h2>
@@ -561,13 +591,6 @@ export default function ReadingTestEngine({
           ))}
         </div>
       </section>
-
-      <QuestionNavPanel
-        items={navItems}
-        activeQuestionId={activeQuestionId}
-        onJump={jumpToQuestion}
-        onToggleReview={toggleReview}
-      />
 
       <div className="flex justify-end">
         <button

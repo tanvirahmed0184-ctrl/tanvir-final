@@ -1,4 +1,5 @@
-import { Flag } from "lucide-react";
+import { useState } from "react";
+import { Flag, PanelRightClose, PanelRightOpen } from "lucide-react";
 
 type QuestionNavItem = {
   id: string;
@@ -44,21 +45,46 @@ export default function QuestionNavPanel({
   onToggleReview,
   className,
 }: QuestionNavPanelProps) {
+  const [collapsed, setCollapsed] = useState(false);
+  const answeredCount = items.filter((item) => item.answered).length;
+
   return (
     <aside
       className={[
-        "rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm",
+        "sticky top-20 rounded-[1.5rem] border border-slate-200/80 bg-white/95 p-3 shadow-[0_20px_60px_-42px_rgba(15,23,42,0.7)] backdrop-blur transition-all",
+        collapsed ? "w-[72px]" : "",
         className || "",
       ].join(" ")}
     >
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-700">
-          Question Navigation
-        </h3>
-        <p className="text-xs text-slate-500">{items.length} questions</p>
+      <div className="mb-4 flex items-center justify-between gap-2">
+        {!collapsed ? (
+          <div>
+            <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-700">
+              Answer Map
+            </h3>
+            <p className="mt-1 text-xs text-slate-500">
+              {answeredCount}/{items.length} answered
+            </p>
+          </div>
+        ) : null}
+        <button
+          type="button"
+          onClick={() => setCollapsed((value) => !value)}
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-600 transition hover:border-brand-teal/30 hover:text-brand-teal-dark"
+          aria-label={collapsed ? "Expand answer navigator" : "Collapse answer navigator"}
+        >
+          {collapsed ? <PanelRightOpen size={16} /> : <PanelRightClose size={16} />}
+        </button>
       </div>
 
-      <div className="grid grid-cols-5 gap-2 sm:grid-cols-6 md:grid-cols-5 lg:grid-cols-4">
+      <div
+        className={[
+          "grid gap-2",
+          collapsed
+            ? "grid-cols-1 justify-items-center"
+            : "grid-cols-5 sm:grid-cols-6 md:grid-cols-5 lg:grid-cols-4",
+        ].join(" ")}
+      >
         {items.map((item) => {
           const active = item.id === activeQuestionId;
           return (
@@ -78,6 +104,8 @@ export default function QuestionNavPanel({
         })}
       </div>
 
+      {!collapsed ? (
+        <>
       <div className="mt-5 space-y-2 text-xs text-slate-600">
         <div className="inline-flex items-center gap-2">
           <span className="inline-block h-3 w-3 rounded-full bg-slate-300" />{" "}
@@ -116,6 +144,8 @@ export default function QuestionNavPanel({
           ))}
         </div>
       </div>
+        </>
+      ) : null}
     </aside>
   );
 }

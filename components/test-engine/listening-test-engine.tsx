@@ -689,20 +689,25 @@ export default function ListeningTestEngine({
   }
 
   return (
-    <div className="space-y-4">
-      <div className="sticky top-16 z-20 rounded-2xl border border-brand-purple/20 bg-white p-3 shadow-sm">
+    <div className="min-h-screen space-y-4 bg-[#f7f8f5] p-3 text-slate-900 sm:p-4">
+      <div className="sticky top-0 z-20 rounded-[1.5rem] border border-slate-200/80 bg-white/95 p-4 shadow-[0_18px_55px_-38px_rgba(15,23,42,0.7)] backdrop-blur">
         <div className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-              Listening Audio ({runtimeMode.toUpperCase()})
-            </p>
-            <p className="rounded-lg bg-brand-purple/10 px-2 py-1 text-xs font-semibold text-brand-purple">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                IELTS Listening ({runtimeMode.toUpperCase()})
+              </p>
+              <p className="mt-1 text-sm font-semibold text-slate-800">
+                Audio-led question workspace
+              </p>
+            </div>
+            <p className="rounded-2xl bg-teal-50 px-3 py-2 text-xs font-semibold text-teal-800">
               Answered: {answeredCount}/{allQuestions.length}
             </p>
           </div>
 
           <div className="grid gap-2 text-xs sm:grid-cols-3">
-            <p className="rounded-lg bg-slate-50 px-2 py-1 text-slate-700">
+            <p className="rounded-2xl bg-slate-50 px-3 py-2 text-slate-700">
               Mode:{" "}
               <span className="font-semibold">
                 {listeningAudioMode === "single_full_audio"
@@ -710,10 +715,10 @@ export default function ListeningTestEngine({
                   : "Sequential section audio"}
               </span>
             </p>
-            <p className="rounded-lg bg-slate-50 px-2 py-1 text-slate-700">
+            <p className="rounded-2xl bg-slate-50 px-3 py-2 text-slate-700">
               Current: <span className="font-semibold">{currentSectionLabel}</span>
             </p>
-            <p className="rounded-lg bg-slate-50 px-2 py-1 text-slate-700">
+            <p className="rounded-2xl bg-slate-50 px-3 py-2 text-slate-700">
               Review timer:{" "}
               <span className="font-semibold">
                 {sessionPhase === "review" ? formatTime(reviewSecondsLeft) : "--:--"}
@@ -752,6 +757,22 @@ export default function ListeningTestEngine({
             }}
           />
 
+          <div className="flex h-16 items-end gap-1 rounded-[1.25rem] border border-slate-200 bg-slate-950 px-4 py-3">
+            {Array.from({ length: 42 }).map((_, index) => (
+              <span
+                key={index}
+                className={[
+                  "w-full rounded-full transition-all duration-300",
+                  playbackRunning ? "bg-brand-teal" : "bg-white/25",
+                ].join(" ")}
+                style={{
+                  height: `${18 + ((index * 17) % 42)}px`,
+                  opacity: playbackRunning ? 0.55 + ((index % 5) * 0.08) : 0.35,
+                }}
+              />
+            ))}
+          </div>
+
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
@@ -762,7 +783,7 @@ export default function ListeningTestEngine({
                 sessionPhase === "review" ||
                 sessionPhase === "submitted"
               }
-              className="rounded-xl bg-gradient-to-r from-brand-purple to-brand-teal px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-2xl bg-gradient-to-r from-slate-900 to-teal-800 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {sessionStartedAt ? "Resume Listening Audio" : "Start Listening Audio"}
             </button>
@@ -776,7 +797,7 @@ export default function ListeningTestEngine({
                 !currentUnit?.audioUrl ||
                 playbackRunning
               }
-              className="rounded-xl border border-brand-purple/30 bg-white px-4 py-2 text-sm font-semibold text-brand-purple disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-2xl border border-brand-teal/30 bg-white px-4 py-2.5 text-sm font-semibold text-brand-teal-dark disabled:cursor-not-allowed disabled:opacity-60"
             >
               Play
             </button>
@@ -785,7 +806,7 @@ export default function ListeningTestEngine({
               type="button"
               onClick={pauseCurrentPlayback}
               disabled={submitting || sessionPhase !== "audio" || !playbackRunning}
-              className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-2xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               Pause
             </button>
@@ -794,7 +815,7 @@ export default function ListeningTestEngine({
               type="button"
               onClick={handleSubmit}
               disabled={submitting || sessionPhase !== "review"}
-              className="ml-auto rounded-xl bg-gradient-to-r from-brand-purple to-brand-teal px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+              className="ml-auto rounded-2xl bg-gradient-to-r from-slate-900 to-teal-800 px-5 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
             >
               {submitting ? "Submitting..." : "Submit"}
             </button>
@@ -832,7 +853,7 @@ export default function ListeningTestEngine({
         </div>
       </div>
 
-      <div className="rounded-2xl border border-brand-purple/15 bg-white p-3 shadow-sm">
+      <div className="rounded-[1.5rem] border border-slate-200/80 bg-white/95 p-3 shadow-sm">
         <div className="flex flex-wrap gap-2">
           <p className="rounded-xl border border-brand-purple/20 bg-brand-purple/5 px-3 py-2 text-sm font-semibold text-slate-700">
             Sections: {sections.length}
@@ -860,8 +881,8 @@ export default function ListeningTestEngine({
         </div>
       ) : null}
 
-      <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
-        <section className="space-y-4 rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <section className="h-[calc(100vh-250px)] min-h-[520px] space-y-4 overflow-y-auto rounded-[1.75rem] border border-slate-200/80 bg-white/95 p-5 shadow-[0_20px_70px_-48px_rgba(15,23,42,0.75)]">
           {sections.map((section) => (
             <article key={section.id} className="space-y-3">
               <h2 className="text-lg font-bold text-slate-900">{section.title}</h2>
@@ -944,6 +965,7 @@ export default function ListeningTestEngine({
           items={navItems}
           onJump={jumpToQuestion}
           onToggleReview={toggleReview}
+          className="h-fit"
         />
       </div>
     </div>
