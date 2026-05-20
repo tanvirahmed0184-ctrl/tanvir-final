@@ -2,6 +2,14 @@
 
 import Link from "next/link";
 import {
+  CheckCircle2,
+  ClipboardList,
+  FileSpreadsheet,
+  Layers3,
+  Rocket,
+  Target,
+} from "lucide-react";
+import {
   ChangeEvent,
   FormEvent,
   useCallback,
@@ -1168,16 +1176,111 @@ export default function TestStudioPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-dash-text">Test Studio</h1>
-        <p className="mt-1 text-sm text-dash-text-muted">Shell-first workflow: create shell - select shell - map
-          passages/questions - inspect - publish.</p>
+        <p className="workspace-section-title">Test publishing suite</p>
+        <h1 className="mt-4 text-3xl font-semibold text-dash-text md:text-4xl">
+          Test Studio
+        </h1>
+        <p className="mt-3 max-w-3xl text-sm leading-6 text-dash-text-muted md:text-base">
+          A shell-first production workflow for IELTS tests: define the shell,
+          map content and question order, run completeness checks, then publish
+          with confidence.
+        </p>
       </div>
 
-      <section className="grid gap-3 md:grid-cols-4">
-        <MetricCard label="Total shells" value={String(coverage.total)} />
-        <MetricCard label="Live tests" value={String(coverage.live)} />
-        <MetricCard label="Archived" value={String(coverage.archived)} />
-        <MetricCard label="Incomplete" value={String(coverage.incomplete)} />
+      <section className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
+        <article className="rounded-3xl border border-dash-border bg-dash-surface p-5">
+          <p className="workspace-section-title">Live workflow</p>
+          <div className="mt-5 grid gap-3">
+            {[
+              {
+                title: "Create shell",
+                body: "Define module, variant, timing, practice mode, and title.",
+                icon: ClipboardList,
+              },
+              {
+                title: "Map sections",
+                body: "Select passages, attach source questions, and order every item.",
+                icon: Layers3,
+              },
+              {
+                title: "Inspect publishability",
+                body: "Check missing passages, question totals, audio, and final settings.",
+                icon: CheckCircle2,
+              },
+            ].map((item, index) => {
+              const Icon = item.icon;
+              const active = step === index + 1;
+              return (
+                <button
+                  key={item.title}
+                  type="button"
+                  onClick={() => setStep((index + 1) as 1 | 2 | 3)}
+                  className={[
+                    "flex w-full items-start gap-4 rounded-2xl border p-4 text-left",
+                    active
+                      ? "border-dash-accent bg-dash-accent-light"
+                      : "border-dash-border/80 bg-white/65",
+                  ].join(" ")}
+                >
+                  <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-dash-accent shadow-sm">
+                    <Icon size={18} />
+                  </span>
+                  <span>
+                    <span className="text-xs font-bold text-dash-accent">
+                      Step 0{index + 1}
+                    </span>
+                    <span className="mt-1 block text-sm font-semibold text-dash-text">
+                      {item.title}
+                    </span>
+                    <span className="mt-1 block text-xs leading-5 text-dash-text-muted">
+                      {item.body}
+                    </span>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </article>
+
+        <article className="rounded-3xl border border-dash-border bg-dash-surface p-5">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="workspace-section-title">Shell coverage</p>
+              <h2 className="mt-3 text-xl font-semibold text-dash-text">
+                Publishing readiness board
+              </h2>
+            </div>
+            <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-dash-accent-light text-dash-accent">
+              <Rocket size={19} />
+            </span>
+          </div>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            {[
+              { label: "Total shells", value: coverage.total, icon: Target },
+              { label: "Live tests", value: coverage.live, icon: Rocket },
+              { label: "Archived", value: coverage.archived, icon: FileSpreadsheet },
+              { label: "Incomplete", value: coverage.incomplete, icon: CheckCircle2 },
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.label}
+                  className="rounded-2xl border border-dash-border/80 bg-white/65 p-4"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
+                      {item.label}
+                    </p>
+                    <Icon size={15} className="text-dash-accent" />
+                  </div>
+                  <p className="mt-3 text-3xl font-semibold text-dash-text">
+                    {item.value}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </article>
       </section>
 
       {error ? (
@@ -2438,17 +2541,6 @@ export default function TestStudioPage() {
         <p className="text-xs text-dash-text-muted">Loading passage library...</p>
       ) : null}
     </div>
-  );
-}
-
-function MetricCard({ label, value }: { label: string; value: string }) {
-  return (
-    <article className="rounded-xl border border-dash-border bg-dash-surface p-5">
-      <p className="text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
-        {label}
-      </p>
-      <p className="mt-2 text-2xl font-bold text-dash-text">{value}</p>
-    </article>
   );
 }
 

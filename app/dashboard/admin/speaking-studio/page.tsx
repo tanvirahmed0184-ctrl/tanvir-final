@@ -2,6 +2,15 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import {
+  Activity,
+  ArrowRight,
+  BarChart3,
+  Library,
+  Mic2,
+  Radio,
+  ShieldCheck,
+} from "lucide-react";
 
 const STAGES = [
   {
@@ -107,36 +116,107 @@ export default function SpeakingStudioPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-dash-text">Speaking Studio</h1>
-        <p className="mt-1 text-sm text-dash-text-muted">Dedicated studio for speaking set lifecycle, live-set control, and safer publishing.</p>
+        <p className="workspace-section-title">Speaking operations</p>
+        <h1 className="mt-4 text-3xl font-semibold text-dash-text md:text-4xl">
+          Speaking Studio
+        </h1>
+        <p className="mt-3 max-w-3xl text-sm leading-6 text-dash-text-muted md:text-base">
+          A dedicated control room for speaking prompt-set lifecycle, live-set
+          governance, test shell alignment, analytics, and safe publishing.
+        </p>
       </div>
 
-      <section className="grid gap-3 md:grid-cols-4">
-        <Metric label="Speaking Tests" value={String(speakingCoverage.totalTests)} />
-        <Metric label="Live Speaking Tests" value={String(speakingCoverage.liveTests)} />
-        <Metric label="Named Sets" value={String(speakingCoverage.totalSets)} />
-        <Metric label="Tests With Live Set" value={String(speakingCoverage.liveSets)} />
+      <section className="grid gap-4 xl:grid-cols-[1fr_0.9fr]">
+        <article className="rounded-3xl border border-dash-border bg-dash-surface p-5">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="workspace-section-title">Control panel</p>
+              <h2 className="mt-3 text-xl font-semibold text-dash-text">
+                Prompt sets, live routing, and publishing confidence
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-dash-text-muted">
+                Keep one active speaking experience per test while still
+                allowing safe drafting, duplication, JSON movement, and
+                analytics review.
+              </p>
+            </div>
+            <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-dash-accent-light text-dash-accent">
+              <Mic2 size={20} />
+            </span>
+          </div>
+
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <Metric label="Speaking Tests" value={String(speakingCoverage.totalTests)} />
+            <Metric label="Live Tests" value={String(speakingCoverage.liveTests)} />
+            <Metric label="Named Sets" value={String(speakingCoverage.totalSets)} />
+            <Metric label="Live Set Linked" value={String(speakingCoverage.liveSets)} />
+          </div>
+        </article>
+
+        <article className="rounded-3xl border border-dash-border bg-dash-surface p-5">
+          <p className="workspace-section-title">Lifecycle</p>
+          <div className="mt-5 space-y-3">
+            {[
+              { title: "Draft set", icon: Library },
+              { title: "Assign to test", icon: ShieldCheck },
+              { title: "Set live", icon: Radio },
+              { title: "Watch usage", icon: Activity },
+            ].map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.title}
+                  className="flex items-center gap-3 rounded-2xl border border-dash-border/80 bg-white/65 px-3 py-3"
+                >
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-dash-accent-light text-dash-accent">
+                    <Icon size={16} />
+                  </span>
+                  <div>
+                    <p className="text-xs font-bold text-dash-accent">
+                      0{index + 1}
+                    </p>
+                    <p className="text-sm font-semibold text-dash-text">
+                      {item.title}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </article>
       </section>
 
-      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
-        <div className="flex flex-wrap gap-2">
+      <section className="rounded-3xl border border-dash-border bg-dash-surface p-5">
+        <div className="grid gap-3 md:grid-cols-3">
           <Link
             href="/dashboard/admin/speaking-prompts"
-            className="rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted disabled:opacity-60"
+            className="group flex items-center justify-between rounded-2xl bg-dash-accent px-4 py-3 text-sm font-semibold text-white"
           >
-            Open Prompt Set Manager
+            <span className="inline-flex items-center gap-2">
+              <Library size={16} />
+              Prompt Set Manager
+            </span>
+            <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
           </Link>
           <Link
             href="/dashboard/admin/resources"
-            className="rounded-lg border border-dash-border px-4 py-2 text-sm font-semibold text-dash-text"
+            className="group flex items-center justify-between rounded-2xl border border-dash-border px-4 py-3 text-sm font-semibold text-dash-text"
           >
-            Open Test Manager
+            <span className="inline-flex items-center gap-2">
+              <Mic2 size={16} />
+              Test Manager
+            </span>
+            <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
           </Link>
           <Link
             href="/dashboard/admin/analytics"
-            className="rounded-lg border border-dash-border px-4 py-2 text-sm font-semibold text-dash-text"
+            className="group flex items-center justify-between rounded-2xl border border-dash-border px-4 py-3 text-sm font-semibold text-dash-text"
           >
-            Open Analytics
+            <span className="inline-flex items-center gap-2">
+              <BarChart3 size={16} />
+              Analytics
+            </span>
+            <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
       </section>
@@ -246,9 +326,11 @@ export default function SpeakingStudioPage() {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <article className="rounded-xl border border-dash-border bg-dash-surface p-5">
-      <p className="text-xs font-semibold uppercase tracking-wide text-dash-text-muted">{label}</p>
-      <p className="mt-2 text-2xl font-bold text-dash-text">{value}</p>
+    <article className="rounded-2xl border border-dash-border/80 bg-white/65 p-4">
+      <p className="text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
+        {label}
+      </p>
+      <p className="mt-2 text-2xl font-semibold text-dash-text">{value}</p>
     </article>
   );
 }

@@ -1,6 +1,15 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
+import {
+  Archive,
+  CheckCircle2,
+  FilePenLine,
+  FileSpreadsheet,
+  ImagePlus,
+  Layers3,
+  Search,
+} from "lucide-react";
 import { parseCsvRows, rowsToObjects } from "@/lib/csv";
 
 type EntityStatus = "DRAFT" | "READY" | "LIVE" | "ARCHIVED";
@@ -637,10 +646,102 @@ export default function ContentStudioPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-dash-text">Content Studio</h1>
-        <p className="mt-1 text-sm text-dash-text-muted">Unified passage + question bank authoring with editable CSV draft
-          flow.</p>
+        <p className="workspace-section-title">Editorial production</p>
+        <h1 className="mt-4 text-3xl font-semibold text-dash-text md:text-4xl">
+          Content Studio
+        </h1>
+        <p className="mt-3 max-w-3xl text-sm leading-6 text-dash-text-muted md:text-base">
+          A unified authoring floor for passages, media, question-bank CSV
+          drafts, validation, and usage history. The workflow is designed to
+          keep writers, reviewers, and publishers in one calm workspace.
+        </p>
       </div>
+
+      <section className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+        <article className="rounded-3xl border border-dash-border bg-dash-surface p-5">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="workspace-section-title">Current workspace</p>
+              <h2 className="mt-3 text-xl font-semibold text-dash-text">
+                Passage to question-bank pipeline
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-dash-text-muted">
+                Create the source passage, attach audio or imagery, draft CSV
+                question rows, validate, then upload only when the content is
+                ready.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setHistoryOpen(true)}
+              className="inline-flex items-center gap-2 rounded-2xl border border-dash-accent/30 bg-dash-accent-light px-4 py-2 text-sm font-semibold text-dash-accent"
+            >
+              <Search size={15} />
+              Passage history
+            </button>
+          </div>
+
+          <div className="mt-5 grid gap-3 sm:grid-cols-4">
+            {[
+              { label: "Passages", value: passages.length, icon: FilePenLine },
+              { label: "Media sources", value: passages.reduce((sum, passage) => sum + passage.media.length, 0), icon: ImagePlus },
+              { label: "Draft rows", value: csvRows.length, icon: FileSpreadsheet },
+              { label: "Warnings", value: validationSummary.warningRows, icon: Archive },
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.label}
+                  className="rounded-2xl border border-dash-border/80 bg-white/65 p-4"
+                >
+                  <Icon size={17} className="text-dash-accent" />
+                  <p className="mt-3 text-2xl font-semibold text-dash-text">
+                    {item.value}
+                  </p>
+                  <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
+                    {item.label}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </article>
+
+        <article className="rounded-3xl border border-dash-border bg-dash-surface p-5">
+          <p className="workspace-section-title">Flow map</p>
+          <div className="mt-5 space-y-3">
+            {[
+              { title: "Author source", body: "Create reading, listening, or writing passages.", icon: FilePenLine },
+              { title: "Attach media", body: "Bind images or audio to the exact source.", icon: ImagePlus },
+              { title: "Validate CSV", body: "Clean draft rows before they enter the bank.", icon: CheckCircle2 },
+              { title: "Ready for tests", body: "Use mapped content inside Test Studio.", icon: Layers3 },
+            ].map((step, index) => {
+              const Icon = step.icon;
+              return (
+                <div
+                  key={step.title}
+                  className="flex gap-3 rounded-2xl border border-dash-border/80 bg-white/65 p-3"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-dash-accent-light text-dash-accent">
+                    <Icon size={16} />
+                  </span>
+                  <div>
+                    <p className="text-xs font-bold text-dash-accent">
+                      0{index + 1}
+                    </p>
+                    <p className="text-sm font-semibold text-dash-text">
+                      {step.title}
+                    </p>
+                    <p className="mt-1 text-xs leading-5 text-dash-text-muted">
+                      {step.body}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </article>
+      </section>
 
       {error ? (
         <div className="whitespace-pre-line rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">

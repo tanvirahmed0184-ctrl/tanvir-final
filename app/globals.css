@@ -230,3 +230,215 @@
     }
   }
 }
+
+@layer components {
+  .dashboard-root {
+    background:
+      radial-gradient(circle at 16% 10%, rgba(93, 155, 123, 0.16), transparent 28rem),
+      radial-gradient(circle at 88% 4%, rgba(45, 122, 95, 0.1), transparent 32rem),
+      linear-gradient(180deg, #f7fbf8 0%, #eff6f1 100%);
+  }
+
+  .dashboard-scroll {
+    scrollbar-gutter: stable;
+  }
+
+  .dashboard-scroll::-webkit-scrollbar,
+  .dashboard-workspace *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  .dashboard-scroll::-webkit-scrollbar-track,
+  .dashboard-workspace *::-webkit-scrollbar-track {
+    background: rgba(232, 238, 235, 0.48);
+    border-radius: 999px;
+  }
+
+  .dashboard-scroll::-webkit-scrollbar-thumb,
+  .dashboard-workspace *::-webkit-scrollbar-thumb {
+    background: rgba(95, 122, 110, 0.34);
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
+  }
+
+  .dashboard-workspace {
+    --workspace-surface: rgba(255, 255, 255, 0.86);
+    --workspace-surface-strong: rgba(255, 255, 255, 0.96);
+    --workspace-border: rgba(186, 207, 197, 0.7);
+    --workspace-shadow: 0 22px 70px -46px rgba(27, 46, 38, 0.55);
+    color: #1a2b23;
+  }
+
+  .dashboard-workspace > div > div:first-child:not([class*="grid"]),
+  .dashboard-workspace > div > header:first-child {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(186, 207, 197, 0.72);
+    border-radius: 28px;
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(239, 248, 243, 0.9)),
+      radial-gradient(circle at 95% 0%, rgba(45, 122, 95, 0.14), transparent 22rem);
+    padding: clamp(1.15rem, 2.4vw, 2rem);
+    box-shadow: var(--workspace-shadow);
+  }
+
+  .dashboard-workspace > div > div:first-child:not([class*="grid"])::before,
+  .dashboard-workspace > div > header:first-child::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(45, 122, 95, 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(45, 122, 95, 0.055) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: linear-gradient(90deg, transparent, black 18%, transparent 88%);
+  }
+
+  .dashboard-workspace h1 {
+    position: relative;
+    letter-spacing: -0.04em;
+  }
+
+  .dashboard-workspace h1,
+  .dashboard-workspace h2,
+  .dashboard-workspace h3 {
+    text-wrap: balance;
+  }
+
+  .dashboard-workspace section,
+  .dashboard-workspace article {
+    border-color: var(--workspace-border);
+  }
+
+  .dashboard-workspace section[class*="bg-dash-surface"],
+  .dashboard-workspace article[class*="bg-dash-surface"],
+  .dashboard-workspace div[class*="bg-dash-surface"][class*="border-dash-border"] {
+    background:
+      linear-gradient(180deg, var(--workspace-surface-strong), var(--workspace-surface)),
+      radial-gradient(circle at 100% 0%, rgba(45, 122, 95, 0.08), transparent 18rem);
+    border-color: var(--workspace-border);
+    box-shadow: var(--workspace-shadow);
+  }
+
+  .dashboard-workspace section[class*="rounded-xl"],
+  .dashboard-workspace article[class*="rounded-xl"],
+  .dashboard-workspace div[class*="rounded-xl"][class*="border-dash-border"] {
+    border-radius: 24px;
+  }
+
+  .dashboard-workspace article[class*="border-dash-border"]:not([class*="bg-dash-surface"]) {
+    background: rgba(255, 255, 255, 0.56);
+    border-color: rgba(207, 221, 214, 0.86);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+
+  .dashboard-workspace input,
+  .dashboard-workspace select,
+  .dashboard-workspace textarea {
+    background-color: rgba(250, 253, 251, 0.88);
+    border-color: rgba(186, 207, 197, 0.86);
+    border-radius: 14px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+    outline: none;
+    transition:
+      border-color 160ms ease,
+      box-shadow 160ms ease,
+      background-color 160ms ease;
+  }
+
+  .dashboard-workspace input:focus,
+  .dashboard-workspace select:focus,
+  .dashboard-workspace textarea:focus {
+    background-color: #ffffff;
+    border-color: rgba(45, 122, 95, 0.7);
+    box-shadow:
+      0 0 0 4px rgba(45, 122, 95, 0.11),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  .dashboard-workspace textarea {
+    line-height: 1.65;
+  }
+
+  .dashboard-workspace button,
+  .dashboard-workspace a[class*="rounded-lg"],
+  .dashboard-workspace a[class*="rounded-xl"] {
+    transition:
+      transform 160ms ease,
+      border-color 160ms ease,
+      background-color 160ms ease,
+      box-shadow 160ms ease,
+      color 160ms ease;
+  }
+
+  .dashboard-workspace button:hover:not(:disabled),
+  .dashboard-workspace a[class*="rounded-lg"]:hover,
+  .dashboard-workspace a[class*="rounded-xl"]:hover {
+    transform: translateY(-1px);
+  }
+
+  .dashboard-workspace button[class*="bg-dash-accent"],
+  .dashboard-workspace a[class*="bg-dash-accent"] {
+    background:
+      linear-gradient(135deg, #2d7a5f 0%, #3d9474 100%);
+    box-shadow: 0 14px 30px -18px rgba(45, 122, 95, 0.9);
+  }
+
+  .dashboard-workspace button[class*="border-dash-border"],
+  .dashboard-workspace a[class*="border-dash-border"] {
+    background-color: rgba(255, 255, 255, 0.7);
+  }
+
+  .dashboard-workspace table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .dashboard-workspace thead {
+    background:
+      linear-gradient(180deg, rgba(239, 248, 243, 0.95), rgba(231, 242, 236, 0.95));
+    color: #476356;
+  }
+
+  .dashboard-workspace th {
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .dashboard-workspace tbody tr {
+    transition: background-color 140ms ease;
+  }
+
+  .dashboard-workspace tbody tr:hover {
+    background-color: rgba(230, 244, 238, 0.45);
+  }
+
+  .dashboard-workspace [class*="animate-pulse"][class*="bg-dash-border"] {
+    background: linear-gradient(90deg, rgba(218, 231, 224, 0.72), rgba(246, 250, 248, 0.95), rgba(218, 231, 224, 0.72));
+    background-size: 220% 100%;
+  }
+
+  .dashboard-workspace .workspace-section-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: #5f7a6e;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .dashboard-workspace .workspace-section-title::before {
+    content: "";
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    background: #2d7a5f;
+    box-shadow: 0 0 0 5px rgba(45, 122, 95, 0.12);
+  }
+}

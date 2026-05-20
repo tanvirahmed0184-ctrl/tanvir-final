@@ -276,7 +276,7 @@ export default function DashboardLayout({
   const roleLabel = role === "SUPER_ADMIN" ? "Super Admin" : role === "ADMIN" ? "Admin" : role === "INSTRUCTOR" ? "Instructor" : "Student";
 
   return (
-    <div className="flex h-screen overflow-hidden bg-dash-bg">
+    <div className="flex h-screen overflow-hidden bg-dash-bg dashboard-root">
       {/* Desktop Sidebar */}
       {loading ? (
         <SidebarSkeleton />
@@ -389,7 +389,7 @@ export default function DashboardLayout({
       {/* Main content */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Top header */}
-        <header className="flex items-center justify-between border-b border-dash-border bg-dash-surface px-4 lg:px-8 h-14 shrink-0">
+        <header className="flex h-16 shrink-0 items-center justify-between border-b border-dash-border/80 bg-white/85 px-4 shadow-[0_1px_0_rgba(30,63,50,0.04)] backdrop-blur-xl lg:px-8">
           <div className="flex items-center gap-3 min-w-0">
             {/* Mobile hamburger */}
             <button
@@ -448,8 +448,8 @@ export default function DashboardLayout({
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto">
-          <div className="mx-auto max-w-[1400px] px-4 lg:px-8 py-6">
+        <main className="flex-1 overflow-y-auto dashboard-scroll">
+          <div className="dashboard-workspace mx-auto max-w-[1480px] px-4 py-6 lg:px-8 lg:py-8">
             {children}
           </div>
         </main>
