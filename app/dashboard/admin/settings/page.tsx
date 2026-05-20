@@ -115,41 +115,39 @@ export default function AdminSettingsPage() {
   if (loading) {
     return (
       <div className="grid gap-4">
-        <div className="h-32 animate-pulse rounded-2xl bg-slate-200" />
-        <div className="h-96 animate-pulse rounded-2xl bg-slate-200" />
+        <div className="h-32 animate-pulse rounded-xl bg-dash-border/50" />
+        <div className="h-96 animate-pulse rounded-xl bg-dash-border/50" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <h1 className="text-2xl font-bold">Admin Settings</h1>
-        <p className="mt-2 text-sm text-white/85">
-          Configure platform operations, moderation defaults, and system
-          preferences.
-        </p>
-      </section>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-dash-text">Admin Settings</h1>
+        <p className="mt-1 text-sm text-dash-text-muted">Configure platform operations, moderation defaults, and system
+          preferences.</p>
+      </div>
 
       <section className="grid gap-4 md:grid-cols-3">
-        <article className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm md:col-span-2">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <article className="rounded-xl border border-dash-border bg-dash-surface p-5 md:col-span-2">
+          <p className="text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
             Administrator
           </p>
-          <h2 className="mt-2 text-lg font-bold text-slate-900">{adminName}</h2>
-          <p className="text-sm text-slate-600">{adminEmail}</p>
+          <h2 className="mt-2 text-lg font-bold text-dash-text">{adminName}</h2>
+          <p className="text-sm text-dash-text-muted">{adminEmail}</p>
         </article>
 
-        <article className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <article className="rounded-xl border border-dash-border bg-dash-surface p-5">
+          <p className="text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
             Access Role
           </p>
-          <p className="mt-2 text-lg font-bold text-slate-900">{adminRole}</p>
-          <p className="text-sm text-slate-600">Operational control enabled</p>
+          <p className="mt-2 text-lg font-bold text-dash-text">{adminRole}</p>
+          <p className="text-sm text-dash-text-muted">Operational control enabled</p>
         </article>
       </section>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
         <form onSubmit={onSave} className="space-y-4">
           <div className="grid gap-3 sm:grid-cols-2">
             <ToggleField
@@ -173,8 +171,8 @@ export default function AdminSettingsPage() {
               onChange={setAutoPublishGeneratedQuestions}
             />
 
-            <label className="block rounded-xl border border-slate-200 p-3 text-sm">
-              <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <label className="block rounded-xl border border-dash-border p-3 text-sm">
+              <span className="block text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
                 Analytics Window (Days)
               </span>
               <input
@@ -187,18 +185,18 @@ export default function AdminSettingsPage() {
                     Math.max(1, Math.min(90, Number(e.target.value) || 1)),
                   )
                 }
-                className="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="mt-2 w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               />
             </label>
 
-            <label className="block rounded-xl border border-slate-200 p-3 text-sm">
-              <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <label className="block rounded-xl border border-dash-border p-3 text-sm">
+              <span className="block text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
                 Default Module
               </span>
               <select
                 value={defaultModule}
                 onChange={(e) => setDefaultModule(e.target.value)}
-                className="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="mt-2 w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               >
                 <option value="READING">READING</option>
                 <option value="LISTENING">LISTENING</option>
@@ -206,14 +204,14 @@ export default function AdminSettingsPage() {
               </select>
             </label>
 
-            <label className="block rounded-xl border border-slate-200 p-3 text-sm">
-              <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <label className="block rounded-xl border border-dash-border p-3 text-sm">
+              <span className="block text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
                 Default Difficulty
               </span>
               <select
                 value={defaultDifficulty}
                 onChange={(e) => setDefaultDifficulty(e.target.value)}
-                className="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="mt-2 w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               >
                 <option value="EASY">EASY</option>
                 <option value="MEDIUM">MEDIUM</option>
@@ -235,14 +233,14 @@ export default function AdminSettingsPage() {
               onChange={setAutoSuggestPassageLinking}
             />
 
-            <label className="block rounded-xl border border-slate-200 p-3 text-sm">
-              <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <label className="block rounded-xl border border-dash-border p-3 text-sm">
+              <span className="block text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
                 CSV Template Profile
               </span>
               <input
                 value={csvTemplate}
                 onChange={(e) => setCsvTemplate(e.target.value)}
-                className="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="mt-2 w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               />
             </label>
 
@@ -260,8 +258,8 @@ export default function AdminSettingsPage() {
               onChange={setPublishReplaceConfirmation}
             />
 
-            <label className="block rounded-xl border border-slate-200 p-3 text-sm">
-              <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <label className="block rounded-xl border border-dash-border p-3 text-sm">
+              <span className="block text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
                 Speaking Silence Threshold (seconds)
               </span>
               <input
@@ -274,53 +272,53 @@ export default function AdminSettingsPage() {
                     Math.max(5, Math.min(60, Number(e.target.value) || 11)),
                   )
                 }
-                className="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="mt-2 w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               />
             </label>
 
-            <label className="block rounded-xl border border-slate-200 p-3 text-sm">
-              <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <label className="block rounded-xl border border-dash-border p-3 text-sm">
+              <span className="block text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
                 Retry Rules
               </span>
               <input
                 value={retryRules}
                 onChange={(e) => setRetryRules(e.target.value)}
-                className="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="mt-2 w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               />
             </label>
 
-            <label className="block rounded-xl border border-slate-200 p-3 text-sm">
-              <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <label className="block rounded-xl border border-dash-border p-3 text-sm">
+              <span className="block text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
                 Evaluation Provider Priority
               </span>
               <input
                 value={evalProviderPriority}
                 onChange={(e) => setEvalProviderPriority(e.target.value)}
-                className="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="mt-2 w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               />
             </label>
           </div>
 
           <label className="block text-sm">
-            <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <span className="mb-1 block text-[13px] font-medium text-dash-text">
               Support Email
             </span>
             <input
               type="email"
               value={supportEmail}
               onChange={(e) => setSupportEmail(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
             />
           </label>
 
           {error ? (
-            <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+            <div className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
               {error}
             </div>
           ) : null}
 
           {message ? (
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
               {message}
             </div>
           ) : null}
@@ -328,7 +326,7 @@ export default function AdminSettingsPage() {
           <button
             type="submit"
             disabled={saving}
-            className="rounded-xl bg-brand-purple px-4 py-2 text-sm font-semibold text-white disabled:opacity-70"
+            className="rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted disabled:opacity-60"
           >
             {saving ? "Saving..." : "Save Settings"}
           </button>
@@ -350,11 +348,11 @@ function ToggleField({
   onChange: (next: boolean) => void;
 }) {
   return (
-    <label className="block rounded-xl border border-slate-200 p-3 text-sm">
-      <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500">
+    <label className="block rounded-xl border border-dash-border p-3 text-sm">
+      <span className="block text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
         {label}
       </span>
-      <p className="mt-1 text-xs text-slate-600">{description}</p>
+      <p className="mt-1 text-xs text-dash-text-muted">{description}</p>
       <button
         type="button"
         onClick={() => onChange(!value)}
@@ -362,7 +360,7 @@ function ToggleField({
           "mt-3 rounded-full px-3 py-1 text-xs font-semibold",
           value
             ? "bg-emerald-100 text-emerald-700"
-            : "bg-slate-200 text-slate-700",
+            : "bg-dash-border/50 text-dash-text",
         ].join(" ")}
       >
         {value ? "Enabled" : "Disabled"}

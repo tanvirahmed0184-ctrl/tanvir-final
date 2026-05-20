@@ -223,16 +223,14 @@ export default function AdminQuestionBankPage() {
   }
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <h1 className="text-2xl font-bold">Question Bank Builder</h1>
-        <p className="mt-2 text-sm text-white/85">
-          Import CSV questions and link them to passage/photo/audio sources.
-        </p>
-      </section>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-dash-text">Question Bank Builder</h1>
+        <p className="mt-1 text-sm text-dash-text-muted">Import CSV questions and link them to passage/photo/audio sources.</p>
+      </div>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
           Passage IDs Reference
         </h2>
         {passages.length ? (
@@ -240,18 +238,18 @@ export default function AdminQuestionBankPage() {
             {passages.slice(0, 20).map((p) => (
               <div
                 key={p.id}
-                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-dash-border px-3 py-2 text-sm"
               >
                 <div>
-                  <p className="font-semibold text-slate-900">{p.title}</p>
-                  <p className="text-xs text-slate-600">
+                  <p className="font-semibold text-dash-text">{p.title}</p>
+                  <p className="text-xs text-dash-text-muted">
                     {p.module} Part {p.sectionPart} | {p.id}
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => void copyId(p.id)}
-                  className="rounded border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700"
+                  className="rounded border border-dash-border px-2 py-1 text-xs font-semibold text-dash-text"
                 >
                   Copy ID
                 </button>
@@ -259,12 +257,12 @@ export default function AdminQuestionBankPage() {
             ))}
           </div>
         ) : (
-          <p className="mt-2 text-sm text-slate-600">No passages found yet.</p>
+          <p className="mt-2 text-sm text-dash-text-muted">No passages found yet.</p>
         )}
       </section>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+        <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
           <p className="font-semibold">How linking works</p>
           <p className="mt-1">
             1) Best: use exact `passage_id` from Passage page.
@@ -277,7 +275,7 @@ export default function AdminQuestionBankPage() {
           <button
             type="button"
             onClick={downloadTemplate}
-            className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700"
+            className="rounded-lg border border-dash-border px-4 py-2 text-sm font-semibold text-dash-text"
           >
             Download CSV Template
           </button>
@@ -285,20 +283,20 @@ export default function AdminQuestionBankPage() {
           <input type="file" accept=".csv,text/csv" onChange={onFileChange} />
         </div>
 
-        <p className="mt-3 text-xs text-slate-500">
+        <p className="mt-3 text-xs text-dash-text-muted">
           Linking rule: provide <code>passage_id</code> per row, or choose a
           default passage below for rows where <code>passage_id</code> is empty.
         </p>
 
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           <label className="block text-sm">
-            <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <span className="mb-1 block text-[13px] font-medium text-dash-text">
               Default Passage (optional)
             </span>
             <select
               value={defaultPassageId}
               onChange={(e) => setDefaultPassageId(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
             >
               <option value="">No default</option>
               {passages.map((p) => (
@@ -315,7 +313,7 @@ export default function AdminQuestionBankPage() {
             type="button"
             onClick={uploadCsv}
             disabled={uploading || !rows.length}
-            className="rounded-xl bg-brand-teal px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+            className="rounded-lg bg-dash-accent-muted px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-90 disabled:opacity-60"
           >
             {uploading ? "Uploading..." : "Upload to Question Bank"}
           </button>
@@ -323,44 +321,44 @@ export default function AdminQuestionBankPage() {
       </section>
 
       {error ? (
-        <div className="whitespace-pre-line rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+        <div className="whitespace-pre-line rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
           {error}
         </div>
       ) : null}
 
       {message ? (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
           {message}
         </div>
       ) : null}
 
       {warning ? (
-        <div className="whitespace-pre-line rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+        <div className="whitespace-pre-line rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
           {warning}
         </div>
       ) : null}
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
           CSV Preview
         </h2>
 
         {previewRows.length ? (
-          <div className="mt-3 overflow-x-auto rounded-xl border border-slate-200">
-            <table className="min-w-full divide-y divide-slate-200 text-sm">
-              <thead className="bg-slate-50">
+          <div className="mt-3 overflow-x-auto rounded-xl border border-dash-border">
+            <table className="min-w-full divide-y divide-dash-border text-sm">
+              <thead className="bg-dash-bg">
                 <tr>
                   {headers.map((h) => (
                     <th
                       key={h}
-                      className="whitespace-nowrap px-3 py-2 text-left text-xs uppercase tracking-wide text-slate-500"
+                      className="whitespace-nowrap px-3 py-2 text-left text-xs uppercase tracking-wide text-dash-text-muted"
                     >
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 bg-white">
+              <tbody className="divide-y divide-dash-border bg-dash-surface">
                 {previewRows.map((row, idx) => (
                   <tr key={idx}>
                     {headers.map((h) => (
@@ -374,41 +372,41 @@ export default function AdminQuestionBankPage() {
             </table>
           </div>
         ) : (
-          <p className="mt-3 text-sm text-slate-600">
+          <p className="mt-3 text-sm text-dash-text-muted">
             Upload a CSV to preview rows before import.
           </p>
         )}
       </section>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
           Recent Bank Questions
         </h2>
 
         {loadingRows ? (
-          <div className="mt-3 h-40 animate-pulse rounded-xl bg-slate-200" />
+          <div className="mt-3 h-40 animate-pulse rounded-xl bg-dash-border/50" />
         ) : recentRows.length ? (
           <div className="mt-3 space-y-2">
             {recentRows.slice(0, 40).map((row) => (
               <article
                 key={row.id}
-                className="rounded-xl border border-slate-200 p-3"
+                className="rounded-xl border border-dash-border p-3"
               >
-                <p className="text-xs font-semibold uppercase tracking-wide text-brand-purple">
+                <p className="text-xs font-semibold uppercase tracking-wide text-dash-accent">
                   {row.type} - {row.module}
                   {row.sectionPart ? ` Part ${row.sectionPart}` : ""}
                 </p>
-                <p className="mt-1 text-sm text-slate-800">
+                <p className="mt-1 text-sm text-dash-text">
                   {row.questionText}
                 </p>
-                <p className="mt-1 text-xs text-slate-500">
+                <p className="mt-1 text-xs text-dash-text-muted">
                   Passage: {row.passage?.title || "Unlinked"}
                 </p>
               </article>
             ))}
           </div>
         ) : (
-          <p className="mt-3 text-sm text-slate-600">
+          <p className="mt-3 text-sm text-dash-text-muted">
             No question bank items yet.
           </p>
         )}

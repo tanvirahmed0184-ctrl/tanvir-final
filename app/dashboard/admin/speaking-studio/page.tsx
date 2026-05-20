@@ -31,7 +31,7 @@ function stageStatus(index: number): StageState {
 }
 
 const STATUS_CLS: Record<StageState, string> = {
-  DRAFT: "bg-slate-100 text-slate-700",
+  DRAFT: "bg-dash-bg text-dash-text",
   READY: "bg-amber-100 text-amber-700",
   LIVE: "bg-emerald-100 text-emerald-700",
 };
@@ -105,13 +105,11 @@ export default function SpeakingStudioPage() {
   }, [tests]);
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <h1 className="text-2xl font-bold">Speaking Studio</h1>
-        <p className="mt-2 text-sm text-white/85">
-          Dedicated studio for speaking set lifecycle, live-set control, and safer publishing.
-        </p>
-      </section>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-dash-text">Speaking Studio</h1>
+        <p className="mt-1 text-sm text-dash-text-muted">Dedicated studio for speaking set lifecycle, live-set control, and safer publishing.</p>
+      </div>
 
       <section className="grid gap-3 md:grid-cols-4">
         <Metric label="Speaking Tests" value={String(speakingCoverage.totalTests)} />
@@ -120,23 +118,23 @@ export default function SpeakingStudioPage() {
         <Metric label="Tests With Live Set" value={String(speakingCoverage.liveSets)} />
       </section>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
         <div className="flex flex-wrap gap-2">
           <Link
             href="/dashboard/admin/speaking-prompts"
-            className="rounded-xl bg-brand-purple px-4 py-2 text-sm font-semibold text-white"
+            className="rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted disabled:opacity-60"
           >
             Open Prompt Set Manager
           </Link>
           <Link
             href="/dashboard/admin/resources"
-            className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700"
+            className="rounded-lg border border-dash-border px-4 py-2 text-sm font-semibold text-dash-text"
           >
             Open Test Manager
           </Link>
           <Link
             href="/dashboard/admin/analytics"
-            className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700"
+            className="rounded-lg border border-dash-border px-4 py-2 text-sm font-semibold text-dash-text"
           >
             Open Analytics
           </Link>
@@ -145,48 +143,48 @@ export default function SpeakingStudioPage() {
 
       <section className="grid gap-3 md:grid-cols-2">
         {cards.map((card, idx) => (
-          <article key={idx} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+          <article key={idx} className="rounded-xl border border-dash-border bg-dash-surface p-5">
             <div className="flex items-center justify-between gap-2">
-              <p className="text-sm font-semibold text-slate-900">{card.title}</p>
+              <p className="text-sm font-semibold text-dash-text">{card.title}</p>
               <span
-                className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase ${STATUS_CLS[card.status]}`}
+                className={`rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase ${STATUS_CLS[card.status]}`}
               >
                 {card.status}
               </span>
             </div>
-            <p className="mt-2 text-sm text-slate-600">{card.body}</p>
+            <p className="mt-2 text-sm text-dash-text-muted">{card.body}</p>
           </article>
         ))}
       </section>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
           Speaking Set Inspector
         </h2>
 
         {loading ? (
-          <div className="mt-3 h-28 animate-pulse rounded-xl bg-slate-100" />
+          <div className="mt-3 h-28 animate-pulse rounded-xl bg-dash-border/50" />
         ) : tests.length ? (
           <div className="mt-3 grid gap-3 md:grid-cols-2">
             {tests.map((test) => {
               const sets = Array.isArray(test.speakingPromptSets) ? test.speakingPromptSets : [];
               return (
-                <article key={test.id} className="rounded-xl border border-slate-200 p-3">
+                <article key={test.id} className="rounded-xl border border-dash-border p-3">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="font-semibold text-slate-900">{test.title}</p>
+                    <p className="font-semibold text-dash-text">{test.title}</p>
                     <span
                       className={[
-                        "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase",
+                        "rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase",
                         test.isActive
                           ? "bg-emerald-100 text-emerald-700"
-                          : "bg-slate-100 text-slate-700",
+                          : "bg-dash-bg text-dash-text",
                       ].join(" ")}
                     >
                       {test.isActive ? "Live Test" : "Draft Test"}
                     </span>
                   </div>
 
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-dash-text-muted">
                     Named sets: {sets.length}
                   </p>
 
@@ -197,9 +195,9 @@ export default function SpeakingStudioPage() {
                         return (
                           <div
                             key={set.id}
-                            className="flex items-center justify-between rounded-lg border border-slate-100 px-2 py-1 text-xs"
+                            className="flex items-center justify-between rounded-lg border border-dash-border px-2 py-1 text-xs"
                           >
-                            <span className="text-slate-700">
+                            <span className="text-dash-text">
                               {set.name}{" "}
                               {typeof set.promptCount === "number"
                                 ? `(${set.promptCount})`
@@ -207,10 +205,10 @@ export default function SpeakingStudioPage() {
                             </span>
                             <span
                               className={[
-                                "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase",
+                                "rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase",
                                 isLiveSet
                                   ? "bg-emerald-100 text-emerald-700"
-                                  : "bg-slate-100 text-slate-600",
+                                  : "bg-dash-bg text-dash-text-muted",
                               ].join(" ")}
                             >
                               {isLiveSet ? "Live Set" : "Draft"}
@@ -219,7 +217,7 @@ export default function SpeakingStudioPage() {
                         );
                       })
                     ) : (
-                      <p className="text-xs text-slate-500">No sets configured yet.</p>
+                      <p className="text-xs text-dash-text-muted">No sets configured yet.</p>
                     )}
                   </div>
                 </article>
@@ -227,15 +225,15 @@ export default function SpeakingStudioPage() {
             })}
           </div>
         ) : (
-          <p className="mt-3 text-sm text-slate-500">No speaking tests found.</p>
+          <p className="mt-3 text-sm text-dash-text-muted">No speaking tests found.</p>
         )}
       </section>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
           Studio Notes
         </h2>
-        <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-700">
+        <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-dash-text">
           <li>Keep one live set at a time for predictable student flow.</li>
           <li>Use duplicate set for safe versioning and iterative improvements.</li>
           <li>Import/export JSON to sync question sets between environments.</li>
@@ -248,9 +246,9 @@ export default function SpeakingStudioPage() {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <article className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</p>
-      <p className="mt-2 text-2xl font-black text-slate-900">{value}</p>
+    <article className="rounded-xl border border-dash-border bg-dash-surface p-5">
+      <p className="text-xs font-semibold uppercase tracking-wide text-dash-text-muted">{label}</p>
+      <p className="mt-2 text-2xl font-bold text-dash-text">{value}</p>
     </article>
   );
 }

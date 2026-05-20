@@ -227,47 +227,45 @@ export default function AdminUsersPage() {
   }
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <h1 className="text-2xl font-bold">User Management</h1>
-        <p className="mt-2 text-sm text-white/85">
-          Search users, change roles, paginate large lists, and export filtered
-          records.
-        </p>
-      </section>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-dash-text">User Management</h1>
+        <p className="mt-1 text-sm text-dash-text-muted">Search users, change roles, paginate large lists, and export filtered
+          records.</p>
+      </div>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-lg bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+            <span className="rounded-lg bg-dash-bg px-3 py-1 text-xs font-semibold text-dash-text">
               Total DB Users: {dbTotalUsers.toLocaleString()}
             </span>
-            <span className="rounded-lg bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+            <span className="rounded-lg bg-dash-bg px-3 py-1 text-xs font-semibold text-dash-text">
               Free: {planCounts.free}
             </span>
-            <span className="rounded-lg bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+            <span className="rounded-lg bg-dash-bg px-3 py-1 text-xs font-semibold text-dash-text">
               Pro: {planCounts.pro}
             </span>
-            <span className="rounded-lg bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+            <span className="rounded-lg bg-dash-bg px-3 py-1 text-xs font-semibold text-dash-text">
               Premium: {planCounts.premium}
             </span>
           </div>
 
           <div className="grid w-full gap-3 sm:grid-cols-2 lg:max-w-2xl">
             <label className="block text-sm">
-              <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <span className="mb-1 block text-[13px] font-medium text-dash-text">
                 Search
               </span>
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search by name, email, or ID"
-                className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm outline-none focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
               />
             </label>
 
             <label className="block text-sm">
-              <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <span className="mb-1 block text-[13px] font-medium text-dash-text">
                 Role Filter
               </span>
               <select
@@ -275,7 +273,7 @@ export default function AdminUsersPage() {
                 onChange={(e) =>
                   setRoleFilter(e.target.value as "ALL" | UserRole)
                 }
-                className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               >
                 <option value="ALL">All Roles</option>
                 <option value="GUEST">Guest</option>
@@ -287,7 +285,7 @@ export default function AdminUsersPage() {
             </label>
 
             <label className="block text-sm">
-              <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <span className="mb-1 block text-[13px] font-medium text-dash-text">
                 Plan Filter
               </span>
               <select
@@ -295,7 +293,7 @@ export default function AdminUsersPage() {
                 onChange={(e) =>
                   setPlanFilter(e.target.value as "ALL" | SubscriptionPlan)
                 }
-                className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               >
                 <option value="ALL">All Plans</option>
                 <option value="free">Free</option>
@@ -309,7 +307,7 @@ export default function AdminUsersPage() {
             type="button"
             onClick={() => void loadUsers(false)}
             disabled={refreshing || loading}
-            className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 disabled:opacity-60"
+            className="rounded-xl border border-dash-border bg-dash-surface px-4 py-2 text-sm font-semibold text-dash-text disabled:opacity-60"
           >
             {refreshing ? "Refreshing..." : "Refresh"}
           </button>
@@ -317,29 +315,29 @@ export default function AdminUsersPage() {
           <button
             type="button"
             onClick={exportFilteredCsv}
-            className="rounded-xl border border-brand-teal/30 bg-brand-teal/10 px-4 py-2 text-sm font-semibold text-brand-teal hover:bg-brand-teal/20"
+            className="rounded-xl border border-dash-accent/30 bg-dash-accent-muted/10 px-4 py-2 text-sm font-semibold text-dash-accent hover:bg-dash-accent-muted/20"
           >
             Export CSV
           </button>
         </div>
 
         {error ? (
-          <div className="mt-3 rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+          <div className="mt-3 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
             {error}
           </div>
         ) : null}
 
         {notice ? (
-          <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+          <div className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
             {notice}
           </div>
         ) : null}
 
         {loading ? (
-          <div className="mt-4 h-52 animate-pulse rounded-xl bg-slate-200" />
+          <div className="mt-4 h-52 animate-pulse rounded-xl bg-dash-border/50" />
         ) : (
           <div className="mt-4 overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200 text-sm">
+            <table className="min-w-full divide-y divide-dash-border text-sm">
               <thead>
                 <tr>
                   <th className="px-3 py-2 text-left">User</th>
@@ -352,12 +350,12 @@ export default function AdminUsersPage() {
                   <th className="px-3 py-2 text-left">Subscription</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-dash-border">
                 {paged.map((u) => (
                   <tr key={u.id}>
                     <td className="px-3 py-2">
-                      <p className="font-medium text-slate-900">{u.name}</p>
-                      <p className="text-xs text-slate-500">{u.id}</p>
+                      <p className="font-medium text-dash-text">{u.name}</p>
+                      <p className="text-xs text-dash-text-muted">{u.id}</p>
                     </td>
                     <td className="px-3 py-2">{u.email}</td>
                     <td className="px-3 py-2">{u.createdAt}</td>
@@ -374,7 +372,7 @@ export default function AdminUsersPage() {
                             role: e.target.value as UserRole,
                           })
                         }
-                        className="rounded-lg border border-slate-300 px-2 py-1 text-xs font-semibold"
+                        className="rounded-lg border border-dash-border px-2 py-1 text-xs font-semibold"
                       >
                         <option value="GUEST">Guest</option>
                         <option value="STUDENT">Student</option>
@@ -392,7 +390,7 @@ export default function AdminUsersPage() {
                             plan: e.target.value as SubscriptionPlan,
                           })
                         }
-                        className="rounded-lg border border-slate-300 px-2 py-1 text-xs font-semibold"
+                        className="rounded-lg border border-dash-border px-2 py-1 text-xs font-semibold"
                       >
                         <option value="free">Free</option>
                         <option value="pro">Pro</option>
@@ -409,7 +407,7 @@ export default function AdminUsersPage() {
                               .value as SubscriptionStatus,
                           })
                         }
-                        className="rounded-lg border border-slate-300 px-2 py-1 text-xs font-semibold"
+                        className="rounded-lg border border-dash-border px-2 py-1 text-xs font-semibold"
                       >
                         <option value="active">Active</option>
                         <option value="inactive">Inactive</option>
@@ -425,7 +423,7 @@ export default function AdminUsersPage() {
                   <tr>
                     <td
                       colSpan={8}
-                      className="px-3 py-8 text-center text-slate-500"
+                      className="px-3 py-8 text-center text-dash-text-muted"
                     >
                       No users found for current filters.
                     </td>
@@ -437,7 +435,7 @@ export default function AdminUsersPage() {
         )}
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-dash-text-muted">
             Showing{" "}
             {(paged.length ? (page - 1) * PAGE_SIZE + 1 : 0).toLocaleString()}-
             {((page - 1) * PAGE_SIZE + paged.length).toLocaleString()} of{" "}
@@ -449,18 +447,18 @@ export default function AdminUsersPage() {
               type="button"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page <= 1}
-              className="rounded-lg border border-slate-300 px-3 py-1 text-xs font-semibold text-slate-700 disabled:opacity-50"
+              className="rounded-lg border border-dash-border px-3 py-1 text-xs font-semibold text-dash-text disabled:opacity-50"
             >
               Previous
             </button>
-            <span className="text-xs font-semibold text-slate-600">
+            <span className="text-xs font-semibold text-dash-text-muted">
               Page {page} of {totalPages}
             </span>
             <button
               type="button"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page >= totalPages}
-              className="rounded-lg border border-slate-300 px-3 py-1 text-xs font-semibold text-slate-700 disabled:opacity-50"
+              className="rounded-lg border border-dash-border px-3 py-1 text-xs font-semibold text-dash-text disabled:opacity-50"
             >
               Next
             </button>

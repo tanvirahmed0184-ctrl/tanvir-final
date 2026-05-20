@@ -175,38 +175,36 @@ export default function AdminTestGeneratorPage() {
   }
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <h1 className="text-2xl font-bold">AI Question Generator</h1>
-        <p className="mt-2 text-sm text-white/85">
-          Generate IELTS-style questions from a topic or passage and save
-          approved items.
-        </p>
-      </section>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-dash-text">AI Question Generator</h1>
+        <p className="mt-1 text-sm text-dash-text-muted">Generate IELTS-style questions from a topic or passage and save
+          approved items.</p>
+      </div>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
         <form onSubmit={generateQuestions} className="space-y-3">
           <label className="block text-sm">
-            <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <span className="mb-1 block text-[13px] font-medium text-dash-text">
               Passage or Topic
             </span>
             <textarea
               value={topicOrPassage}
               onChange={(e) => setTopicOrPassage(e.target.value)}
               rows={6}
-              className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+              className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm outline-none focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
             />
           </label>
 
           <div className="grid gap-3 sm:grid-cols-3">
             <label className="block text-sm">
-              <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <span className="mb-1 block text-[13px] font-medium text-dash-text">
                 Question Type
               </span>
               <select
                 value={questionType}
                 onChange={(e) => setQuestionType(e.target.value)}
-                className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               >
                 <option value="MULTIPLE_CHOICE">MCQ</option>
                 <option value="TRUE_FALSE_NOT_GIVEN">
@@ -218,7 +216,7 @@ export default function AdminTestGeneratorPage() {
             </label>
 
             <label className="block text-sm">
-              <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <span className="mb-1 block text-[13px] font-medium text-dash-text">
                 Number of Questions
               </span>
               <input
@@ -231,18 +229,18 @@ export default function AdminTestGeneratorPage() {
                     Math.max(1, Math.min(20, Number(e.target.value) || 1)),
                   )
                 }
-                className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               />
             </label>
 
             <label className="block text-sm">
-              <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <span className="mb-1 block text-[13px] font-medium text-dash-text">
                 Add to Test
               </span>
               <select
                 value={testId}
                 onChange={(e) => setTestId(e.target.value)}
-                className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               >
                 {tests.map((t) => (
                   <option key={t.id} value={t.id}>
@@ -256,7 +254,7 @@ export default function AdminTestGeneratorPage() {
           <button
             type="submit"
             disabled={loadingGenerate}
-            className="rounded-xl bg-brand-purple px-4 py-2 text-sm font-semibold text-white disabled:opacity-70"
+            className="rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted disabled:opacity-60"
           >
             {loadingGenerate ? "Generating..." : "Generate with AI"}
           </button>
@@ -264,21 +262,21 @@ export default function AdminTestGeneratorPage() {
       </section>
 
       {message ? (
-        <section className="rounded-xl border border-brand-purple/20 bg-brand-purple/5 p-3 text-sm text-slate-700">
+        <section className="rounded-lg border border-dash-border bg-dash-accent-light px-4 py-3 text-sm text-dash-text">
           {message}
         </section>
       ) : null}
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
             Generated Questions Preview
           </h2>
           <button
             type="button"
             onClick={saveApproved}
             disabled={!approvedCount || loadingSave}
-            className="rounded-xl bg-brand-teal px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+            className="rounded-lg bg-dash-accent-muted px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-90 disabled:opacity-60"
           >
             {loadingSave ? "Saving..." : `Save Approved (${approvedCount})`}
           </button>
@@ -289,10 +287,10 @@ export default function AdminTestGeneratorPage() {
             {questions.map((q, idx) => (
               <article
                 key={q.id}
-                className="rounded-xl border border-slate-200 p-3"
+                className="rounded-xl border border-dash-border p-3"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-brand-purple">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-dash-accent">
                     Q{idx + 1} - {q.question_type}
                   </p>
                   <div className="flex gap-2">
@@ -303,7 +301,7 @@ export default function AdminTestGeneratorPage() {
                         "rounded-lg px-2 py-1 text-xs font-semibold",
                         q.approved
                           ? "bg-emerald-100 text-emerald-700"
-                          : "bg-slate-100 text-slate-600",
+                          : "bg-dash-bg text-dash-text-muted",
                       ].join(" ")}
                     >
                       Approve
@@ -315,7 +313,7 @@ export default function AdminTestGeneratorPage() {
                         "rounded-lg px-2 py-1 text-xs font-semibold",
                         !q.approved
                           ? "bg-rose-100 text-rose-700"
-                          : "bg-slate-100 text-slate-600",
+                          : "bg-dash-bg text-dash-text-muted",
                       ].join(" ")}
                     >
                       Reject
@@ -323,18 +321,18 @@ export default function AdminTestGeneratorPage() {
                   </div>
                 </div>
 
-                <p className="mt-2 text-sm text-slate-800">{q.question_text}</p>
-                <p className="mt-1 text-xs text-slate-600">
+                <p className="mt-2 text-sm text-dash-text">{q.question_text}</p>
+                <p className="mt-1 text-xs text-dash-text-muted">
                   Correct: {q.correct_answer}
                 </p>
                 {q.explanation ? (
-                  <p className="mt-1 text-xs text-slate-500">{q.explanation}</p>
+                  <p className="mt-1 text-xs text-dash-text-muted">{q.explanation}</p>
                 ) : null}
               </article>
             ))}
           </div>
         ) : (
-          <p className="text-sm text-slate-600">No generated questions yet.</p>
+          <p className="text-sm text-dash-text-muted">No generated questions yet.</p>
         )}
       </section>
     </div>

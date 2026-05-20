@@ -197,39 +197,37 @@ export default function AdminResourcesPage() {
   }
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <h1 className="text-2xl font-bold">Test Manager</h1>
-        <p className="mt-2 text-sm text-white/85">
-          Create, edit, and manage IELTS tests and question workflows.
-        </p>
-      </section>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-dash-text">Test Manager</h1>
+        <p className="mt-1 text-sm text-dash-text-muted">Create, edit, and manage IELTS tests and question workflows.</p>
+      </div>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
             All Tests
           </h2>
           <button
             type="button"
             onClick={() => setOpenCreate(true)}
-            className="rounded-xl bg-brand-purple px-4 py-2 text-sm font-semibold text-white"
+            className="rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted disabled:opacity-60"
           >
             Create Test
           </button>
         </div>
 
         {error ? (
-          <div className="mt-3 rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+          <div className="mt-3 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
             {error}
           </div>
         ) : null}
 
         {loading ? (
-          <div className="mt-4 h-48 animate-pulse rounded-xl bg-slate-200" />
+          <div className="mt-4 h-48 animate-pulse rounded-xl bg-dash-border/50" />
         ) : (
           <div className="mt-4 overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200 text-sm">
+            <table className="min-w-full divide-y divide-dash-border text-sm">
               <thead>
                 <tr>
                   <th className="px-3 py-2 text-left">Title</th>
@@ -240,12 +238,12 @@ export default function AdminResourcesPage() {
                   <th className="px-3 py-2 text-left">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-dash-border">
                 {sortedTests.map((test) => (
                   <tr key={test.id}>
                     <td className="px-3 py-2">
-                      <p className="font-medium text-slate-900">{test.title}</p>
-                      <p className="text-xs text-slate-500">
+                      <p className="font-medium text-dash-text">{test.title}</p>
+                      <p className="text-xs text-dash-text-muted">
                         {test.difficulty}
                       </p>
                     </td>
@@ -261,7 +259,7 @@ export default function AdminResourcesPage() {
                           "rounded-full px-2 py-1 text-xs font-semibold",
                           test.isActive
                             ? "bg-emerald-100 text-emerald-700"
-                            : "bg-slate-200 text-slate-700",
+                            : "bg-dash-border/50 text-dash-text",
                         ].join(" ")}
                       >
                         {test.isActive ? "Active" : "Draft"}
@@ -272,7 +270,7 @@ export default function AdminResourcesPage() {
                         <button
                           type="button"
                           onClick={() => setOpenCreate(true)}
-                          className="rounded-lg border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700"
+                          className="rounded-lg border border-dash-border px-2 py-1 text-xs font-semibold text-dash-text"
                         >
                           Edit
                         </button>
@@ -285,7 +283,7 @@ export default function AdminResourcesPage() {
                         </button>
                         <Link
                           href={`/dashboard/admin/resources/${test.id}/questions`}
-                          className="rounded-lg bg-brand-teal px-2 py-1 text-xs font-semibold text-white"
+                          className="rounded-lg bg-dash-accent-muted px-2 py-1 text-xs font-semibold text-white"
                         >
                           Add Questions
                         </Link>
@@ -301,15 +299,15 @@ export default function AdminResourcesPage() {
 
       {openCreate ? (
         <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/50 p-4">
-          <div className="w-full max-w-lg rounded-2xl border border-brand-purple/20 bg-white p-5 shadow-2xl">
-            <h3 className="text-lg font-bold text-slate-900">Create Test</h3>
+          <div className="w-full max-w-lg rounded-xl border border-dash-border bg-dash-surface p-5 shadow-2xl">
+            <h3 className="text-lg font-bold text-dash-text">Create Test</h3>
             <form onSubmit={createTest} className="mt-4 space-y-3">
               <Field label="Title">
                 <input
                   value={form.title}
                   onChange={(e) => updateForm("title", e.target.value)}
                   required
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                 />
               </Field>
 
@@ -323,7 +321,7 @@ export default function AdminResourcesPage() {
                         e.target.value as CreatePayload["module"],
                       )
                     }
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   >
                     {(
                       ["READING", "LISTENING", "WRITING", "SPEAKING"] as const
@@ -344,7 +342,7 @@ export default function AdminResourcesPage() {
                         e.target.value as CreatePayload["variant"],
                       )
                     }
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   >
                     <option value="ACADEMIC">ACADEMIC</option>
                     <option value="GENERAL">GENERAL</option>
@@ -360,7 +358,7 @@ export default function AdminResourcesPage() {
                         e.target.value as CreatePayload["difficulty"],
                       )
                     }
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   >
                     <option value="EASY">EASY</option>
                     <option value="MEDIUM">MEDIUM</option>
@@ -378,7 +376,7 @@ export default function AdminResourcesPage() {
                     onChange={(e) =>
                       updateForm("durationMins", Number(e.target.value) || 60)
                     }
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   />
                 </Field>
 
@@ -388,7 +386,7 @@ export default function AdminResourcesPage() {
                     onChange={(e) =>
                       updateForm("isPractice", e.target.value === "true")
                     }
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   >
                     <option value="true">Yes</option>
                     <option value="false">No</option>
@@ -401,7 +399,7 @@ export default function AdminResourcesPage() {
                   value={form.description}
                   onChange={(e) => updateForm("description", e.target.value)}
                   rows={3}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                 />
               </Field>
 
@@ -409,14 +407,14 @@ export default function AdminResourcesPage() {
                 <button
                   type="button"
                   onClick={() => setOpenCreate(false)}
-                  className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700"
+                  className="rounded-lg border border-dash-border px-4 py-2 text-sm font-semibold text-dash-text"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={busyId === "create"}
-                  className="rounded-xl bg-brand-purple px-4 py-2 text-sm font-semibold text-white disabled:opacity-70"
+                  className="rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted disabled:opacity-60"
                 >
                   {busyId === "create" ? "Saving..." : "Save Test"}
                 </button>
@@ -438,7 +436,7 @@ function Field({
 }) {
   return (
     <label className="block text-sm">
-      <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <span className="mb-1 block text-[13px] font-medium text-dash-text">
         {label}
       </span>
       {children}

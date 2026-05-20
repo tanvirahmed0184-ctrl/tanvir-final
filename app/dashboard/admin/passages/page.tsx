@@ -265,16 +265,14 @@ export default function AdminPassagesPage() {
   }
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <h1 className="text-2xl font-bold">Passage Manager</h1>
-        <p className="mt-2 text-sm text-white/85">
-          Add passage/audio/image sources and keep question links organized.
-        </p>
-      </section>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-dash-text">Passage Manager</h1>
+        <p className="mt-1 text-sm text-dash-text-muted">Add passage/audio/image sources and keep question links organized.</p>
+      </div>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
           Add Passage Source
         </h2>
 
@@ -287,7 +285,7 @@ export default function AdminPassagesPage() {
                   setPassageForm((prev) => ({ ...prev, title: e.target.value }))
                 }
                 required
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               />
             </Field>
 
@@ -303,7 +301,7 @@ export default function AdminPassagesPage() {
                     sectionPart: Math.max(1, Number(e.target.value) || 1),
                   }))
                 }
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               />
             </Field>
           </div>
@@ -318,7 +316,7 @@ export default function AdminPassagesPage() {
                     module: e.target.value as PassageCreatePayload["module"],
                   }))
                 }
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               >
                 <option value="READING">READING</option>
                 <option value="LISTENING">LISTENING</option>
@@ -336,7 +334,7 @@ export default function AdminPassagesPage() {
                       .value as PassageCreatePayload["difficulty"],
                   }))
                 }
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               >
                 <option value="EASY">EASY</option>
                 <option value="MEDIUM">MEDIUM</option>
@@ -353,22 +351,22 @@ export default function AdminPassagesPage() {
               }
               rows={5}
               placeholder="You can leave this empty if this source is image-only or audio-only."
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
             />
           </Field>
 
           <button
             type="submit"
             disabled={creatingPassage}
-            className="rounded-xl bg-brand-purple px-4 py-2 text-sm font-semibold text-white disabled:opacity-70"
+            className="rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted disabled:opacity-60"
           >
             {creatingPassage ? "Creating..." : "Create Passage"}
           </button>
         </form>
       </section>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
           Add Media (URL or Upload)
         </h2>
 
@@ -378,7 +376,7 @@ export default function AdminPassagesPage() {
               <select
                 value={targetPassageId}
                 onChange={(e) => setTargetPassageId(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               >
                 <option value="">Select a passage</option>
                 {passages.map((row) => (
@@ -395,7 +393,7 @@ export default function AdminPassagesPage() {
                 onChange={(e) =>
                   setMediaType(e.target.value as "IMAGE" | "AUDIO")
                 }
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               >
                 <option value="IMAGE">IMAGE</option>
                 <option value="AUDIO">AUDIO</option>
@@ -409,7 +407,7 @@ export default function AdminPassagesPage() {
                 value={mediaUrl}
                 onChange={(e) => setMediaUrl(e.target.value)}
                 placeholder="https://..."
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               />
             </Field>
 
@@ -418,7 +416,7 @@ export default function AdminPassagesPage() {
                 type="file"
                 accept={mediaType === "IMAGE" ? "image/*" : "audio/*"}
                 onChange={(e) => setMediaFile(e.target.files?.[0] || null)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               />
             </Field>
           </div>
@@ -428,7 +426,7 @@ export default function AdminPassagesPage() {
               <input
                 value={mediaLabel}
                 onChange={(e) => setMediaLabel(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               />
             </Field>
 
@@ -440,7 +438,7 @@ export default function AdminPassagesPage() {
                 onChange={(e) =>
                   setMediaOrder(Math.max(1, Number(e.target.value) || 1))
                 }
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               />
             </Field>
           </div>
@@ -448,7 +446,7 @@ export default function AdminPassagesPage() {
           <button
             type="submit"
             disabled={creatingMedia}
-            className="rounded-xl bg-brand-teal px-4 py-2 text-sm font-semibold text-white disabled:opacity-70"
+            className="rounded-lg bg-dash-accent-muted px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-90 disabled:opacity-60"
           >
             {creatingMedia ? "Saving..." : "Add Media"}
           </button>
@@ -456,45 +454,45 @@ export default function AdminPassagesPage() {
       </section>
 
       {error ? (
-        <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+        <div className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
           {error}
         </div>
       ) : null}
 
       {message ? (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
           {message}
         </div>
       ) : null}
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
           Existing Sources
         </h2>
 
         {loading ? (
-          <div className="mt-3 h-40 animate-pulse rounded-xl bg-slate-200" />
+          <div className="mt-3 h-40 animate-pulse rounded-xl bg-dash-border/50" />
         ) : passages.length ? (
           <div className="mt-3 space-y-3">
             {passages.map((row) => (
               <article
                 key={row.id}
-                className="rounded-xl border border-slate-200 p-3"
+                className="rounded-xl border border-dash-border p-3"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="font-semibold text-slate-900">{row.title}</p>
-                  <p className="text-xs text-slate-500">
+                  <p className="font-semibold text-dash-text">{row.title}</p>
+                  <p className="text-xs text-dash-text-muted">
                     {row.module} - Part {row.sectionPart} - {row.difficulty}
                   </p>
                 </div>
-                <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-600">
-                  <span className="rounded bg-slate-100 px-2 py-1">
+                <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-dash-text-muted">
+                  <span className="rounded bg-dash-bg px-2 py-1">
                     ID: {row.id}
                   </span>
                   <button
                     type="button"
                     onClick={() => void copyPassageId(row.id)}
-                    className="rounded border border-slate-300 px-2 py-1 font-semibold text-slate-700"
+                    className="rounded border border-dash-border px-2 py-1 font-semibold text-dash-text"
                   >
                     Copy ID
                   </button>
@@ -503,7 +501,7 @@ export default function AdminPassagesPage() {
                       type="button"
                       onClick={() => void generatePassageAudio(row)}
                       disabled={generatingAudioPassageId === row.id}
-                      className="rounded border border-brand-purple/30 bg-brand-purple/5 px-2 py-1 font-semibold text-brand-purple disabled:opacity-60"
+                      className="rounded border border-dash-accent/30 bg-dash-accent-light px-2 py-1 font-semibold text-dash-accent disabled:opacity-60"
                     >
                       {generatingAudioPassageId === row.id
                         ? "Generating..."
@@ -514,17 +512,17 @@ export default function AdminPassagesPage() {
                   ) : null}
                 </div>
 
-                <p className="mt-1 text-xs text-slate-500">
+                <p className="mt-1 text-xs text-dash-text-muted">
                   Words: {row.wordCount || 0} | Linked Questions:{" "}
                   {row.linkedQuestions} | Media: {row.media.length}
                 </p>
 
                 {row.content ? (
-                  <p className="mt-2 line-clamp-2 text-sm text-slate-700">
+                  <p className="mt-2 line-clamp-2 text-sm text-dash-text">
                     {row.content}
                   </p>
                 ) : (
-                  <p className="mt-2 text-sm text-slate-500">
+                  <p className="mt-2 text-sm text-dash-text-muted">
                     No text content (media-only source).
                   </p>
                 )}
@@ -534,7 +532,7 @@ export default function AdminPassagesPage() {
                     {row.media.map((m) => (
                       <span
                         key={m.id}
-                        className="rounded-full bg-slate-100 px-2 py-1 text-xs text-slate-700"
+                        className="rounded-full bg-dash-bg px-2 py-1 text-xs text-dash-text"
                       >
                         {m.type} #{m.order}
                         {m.label ? ` - ${m.label}` : ""}
@@ -546,7 +544,7 @@ export default function AdminPassagesPage() {
             ))}
           </div>
         ) : (
-          <p className="mt-3 text-sm text-slate-600">
+          <p className="mt-3 text-sm text-dash-text-muted">
             No passages created yet.
           </p>
         )}
@@ -564,7 +562,7 @@ function Field({
 }) {
   return (
     <label className="block text-sm">
-      <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <span className="mb-1 block text-[13px] font-medium text-dash-text">
         {label}
       </span>
       {children}
