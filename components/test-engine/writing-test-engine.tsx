@@ -103,6 +103,7 @@ export default function WritingTestEngine({
   const [persistedFinalBand, setPersistedFinalBand] = useState<number | null>(
     null,
   );
+  const [leavePromptOpen, setLeavePromptOpen] = useState(false);
 
   const task1Words = useMemo(() => countWords(task1Essay), [task1Essay]);
   const task2Words = useMemo(() => countWords(task2Essay), [task2Essay]);
@@ -326,22 +327,43 @@ export default function WritingTestEngine({
     return () => clearInterval(timer);
   }, [remainingSecs, submitting, task1Eval, task2Eval, submitWriting]);
 
+  useEffect(() => {
+    if (task1Eval || task2Eval) return;
+    window.history.pushState({ examGuard: "writing" }, "", window.location.href);
+    const onPopState = () => {
+      if (submitting || task1Eval || task2Eval) return;
+      window.history.pushState({ examGuard: "writing" }, "", window.location.href);
+      setLeavePromptOpen(true);
+    };
+    const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (submitting || task1Eval || task2Eval) return;
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("popstate", onPopState);
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+      window.removeEventListener("beforeunload", onBeforeUnload);
+    };
+  }, [submitting, task1Eval, task2Eval]);
+
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl border border-brand-purple/20 bg-white p-4 shadow-sm">
+    <div className="min-h-screen space-y-5 bg-[#f7f8f5] p-3 text-slate-900 sm:p-4">
+      <section className="sticky top-0 z-20 rounded-[1.5rem] border border-slate-200/80 bg-white/95 p-4 shadow-[0_18px_55px_-38px_rgba(15,23,42,0.7)] backdrop-blur">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-              Writing Timer
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+              IELTS Writing
             </p>
-            <p className="text-sm text-slate-700">
-              Recommended split: Task 1 = 20 mins, Task 2 = 40 mins.
+            <p className="mt-1 text-sm font-semibold text-slate-800">
+              Split prompt and response workspace
             </p>
           </div>
 
           <div
             className={[
-              "inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-lg font-black",
+              "inline-flex items-center gap-2 rounded-2xl border px-4 py-2 text-lg font-black tabular-nums",
               remainingSecs <= 300
                 ? "border-rose-300 bg-rose-50 text-rose-700"
                 : remainingSecs <= 900
@@ -355,7 +377,7 @@ export default function WritingTestEngine({
         </div>
       </section>
 
-      <section className="rounded-2xl border border-brand-purple/20 bg-white p-4 shadow-sm">
+      <section className="rounded-[1.75rem] border border-slate-200/80 bg-white/95 p-5 shadow-[0_20px_70px_-48px_rgba(15,23,42,0.75)]">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-bold text-slate-900">
             Task 1 (Recommended 20 mins)
@@ -373,7 +395,7 @@ export default function WritingTestEngine({
         </div>
 
         <div className="grid gap-4 lg:grid-cols-2">
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+          <div className="max-h-[calc(100vh-230px)] overflow-y-auto rounded-[1.35rem] border border-slate-200 bg-slate-50/80 p-4">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
               Prompt
             </p>
@@ -389,7 +411,7 @@ export default function WritingTestEngine({
             ) : null}
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-white p-4">
+          <div className="max-h-[calc(100vh-230px)] overflow-y-auto rounded-[1.35rem] border border-slate-200 bg-white p-4">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
               Your Response
             </p>
@@ -397,13 +419,13 @@ export default function WritingTestEngine({
               value={task1Essay}
               onChange={(e) => setTask1Essay(e.target.value)}
               placeholder="Write Task 1 response here..."
-              className="mt-2 h-56 w-full resize-none rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+              className="mt-2 h-[calc(100vh-330px)] min-h-72 w-full resize-none rounded-2xl border border-slate-300 bg-slate-50/50 px-4 py-3 text-base leading-7 text-slate-800 outline-none transition focus:border-brand-teal focus:bg-white focus:ring-2 focus:ring-brand-teal/20"
             />
           </div>
         </div>
       </section>
 
-      <section className="rounded-2xl border border-brand-purple/20 bg-white p-4 shadow-sm">
+      <section className="rounded-[1.75rem] border border-slate-200/80 bg-white/95 p-5 shadow-[0_20px_70px_-48px_rgba(15,23,42,0.75)]">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-bold text-slate-900">
             Task 2 (Recommended 40 mins)
@@ -420,30 +442,34 @@ export default function WritingTestEngine({
           </span>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-            Prompt
-          </p>
-          <div className="mt-2 max-h-32 overflow-y-auto rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800">
-            <p className="whitespace-pre-line">{task2Prompt}</p>
+        <div className="grid gap-4 lg:grid-cols-2">
+          <div className="max-h-[calc(100vh-230px)] overflow-y-auto rounded-[1.35rem] border border-slate-200 bg-slate-50/80 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Prompt
+            </p>
+            <div className="mt-2 max-h-56 overflow-y-auto rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm leading-7 text-slate-800">
+              <p className="whitespace-pre-line">{task2Prompt}</p>
+            </div>
+            {task2PromptImage ? (
+              <img
+                src={task2PromptImage}
+                alt="Task 2 visual"
+                className="mt-3 max-h-56 w-full rounded-2xl border border-slate-200 object-contain"
+              />
+            ) : null}
           </div>
-          {task2PromptImage ? (
-            <img
-              src={task2PromptImage}
-              alt="Task 2 visual"
-              className="mt-3 max-h-56 w-full rounded-lg border border-slate-200 object-contain"
-            />
-          ) : null}
 
-          <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
-            Your Response
-          </p>
-          <textarea
-            value={task2Essay}
-            onChange={(e) => setTask2Essay(e.target.value)}
-            placeholder="Write Task 2 response here..."
-            className="mt-2 h-64 w-full resize-none rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
-          />
+          <div className="max-h-[calc(100vh-230px)] overflow-y-auto rounded-[1.35rem] border border-slate-200 bg-white p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Your Response
+            </p>
+            <textarea
+              value={task2Essay}
+              onChange={(e) => setTask2Essay(e.target.value)}
+              placeholder="Write Task 2 response here..."
+              className="mt-2 h-[calc(100vh-330px)] min-h-80 w-full resize-none rounded-2xl border border-slate-300 bg-slate-50/50 px-4 py-3 text-base leading-7 text-slate-800 outline-none transition focus:border-brand-teal focus:bg-white focus:ring-2 focus:ring-brand-teal/20"
+            />
+          </div>
         </div>
       </section>
 
@@ -463,7 +489,7 @@ export default function WritingTestEngine({
             void submitWriting("manual");
           }}
           disabled={submitting}
-          className="rounded-xl bg-gradient-to-r from-brand-purple to-brand-teal px-5 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+          className="rounded-2xl bg-gradient-to-r from-slate-900 to-teal-800 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 disabled:cursor-not-allowed disabled:opacity-70"
         >
           {submitting ? "Evaluating..." : "Submit for AI Evaluation"}
         </button>
@@ -590,6 +616,39 @@ export default function WritingTestEngine({
             ) : null,
           )}
         </section>
+      ) : null}
+
+      {leavePromptOpen ? (
+        <div className="fixed inset-0 z-[70] grid place-items-center bg-slate-950/40 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-[2rem] bg-white p-6 shadow-2xl">
+            <h2 className="text-xl font-semibold text-slate-950">
+              Leave writing exam?
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-slate-600">
+              Leaving now will submit your current writing responses for
+              evaluation. Cancel to remain inside the exam.
+            </p>
+            <div className="mt-6 flex gap-2">
+              <button
+                type="button"
+                onClick={() => setLeavePromptOpen(false)}
+                className="flex-1 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700"
+              >
+                Stay in exam
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setLeavePromptOpen(false);
+                  void submitWriting("manual");
+                }}
+                className="flex-1 rounded-2xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white"
+              >
+                Submit exam
+              </button>
+            </div>
+          </div>
+        </div>
       ) : null}
     </div>
   );

@@ -110,11 +110,21 @@ export default function ExamLibrarySkillPage() {
       }
       const data = (await res.json().catch(() => null)) as {
         user?: {
+          role?: string;
           subscription?: {
             plan?: string;
           } | null;
         } | null;
       } | null;
+      const role = data?.user?.role;
+      if (role === "ADMIN" || role === "SUPER_ADMIN") {
+        router.replace("/dashboard/admin");
+        return "free";
+      }
+      if (role === "INSTRUCTOR") {
+        router.replace("/dashboard/instructor/availability");
+        return "free";
+      }
       const plan = data?.user?.subscription?.plan;
       const resolved = plan === "pro" || plan === "premium" ? plan : "free";
       setUserPlan(resolved);
@@ -310,7 +320,7 @@ export default function ExamLibrarySkillPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 py-8">
+    <div className="mx-auto w-full max-w-7xl bg-[#f7f5ee] px-4 py-8 text-slate-950">
       {toast ? (
         <div className="fixed right-4 top-4 z-60 w-full max-w-sm">
           <div
@@ -329,15 +339,16 @@ export default function ExamLibrarySkillPage() {
         </div>
       ) : null}
 
-      <header className="rounded-3xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-6 text-white shadow-lg">
-        <p className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
+      <header className="relative overflow-hidden rounded-[2.25rem] bg-white p-8 shadow-[0_30px_90px_-60px_rgba(15,23,42,0.7)]">
+        <div className="absolute right-0 top-0 h-56 w-56 rounded-bl-[8rem] bg-emerald-100" />
+        <p className="relative inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-800">
           <Sparkles size={14} />
           IELTS Exam Library
         </p>
-        <h1 className="mt-3 text-3xl font-black">
+        <h1 className="relative mt-5 text-4xl font-display tracking-tight text-slate-950 md:text-5xl">
           Practice {skill[0].toUpperCase() + skill.slice(1)}
         </h1>
-        <p className="mt-2 text-sm text-white/85">
+        <p className="relative mt-3 max-w-2xl text-base leading-7 text-slate-600">
           Select a test, choose your mode, and start your IELTS workflow.
         </p>
       </header>
@@ -350,10 +361,10 @@ export default function ExamLibrarySkillPage() {
               key={tab.value}
               href={tab.href}
               className={[
-                "rounded-xl border px-4 py-2 text-sm font-semibold transition",
+                "rounded-full border px-4 py-2 text-sm font-semibold transition",
                 active
-                  ? "border-brand-purple bg-brand-purple text-white"
-                  : "border-brand-purple/20 bg-white text-slate-700 hover:bg-brand-purple/5",
+                  ? "border-emerald-800 bg-emerald-900 text-white"
+                  : "border-slate-200 bg-white/70 text-slate-700 hover:border-emerald-200 hover:bg-white",
               ].join(" ")}
             >
               {tab.label}
@@ -362,7 +373,7 @@ export default function ExamLibrarySkillPage() {
         })}
       </div>
 
-      <div className="mt-5 rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+      <div className="mt-6 rounded-[1.5rem] bg-white/70 p-3 shadow-sm">
         <label className="relative block">
           <Search
             size={16}
@@ -372,13 +383,13 @@ export default function ExamLibrarySkillPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search tests by title or keyword..."
-            className="w-full rounded-xl border border-slate-300 py-2 pl-9 pr-3 text-sm outline-none transition focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+            className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-10 pr-3 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15"
           />
         </label>
       </div>
 
       {loading ? (
-        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {Array.from({ length: 6 }).map((_, idx) => (
             <div
               key={idx}
@@ -406,10 +417,10 @@ export default function ExamLibrarySkillPage() {
                   void openTest(test);
                 }}
                 disabled={Boolean(startingTestId)}
-                className="rounded-2xl border border-brand-purple/15 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                className="group min-h-56 rounded-[2rem] bg-white p-6 text-left shadow-[0_24px_75px_-58px_rgba(15,23,42,0.75)] transition hover:-translate-y-1 hover:shadow-[0_30px_85px_-55px_rgba(15,23,42,0.85)]"
               >
                 <div className="mb-3 flex items-center justify-between gap-3">
-                  <span className="rounded-full bg-brand-purple/10 px-3 py-1 text-xs font-semibold text-brand-purple">
+                  <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
                     {test.variant}
                   </span>
                   <span
@@ -425,14 +436,14 @@ export default function ExamLibrarySkillPage() {
                   </span>
                 </div>
 
-                <h3 className="text-lg font-semibold text-slate-900">
+                <h3 className="text-xl font-display tracking-tight text-slate-950">
                   {test.title}
                 </h3>
-                <p className="mt-1 text-sm text-slate-600">
+                <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">
                   {test.description || "No description"}
                 </p>
 
-                <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-600">
+                <div className="mt-6 flex flex-wrap items-center gap-2 text-xs text-slate-600">
                   <span className="rounded-lg bg-slate-100 px-2 py-1">
                     {test.difficulty}
                   </span>
@@ -456,8 +467,8 @@ export default function ExamLibrarySkillPage() {
       ) : null}
 
       {showUpgradeModal && activeTest ? (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-slate-900/55 p-4">
-          <div className="w-full max-w-md rounded-2xl border border-brand-purple/20 bg-white p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/35 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-[2rem] bg-white p-6 shadow-2xl">
             <div className="mb-3 flex items-start justify-between gap-3">
               <div>
                 <h3 className="text-xl font-semibold text-slate-900">
@@ -504,8 +515,8 @@ export default function ExamLibrarySkillPage() {
       ) : null}
 
       {showModeModal && activeTest ? (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-slate-900/55 p-4">
-          <div className="w-full max-w-3xl rounded-2xl border border-brand-purple/20 bg-white p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/35 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-3xl rounded-[2rem] bg-white p-6 shadow-2xl">
             <div className="mb-4 flex items-start justify-between gap-3">
               <div>
                 <h3 className="text-xl font-semibold text-slate-900">
@@ -525,7 +536,7 @@ export default function ExamLibrarySkillPage() {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="rounded-xl border border-brand-teal/25 bg-brand-teal/5 p-4">
+              <div className="rounded-[1.5rem] bg-emerald-50/80 p-5">
                 <h4 className="text-base font-semibold text-slate-900">
                   Practice Mode
                 </h4>
@@ -538,7 +549,7 @@ export default function ExamLibrarySkillPage() {
                     (part) => (
                       <label
                         key={part}
-                        className="flex items-center gap-2 text-sm text-slate-700"
+                        className="flex items-center gap-3 rounded-xl bg-white/70 px-3 py-2 text-sm text-slate-700"
                       >
                         <input
                           type="checkbox"
@@ -559,7 +570,7 @@ export default function ExamLibrarySkillPage() {
                   <select
                     value={timeLimit}
                     onChange={(e) => setTimeLimit(e.target.value)}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm"
                   >
                     {TIME_LIMITS.map((t) => (
                       <option key={t} value={t}>
@@ -573,7 +584,7 @@ export default function ExamLibrarySkillPage() {
                   type="button"
                   onClick={() => void startAttempt("practice")}
                   disabled={startingMode === "practice" || parts.length === 0}
-                  className="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-brand-teal px-4 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                  className="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-brand-teal px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {startingMode === "practice"
                     ? "Starting..."
@@ -581,15 +592,15 @@ export default function ExamLibrarySkillPage() {
                 </button>
               </div>
 
-              <div className="rounded-xl border border-brand-purple/25 bg-brand-purple/5 p-4">
-                <h4 className="text-base font-semibold text-slate-900">
+              <div className="rounded-[1.5rem] bg-slate-950 p-5 text-white">
+                <h4 className="text-base font-semibold text-white">
                   Full Simulation
                 </h4>
-                <p className="mt-1 text-sm text-slate-600">
+                <p className="mt-1 text-sm text-white/65">
                   Attempt the complete official-style test with standard timing.
                 </p>
 
-                <ul className="mt-3 space-y-2 text-sm text-slate-700">
+                <ul className="mt-3 space-y-2 text-sm text-white/70">
                   <li>• Full question set</li>
                   <li>• Official time format</li>
                   <li>• End-to-end test experience</li>
@@ -599,7 +610,7 @@ export default function ExamLibrarySkillPage() {
                   type="button"
                   onClick={() => void startAttempt("simulation")}
                   disabled={startingMode === "simulation"}
-                  className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-brand-purple px-4 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                  className="mt-6 inline-flex w-full items-center justify-center rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-slate-950 disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {startingMode === "simulation"
                     ? "Starting..."

@@ -143,40 +143,40 @@ export default function StudentSettingsPage() {
 
   if (loading) {
     return (
-      <div className="grid gap-4">
-        <div className="h-32 animate-pulse rounded-2xl bg-slate-200" />
-        <div className="h-96 animate-pulse rounded-2xl bg-slate-200" />
+      <div className="space-y-4">
+        <div className="h-20 animate-pulse rounded-xl bg-dash-border/50" />
+        <div className="h-80 animate-pulse rounded-xl bg-dash-border/50" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <h1 className="text-2xl font-bold">Profile Settings</h1>
-        <p className="mt-2 text-sm text-white/85">
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-dash-text">Profile Settings</h1>
+        <p className="mt-1 text-sm text-dash-text-muted">
           Manage your IELTS targets, exam profile, and timezone preferences.
         </p>
-      </section>
+      </div>
 
       <section className="grid gap-4 md:grid-cols-3">
-        <article className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm md:col-span-2">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <article className="rounded-xl border border-dash-border bg-dash-surface p-5 md:col-span-2">
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-dash-text-muted">
             Account
           </p>
-          <h2 className="mt-2 text-lg font-bold text-slate-900">{name}</h2>
-          <p className="text-sm text-slate-600">{email}</p>
+          <h2 className="mt-2 text-lg font-semibold text-dash-text">{name}</h2>
+          <p className="text-sm text-dash-text-muted">{email}</p>
         </article>
 
-        <article className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <article className="rounded-xl border border-dash-border bg-dash-surface p-5">
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-dash-text-muted">
             Plan
           </p>
-          <p className="mt-2 text-lg font-bold text-slate-900">
+          <p className="mt-2 text-lg font-semibold text-dash-text">
             {plan.toUpperCase()}
           </p>
-          <p className="text-sm text-slate-600">Status: {planStatus}</p>
-          <p className="text-xs text-slate-500">
+          <p className="text-sm text-dash-text-muted">Status: {planStatus}</p>
+          <p className="text-xs text-dash-text-light">
             {planExpires
               ? `Expires: ${new Date(planExpires).toISOString().slice(0, 10)}`
               : "No expiry set"}
@@ -184,9 +184,9 @@ export default function StudentSettingsPage() {
         </article>
       </section>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-        <form onSubmit={saveSettings} className="space-y-3">
-          <div className="grid gap-3 sm:grid-cols-2">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+        <form onSubmit={saveSettings} className="space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Target Band">
               <input
                 type="number"
@@ -195,7 +195,7 @@ export default function StudentSettingsPage() {
                 step={0.5}
                 value={targetBand}
                 onChange={(e) => setTargetBand(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
               />
             </Field>
 
@@ -207,18 +207,18 @@ export default function StudentSettingsPage() {
                 step={0.5}
                 value={currentBand}
                 onChange={(e) => setCurrentBand(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
               />
             </Field>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Exam Date">
               <input
                 type="date"
                 value={examDate}
                 onChange={(e) => setExamDate(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
               />
             </Field>
 
@@ -226,7 +226,7 @@ export default function StudentSettingsPage() {
               <select
                 value={timezone}
                 onChange={(e) => setTimezone(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
               >
                 {TIMEZONES.map((tz) => (
                   <option key={tz} value={tz}>
@@ -242,7 +242,7 @@ export default function StudentSettingsPage() {
               value={studyProfession}
               onChange={(e) => setStudyProfession(e.target.value)}
               placeholder="e.g. Undergraduate student, Software Engineer"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
             />
           </Field>
 
@@ -252,26 +252,26 @@ export default function StudentSettingsPage() {
               onChange={(e) => setExamReason(e.target.value)}
               rows={3}
               placeholder="e.g. Higher studies, immigration, professional registration"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
             />
           </Field>
 
-          {error ? (
-            <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+          {error && (
+            <div className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
               {error}
             </div>
-          ) : null}
+          )}
 
-          {message ? (
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+          {message && (
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
               {message}
             </div>
-          ) : null}
+          )}
 
           <button
             type="submit"
             disabled={saving}
-            className="rounded-xl bg-brand-purple px-4 py-2 text-sm font-semibold text-white disabled:opacity-70"
+            className="rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted disabled:opacity-60"
           >
             {saving ? "Saving..." : "Save Settings"}
           </button>
@@ -289,8 +289,8 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <label className="block text-sm">
-      <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+    <label className="block">
+      <span className="mb-1.5 block text-[13px] font-medium text-dash-text">
         {label}
       </span>
       {children}

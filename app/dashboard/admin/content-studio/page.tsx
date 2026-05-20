@@ -1,6 +1,15 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
+import {
+  Archive,
+  CheckCircle2,
+  FilePenLine,
+  FileSpreadsheet,
+  ImagePlus,
+  Layers3,
+  Search,
+} from "lucide-react";
 import { parseCsvRows, rowsToObjects } from "@/lib/csv";
 
 type EntityStatus = "DRAFT" | "READY" | "LIVE" | "ARCHIVED";
@@ -56,7 +65,7 @@ const EMPTY_PASSAGE_FORM: PassageCreatePayload = {
 const REQUIRED_CSV_HEADERS = ["question_text", "question_type"];
 
 const STATUS_CHIPS: Array<{ key: EntityStatus; label: string; cls: string }> = [
-  { key: "DRAFT", label: "Draft", cls: "bg-slate-100 text-slate-700" },
+  { key: "DRAFT", label: "Draft", cls: "bg-dash-bg text-dash-text" },
   { key: "READY", label: "Ready", cls: "bg-amber-100 text-amber-700" },
   { key: "LIVE", label: "Live", cls: "bg-emerald-100 text-emerald-700" },
   { key: "ARCHIVED", label: "Archived", cls: "bg-rose-100 text-rose-700" },
@@ -635,48 +644,138 @@ export default function ContentStudioPage() {
   }, [filteredPassageStatuses, historyFilter, historySearch]);
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <h1 className="text-2xl font-bold">Content Studio</h1>
-        <p className="mt-2 text-sm text-white/85">
-          Unified passage + question bank authoring with editable CSV draft
-          flow.
+    <div className="space-y-6">
+      <div>
+        <p className="workspace-section-title">Editorial production</p>
+        <h1 className="mt-4 text-3xl font-semibold text-dash-text md:text-4xl">
+          Content Studio
+        </h1>
+        <p className="mt-3 max-w-3xl text-sm leading-6 text-dash-text-muted md:text-base">
+          A unified authoring floor for passages, media, question-bank CSV
+          drafts, validation, and usage history. The workflow is designed to
+          keep writers, reviewers, and publishers in one calm workspace.
         </p>
+      </div>
+
+      <section className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+        <article className="rounded-3xl border border-dash-border bg-dash-surface p-5">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="workspace-section-title">Current workspace</p>
+              <h2 className="mt-3 text-xl font-semibold text-dash-text">
+                Passage to question-bank pipeline
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-dash-text-muted">
+                Create the source passage, attach audio or imagery, draft CSV
+                question rows, validate, then upload only when the content is
+                ready.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setHistoryOpen(true)}
+              className="inline-flex items-center gap-2 rounded-2xl border border-dash-accent/30 bg-dash-accent-light px-4 py-2 text-sm font-semibold text-dash-accent"
+            >
+              <Search size={15} />
+              Passage history
+            </button>
+          </div>
+
+          <div className="mt-5 grid gap-3 sm:grid-cols-4">
+            {[
+              { label: "Passages", value: passages.length, icon: FilePenLine },
+              { label: "Media sources", value: passages.reduce((sum, passage) => sum + passage.media.length, 0), icon: ImagePlus },
+              { label: "Draft rows", value: csvRows.length, icon: FileSpreadsheet },
+              { label: "Warnings", value: validationSummary.warningRows, icon: Archive },
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.label}
+                  className="rounded-2xl border border-dash-border/80 bg-white/65 p-4"
+                >
+                  <Icon size={17} className="text-dash-accent" />
+                  <p className="mt-3 text-2xl font-semibold text-dash-text">
+                    {item.value}
+                  </p>
+                  <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
+                    {item.label}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </article>
+
+        <article className="rounded-3xl border border-dash-border bg-dash-surface p-5">
+          <p className="workspace-section-title">Flow map</p>
+          <div className="mt-5 space-y-3">
+            {[
+              { title: "Author source", body: "Create reading, listening, or writing passages.", icon: FilePenLine },
+              { title: "Attach media", body: "Bind images or audio to the exact source.", icon: ImagePlus },
+              { title: "Validate CSV", body: "Clean draft rows before they enter the bank.", icon: CheckCircle2 },
+              { title: "Ready for tests", body: "Use mapped content inside Test Studio.", icon: Layers3 },
+            ].map((step, index) => {
+              const Icon = step.icon;
+              return (
+                <div
+                  key={step.title}
+                  className="flex gap-3 rounded-2xl border border-dash-border/80 bg-white/65 p-3"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-dash-accent-light text-dash-accent">
+                    <Icon size={16} />
+                  </span>
+                  <div>
+                    <p className="text-xs font-bold text-dash-accent">
+                      0{index + 1}
+                    </p>
+                    <p className="text-sm font-semibold text-dash-text">
+                      {step.title}
+                    </p>
+                    <p className="mt-1 text-xs leading-5 text-dash-text-muted">
+                      {step.body}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </article>
       </section>
 
       {error ? (
-        <div className="whitespace-pre-line rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+        <div className="whitespace-pre-line rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
           {error}
         </div>
       ) : null}
       {message ? (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
           {message}
         </div>
       ) : null}
       {warning ? (
-        <div className="whitespace-pre-line rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+        <div className="whitespace-pre-line rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
           {warning}
         </div>
       ) : null}
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
             Passage Authoring Workspace
           </h2>
           <button
             type="button"
             onClick={() => setHistoryOpen(true)}
-            className="rounded-lg border border-brand-purple/35 bg-brand-purple/5 px-3 py-1.5 text-xs font-semibold text-brand-purple"
+            className="rounded-lg border border-dash-accent/30 bg-dash-accent-light px-3 py-1.5 text-xs font-semibold text-dash-accent"
           >
             Open Passage History & Usage
           </button>
         </div>
 
         <div className="mt-3 grid gap-4 xl:grid-cols-[1.45fr_1fr]">
-          <article className="rounded-2xl border border-slate-200 p-4">
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+          <article className="rounded-xl border border-dash-border p-4">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
               Passage Authoring
             </h3>
 
@@ -692,7 +791,7 @@ export default function ContentStudioPage() {
                       }))
                     }
                     required
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   />
                 </Field>
                 <Field label="Section / Part">
@@ -707,7 +806,7 @@ export default function ContentStudioPage() {
                         sectionPart: Math.max(1, Number(e.target.value) || 1),
                       }))
                     }
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   />
                 </Field>
               </div>
@@ -721,7 +820,7 @@ export default function ContentStudioPage() {
                         module: e.target.value as ModuleInput,
                       }))
                     }
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   >
                     <option value="READING">READING</option>
                     <option value="LISTENING">LISTENING</option>
@@ -737,7 +836,7 @@ export default function ContentStudioPage() {
                         difficulty: e.target.value as DifficultyInput,
                       }))
                     }
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   >
                     <option value="EASY">EASY</option>
                     <option value="MEDIUM">MEDIUM</option>
@@ -755,7 +854,7 @@ export default function ContentStudioPage() {
                     }))
                   }
                   rows={6}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   placeholder="Paste full content, or keep empty for media-only source."
                 />
               </Field>
@@ -763,15 +862,15 @@ export default function ContentStudioPage() {
               <button
                 type="submit"
                 disabled={creatingPassage}
-                className="rounded-xl bg-brand-purple px-4 py-2 text-sm font-semibold text-white disabled:opacity-70"
+                className="rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted disabled:opacity-60"
               >
                 {creatingPassage ? "Saving..." : "Save Passage"}
               </button>
             </form>
           </article>
 
-          <article className="rounded-2xl border border-slate-200 p-4">
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+          <article className="rounded-xl border border-dash-border p-4">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
               Media Attachments
             </h3>
 
@@ -780,7 +879,7 @@ export default function ContentStudioPage() {
                 <input
                   value={targetPassageId}
                   onChange={(e) => setTargetPassageId(e.target.value)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                 />
               </Field>
 
@@ -788,7 +887,7 @@ export default function ContentStudioPage() {
                 <select
                   value={targetPassageId}
                   onChange={(e) => setTargetPassageId(e.target.value)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                 >
                   <option value="">Select a passage</option>
                   {passages.map((passage) => (
@@ -807,7 +906,7 @@ export default function ContentStudioPage() {
                     onChange={(e) =>
                       setMediaType(e.target.value as "IMAGE" | "AUDIO")
                     }
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   >
                     <option value="IMAGE">IMAGE</option>
                     <option value="AUDIO">AUDIO</option>
@@ -821,7 +920,7 @@ export default function ContentStudioPage() {
                     onChange={(e) =>
                       setMediaOrder(Math.max(1, Number(e.target.value) || 1))
                     }
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   />
                 </Field>
               </div>
@@ -830,30 +929,44 @@ export default function ContentStudioPage() {
                 <input
                   value={mediaUrl}
                   onChange={(e) => setMediaUrl(e.target.value)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   placeholder="https://..."
                 />
               </Field>
-              <Field label="Upload file (optional)">
-                <input
-                  type="file"
-                  accept={mediaType === "IMAGE" ? "image/*" : "audio/*"}
-                  onChange={(e) => setMediaFile(e.target.files?.[0] || null)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                />
-              </Field>
+              <div>
+                <p className="mb-1 block text-[13px] font-medium text-dash-text">
+                  Upload file (optional)
+                </p>
+                <label className="group flex min-h-32 cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-dash-accent/35 bg-dash-accent-light/45 px-4 py-5 text-center transition hover:border-dash-accent hover:bg-dash-accent-light">
+                  <input
+                    type="file"
+                    accept={mediaType === "IMAGE" ? "image/*" : "audio/*"}
+                    onChange={(e) => setMediaFile(e.target.files?.[0] || null)}
+                    className="sr-only"
+                  />
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-dash-accent shadow-sm">
+                    {mediaType === "IMAGE" ? "IMG" : "AUD"}
+                  </span>
+                  <span className="mt-3 text-sm font-semibold text-dash-text">
+                    {mediaFile ? mediaFile.name : "Drop or choose media"}
+                  </span>
+                  <span className="mt-1 text-xs text-dash-text-muted">
+                    {mediaType === "IMAGE" ? "Images for passages or prompts" : "Audio source for listening"}
+                  </span>
+                </label>
+              </div>
               <Field label="Label (optional)">
                 <input
                   value={mediaLabel}
                   onChange={(e) => setMediaLabel(e.target.value)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                 />
               </Field>
 
               <button
                 type="submit"
                 disabled={addingMedia}
-                className="rounded-xl bg-brand-teal px-4 py-2 text-sm font-semibold text-white disabled:opacity-70"
+                className="rounded-lg bg-dash-accent-muted px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-90 disabled:opacity-60"
               >
                 {addingMedia ? "Saving..." : "Attach Media"}
               </button>
@@ -862,14 +975,14 @@ export default function ContentStudioPage() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
         <article>
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
               CSV Draft Editor
             </h2>
             <div className="flex flex-wrap items-center gap-2">
-              <label className="inline-flex items-center gap-1 rounded-lg border border-slate-300 px-2 py-1 text-xs">
+              <label className="inline-flex items-center gap-1 rounded-lg border border-dash-border px-2 py-1 text-xs">
                 <input
                   type="checkbox"
                   checked={allowInvalidOverride}
@@ -880,7 +993,7 @@ export default function ContentStudioPage() {
               <button
                 type="button"
                 onClick={addCsvRow}
-                className="rounded-lg border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700"
+                className="rounded-lg border border-dash-border px-2 py-1 text-xs font-semibold text-dash-text"
               >
                 Add Row
               </button>
@@ -888,7 +1001,7 @@ export default function ContentStudioPage() {
                 type="button"
                 onClick={uploadDraftCsv}
                 disabled={uploading || !csvRows.length}
-                className="rounded-lg bg-brand-teal px-3 py-1 text-xs font-semibold text-white disabled:opacity-60"
+                className="rounded-lg bg-dash-accent-muted px-3 py-1 text-xs font-semibold text-white disabled:opacity-60"
               >
                 {uploading ? "Uploading..." : "Confirm & Upload"}
               </button>
@@ -899,20 +1012,24 @@ export default function ContentStudioPage() {
             <button
               type="button"
               onClick={downloadCsvTemplate}
-              className="rounded-lg border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700"
+              className="rounded-lg border border-dash-border px-2 py-1 text-xs font-semibold text-dash-text"
             >
               Download CSV Template
             </button>
-            <input
-              type="file"
-              accept=".csv,text/csv"
-              onChange={onCsvFileChange}
-            />
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-dash-accent/35 bg-dash-accent-light/50 px-3 py-2 text-xs font-semibold text-dash-accent transition hover:border-dash-accent hover:bg-dash-accent-light">
+              Import CSV Draft
+              <input
+                type="file"
+                accept=".csv,text/csv"
+                onChange={onCsvFileChange}
+                className="sr-only"
+              />
+            </label>
             <FieldInline label="Default passage_id fallback">
               <select
                 value={defaultPassageId}
                 onChange={(e) => setDefaultPassageId(e.target.value)}
-                className="rounded-lg border border-slate-300 px-2 py-1 text-xs"
+                className="rounded-lg border border-dash-border px-2 py-1 text-xs"
               >
                 <option value="">No default</option>
                 {passages.map((passage) => (
@@ -926,7 +1043,7 @@ export default function ContentStudioPage() {
               type="button"
               onClick={applyDefaultPassageToMissingRows}
               disabled={!defaultPassageId || !csvRows.length}
-              className="rounded-lg border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700 disabled:opacity-60"
+              className="rounded-lg border border-dash-border px-2 py-1 text-xs font-semibold text-dash-text disabled:opacity-60"
             >
               Apply default passage_id
             </button>
@@ -937,12 +1054,12 @@ export default function ContentStudioPage() {
               value={csvSearch}
               onChange={(e) => setCsvSearch(e.target.value)}
               placeholder="Search rows..."
-              className="rounded-lg border border-slate-300 px-2 py-1.5 text-xs"
+              className="rounded-lg border border-dash-border px-2 py-1.5 text-xs"
             />
             <select
               value={csvModuleFilter}
               onChange={(e) => setCsvModuleFilter(e.target.value)}
-              className="rounded-lg border border-slate-300 px-2 py-1.5 text-xs"
+              className="rounded-lg border border-dash-border px-2 py-1.5 text-xs"
             >
               <option value="ALL">All modules</option>
               <option value="READING">READING</option>
@@ -952,7 +1069,7 @@ export default function ContentStudioPage() {
             <select
               value={csvSectionFilter}
               onChange={(e) => setCsvSectionFilter(e.target.value)}
-              className="rounded-lg border border-slate-300 px-2 py-1.5 text-xs"
+              className="rounded-lg border border-dash-border px-2 py-1.5 text-xs"
             >
               <option value="ALL">All sections</option>
               {Array.from({ length: 10 }).map((_, idx) => (
@@ -964,7 +1081,7 @@ export default function ContentStudioPage() {
             <select
               value={csvDifficultyFilter}
               onChange={(e) => setCsvDifficultyFilter(e.target.value)}
-              className="rounded-lg border border-slate-300 px-2 py-1.5 text-xs"
+              className="rounded-lg border border-dash-border px-2 py-1.5 text-xs"
             >
               <option value="ALL">All difficulties</option>
               <option value="EASY">EASY</option>
@@ -973,16 +1090,16 @@ export default function ContentStudioPage() {
             </select>
           </div>
 
-          <div className="mt-3 text-xs text-slate-600">
+          <div className="mt-3 text-xs text-dash-text-muted">
             Invalid rows: {validationSummary.invalidRows} - Warning rows:{" "}
             {validationSummary.warningRows}
           </div>
 
-          <div className="mt-3 overflow-hidden rounded-xl border border-slate-200 bg-white">
+          <div className="mt-3 overflow-hidden rounded-xl border border-dash-border bg-dash-surface">
             <div className="max-h-[60vh] overflow-auto">
               {filteredDraft.length ? (
-                <table className="w-max min-w-[1200px] divide-y divide-slate-200 text-xs">
-                  <thead className="sticky top-0 bg-slate-50">
+                <table className="w-max min-w-[1200px] divide-y divide-dash-border text-xs">
+                  <thead className="sticky top-0 bg-dash-bg">
                     <tr>
                       <th className="px-2 py-2 text-left">#</th>
                       <th className="px-2 py-2 text-left">Actions</th>
@@ -997,7 +1114,7 @@ export default function ContentStudioPage() {
                       <th className="px-2 py-2 text-left">Validation</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 bg-white">
+                  <tbody className="divide-y divide-dash-border bg-dash-surface">
                     {filteredDraft.map((entry) => (
                       <tr
                         key={entry.index}
@@ -1017,7 +1134,7 @@ export default function ContentStudioPage() {
                             <button
                               type="button"
                               onClick={() => duplicateCsvRow(entry.index)}
-                              className="rounded border border-slate-300 px-1.5 py-0.5 text-[10px]"
+                              className="rounded border border-dash-border px-1.5 py-0.5 text-[10px]"
                             >
                               Duplicate
                             </button>
@@ -1047,7 +1164,7 @@ export default function ContentStudioPage() {
                                     )
                                   }
                                   placeholder="manual passage_id"
-                                  className="w-[200px] rounded border border-slate-300 px-1.5 py-1 text-[11px]"
+                                  className="w-[200px] rounded border border-dash-border px-1.5 py-1 text-[11px]"
                                 />
                                 <select
                                   value={entry.row[header] || ""}
@@ -1058,7 +1175,7 @@ export default function ContentStudioPage() {
                                       e.target.value,
                                     )
                                   }
-                                  className="w-[200px] rounded border border-slate-300 px-1.5 py-1 text-[11px]"
+                                  className="w-[200px] rounded border border-dash-border px-1.5 py-1 text-[11px]"
                                 >
                                   <option value="">Select passage</option>
                                   {passages.map((passage) => (
@@ -1074,7 +1191,7 @@ export default function ContentStudioPage() {
                                     onClick={() =>
                                       applyPassageSuggestion(entry.index)
                                     }
-                                    className="rounded border border-brand-purple/30 bg-brand-purple/5 px-1.5 py-0.5 text-[10px] text-brand-purple"
+                                    className="rounded border border-dash-accent/30 bg-dash-accent-light px-1.5 py-0.5 text-[10px] text-dash-accent"
                                   >
                                     Use suggestion
                                   </button>
@@ -1090,7 +1207,7 @@ export default function ContentStudioPage() {
                                     e.target.value,
                                   )
                                 }
-                                className="w-[170px] rounded border border-slate-300 px-1.5 py-1 text-[11px]"
+                                className="w-[170px] rounded border border-dash-border px-1.5 py-1 text-[11px]"
                               />
                             )}
                           </td>
@@ -1107,7 +1224,7 @@ export default function ContentStudioPage() {
                             </p>
                           ) : null}
                           {entry.reason ? (
-                            <p className="text-[10px] text-slate-500">
+                            <p className="text-[10px] text-dash-text-muted">
                               {entry.reason}
                             </p>
                           ) : null}
@@ -1117,7 +1234,7 @@ export default function ContentStudioPage() {
                   </tbody>
                 </table>
               ) : (
-                <div className="p-4 text-sm text-slate-500">
+                <div className="p-4 text-sm text-dash-text-muted">
                   Upload CSV and start editing draft rows here before final
                   upload.
                 </div>
@@ -1129,21 +1246,21 @@ export default function ContentStudioPage() {
 
       {historyOpen ? (
         <div className="fixed inset-0 z-40 bg-slate-950/40">
-          <div className="absolute inset-y-0 right-0 w-full max-w-none bg-white shadow-2xl md:w-1/2">
+          <div className="absolute inset-y-0 right-0 w-full max-w-none bg-dash-surface shadow-2xl md:w-1/2">
             <div className="flex h-full flex-col">
-              <div className="flex items-center justify-between border-b border-slate-200 p-4">
+              <div className="flex items-center justify-between border-b border-dash-border p-4">
                 <div>
-                  <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+                  <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
                     Passage History & Usage
                   </h2>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-dash-text-muted">
                     Search passage status, usage, media, and recent linked rows.
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setHistoryOpen(false)}
-                  className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700"
+                  className="rounded-lg border border-dash-border px-3 py-1.5 text-xs font-semibold text-dash-text"
                 >
                   Close sidebar
                 </button>
@@ -1155,14 +1272,14 @@ export default function ContentStudioPage() {
                     value={historySearch}
                     onChange={(e) => setHistorySearch(e.target.value)}
                     placeholder="Search title / id / module..."
-                    className="rounded-lg border border-slate-300 px-2 py-1.5 text-xs"
+                    className="rounded-lg border border-dash-border px-2 py-1.5 text-xs"
                   />
                   <select
                     value={statusFilter}
                     onChange={(e) =>
                       setStatusFilter(e.target.value as EntityStatus | "ALL")
                     }
-                    className="rounded-lg border border-slate-300 px-2 py-1 text-xs"
+                    className="rounded-lg border border-dash-border px-2 py-1 text-xs"
                   >
                     <option value="ALL">All statuses</option>
                     {STATUS_CHIPS.map((status) => (
@@ -1174,7 +1291,7 @@ export default function ContentStudioPage() {
                   <select
                     value={historyFilter}
                     onChange={(e) => setHistoryFilter(e.target.value)}
-                    className="rounded-lg border border-slate-300 px-2 py-1 text-xs"
+                    className="rounded-lg border border-dash-border px-2 py-1 text-xs"
                   >
                     <option value="ALL">All</option>
                     <option value="HAS_MEDIA">Has media</option>
@@ -1184,7 +1301,7 @@ export default function ContentStudioPage() {
 
                 <div className="mt-4 space-y-2">
                   {loading ? (
-                    <div className="h-32 animate-pulse rounded-xl bg-slate-100" />
+                    <div className="h-32 animate-pulse rounded-xl bg-dash-border/50" />
                   ) : historyRows.length ? (
                     historyRows.slice(0, 80).map((passage) => {
                       const statusCls =
@@ -1194,10 +1311,10 @@ export default function ContentStudioPage() {
                       return (
                         <article
                           key={passage.id}
-                          className="rounded-xl border border-slate-200 p-3"
+                          className="rounded-xl border border-dash-border p-3"
                         >
                           <div className="flex items-center justify-between gap-2">
-                            <p className="text-sm font-semibold text-slate-900">
+                            <p className="text-sm font-semibold text-dash-text">
                               {passage.title}
                             </p>
                             <span
@@ -1206,19 +1323,19 @@ export default function ContentStudioPage() {
                               {passage.status}
                             </span>
                           </div>
-                          <p className="mt-1 text-[11px] text-slate-500">
+                          <p className="mt-1 text-[11px] text-dash-text-muted">
                             {passage.module} Part {passage.sectionPart} -
                             Questions: {passage.linkedQuestions} - Media:{" "}
                             {passage.media.length}
                           </p>
-                          <p className="mt-1 text-[11px] text-slate-600">
+                          <p className="mt-1 text-[11px] text-dash-text-muted">
                             ID: {passage.id}
                           </p>
                           <div className="mt-2 flex flex-wrap gap-1">
                             <button
                               type="button"
                               onClick={() => void copyPassageId(passage.id)}
-                              className="rounded border border-slate-300 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700"
+                              className="rounded border border-dash-border px-1.5 py-0.5 text-[10px] font-semibold text-dash-text"
                             >
                               Copy ID
                             </button>
@@ -1227,23 +1344,23 @@ export default function ContentStudioPage() {
                       );
                     })
                   ) : (
-                    <p className="text-sm text-slate-500">No passages found.</p>
+                    <p className="text-sm text-dash-text-muted">No passages found.</p>
                   )}
                 </div>
 
-                <h3 className="mt-5 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <h3 className="mt-5 text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
                   Used-by references (recent questions)
                 </h3>
                 <div className="mt-2 space-y-2">
                   {recentRows.slice(0, 20).map((row) => (
                     <div
                       key={row.id}
-                      className="rounded-lg border border-slate-200 px-2 py-1.5 text-xs"
+                      className="rounded-lg border border-dash-border px-2 py-1.5 text-xs"
                     >
-                      <p className="font-semibold text-slate-800">
+                      <p className="font-semibold text-dash-text">
                         {row.questionText}
                       </p>
-                      <p className="text-slate-500">
+                      <p className="text-dash-text-muted">
                         {row.type} - {row.module}
                         {row.sectionPart ? ` Part ${row.sectionPart}` : ""} -
                         passage: {row.passageId || "unlinked"}
@@ -1269,7 +1386,7 @@ function Field({
 }) {
   return (
     <label className="block text-sm">
-      <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <span className="mb-1 block text-[13px] font-medium text-dash-text">
         {label}
       </span>
       {children}
@@ -1285,7 +1402,7 @@ function FieldInline({
   children: React.ReactNode;
 }) {
   return (
-    <label className="inline-flex items-center gap-2 text-xs text-slate-600">
+    <label className="inline-flex items-center gap-2 text-xs text-dash-text-muted">
       <span>{label}</span>
       {children}
     </label>

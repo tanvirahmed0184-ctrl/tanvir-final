@@ -2,6 +2,14 @@
 
 import Link from "next/link";
 import {
+  CheckCircle2,
+  ClipboardList,
+  FileSpreadsheet,
+  Layers3,
+  Rocket,
+  Target,
+} from "lucide-react";
+import {
   ChangeEvent,
   FormEvent,
   useCallback,
@@ -110,7 +118,7 @@ const DEFAULT_SECTION_TRANSITION_MESSAGE =
   "Now, starting another section, be prepared.";
 
 const STATUS_CLS: Record<StatusChip, string> = {
-  DRAFT: "bg-slate-100 text-slate-700",
+  DRAFT: "bg-dash-bg text-dash-text",
   READY: "bg-amber-100 text-amber-700",
   LIVE: "bg-emerald-100 text-emerald-700",
   ARCHIVED: "bg-rose-100 text-rose-700",
@@ -1166,34 +1174,127 @@ export default function TestStudioPage() {
   }
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <h1 className="text-2xl font-bold">Test Studio</h1>
-        <p className="mt-2 text-sm text-white/85">
-          Shell-first workflow: create shell - select shell - map
-          passages/questions - inspect - publish.
+    <div className="space-y-6">
+      <div>
+        <p className="workspace-section-title">Test publishing suite</p>
+        <h1 className="mt-4 text-3xl font-semibold text-dash-text md:text-4xl">
+          Test Studio
+        </h1>
+        <p className="mt-3 max-w-3xl text-sm leading-6 text-dash-text-muted md:text-base">
+          A shell-first production workflow for IELTS tests: define the shell,
+          map content and question order, run completeness checks, then publish
+          with confidence.
         </p>
-      </section>
+      </div>
 
-      <section className="grid gap-3 md:grid-cols-4">
-        <MetricCard label="Total shells" value={String(coverage.total)} />
-        <MetricCard label="Live tests" value={String(coverage.live)} />
-        <MetricCard label="Archived" value={String(coverage.archived)} />
-        <MetricCard label="Incomplete" value={String(coverage.incomplete)} />
+      <section className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
+        <article className="rounded-3xl border border-dash-border bg-dash-surface p-5">
+          <p className="workspace-section-title">Live workflow</p>
+          <div className="mt-5 grid gap-3">
+            {[
+              {
+                title: "Create shell",
+                body: "Define module, variant, timing, practice mode, and title.",
+                icon: ClipboardList,
+              },
+              {
+                title: "Map sections",
+                body: "Select passages, attach source questions, and order every item.",
+                icon: Layers3,
+              },
+              {
+                title: "Inspect publishability",
+                body: "Check missing passages, question totals, audio, and final settings.",
+                icon: CheckCircle2,
+              },
+            ].map((item, index) => {
+              const Icon = item.icon;
+              const active = step === index + 1;
+              return (
+                <button
+                  key={item.title}
+                  type="button"
+                  onClick={() => setStep((index + 1) as 1 | 2 | 3)}
+                  className={[
+                    "flex w-full items-start gap-4 rounded-2xl border p-4 text-left",
+                    active
+                      ? "border-dash-accent bg-dash-accent-light"
+                      : "border-dash-border/80 bg-white/65",
+                  ].join(" ")}
+                >
+                  <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-dash-accent shadow-sm">
+                    <Icon size={18} />
+                  </span>
+                  <span>
+                    <span className="text-xs font-bold text-dash-accent">
+                      Step 0{index + 1}
+                    </span>
+                    <span className="mt-1 block text-sm font-semibold text-dash-text">
+                      {item.title}
+                    </span>
+                    <span className="mt-1 block text-xs leading-5 text-dash-text-muted">
+                      {item.body}
+                    </span>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </article>
+
+        <article className="rounded-3xl border border-dash-border bg-dash-surface p-5">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="workspace-section-title">Shell coverage</p>
+              <h2 className="mt-3 text-xl font-semibold text-dash-text">
+                Publishing readiness board
+              </h2>
+            </div>
+            <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-dash-accent-light text-dash-accent">
+              <Rocket size={19} />
+            </span>
+          </div>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            {[
+              { label: "Total shells", value: coverage.total, icon: Target },
+              { label: "Live tests", value: coverage.live, icon: Rocket },
+              { label: "Archived", value: coverage.archived, icon: FileSpreadsheet },
+              { label: "Incomplete", value: coverage.incomplete, icon: CheckCircle2 },
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.label}
+                  className="rounded-2xl border border-dash-border/80 bg-white/65 p-4"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
+                      {item.label}
+                    </p>
+                    <Icon size={15} className="text-dash-accent" />
+                  </div>
+                  <p className="mt-3 text-3xl font-semibold text-dash-text">
+                    {item.value}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </article>
       </section>
 
       {error ? (
-        <div className="whitespace-pre-line rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+        <div className="whitespace-pre-line rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
           {error}
         </div>
       ) : null}
       {notice ? (
-        <div className="whitespace-pre-line rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+        <div className="whitespace-pre-line rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
           {notice}
         </div>
       ) : null}
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
         <div className="grid gap-2 md:grid-cols-3">
           {(
             [
@@ -1224,25 +1325,25 @@ export default function TestStudioPage() {
               className={[
                 "rounded-xl border p-3 text-left transition",
                 step === item.id
-                  ? "border-brand-purple bg-brand-purple/5"
-                  : "border-slate-200 hover:bg-slate-50",
+                  ? "border-dash-accent bg-dash-accent-light"
+                  : "border-dash-border hover:bg-dash-bg",
               ].join(" ")}
             >
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <p className="text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
                 {item.label}
               </p>
-              <p className="mt-1 text-sm font-semibold text-slate-900">
+              <p className="mt-1 text-sm font-semibold text-dash-text">
                 {item.title}
               </p>
-              <p className="mt-1 text-xs text-slate-500">{item.subtitle}</p>
+              <p className="mt-1 text-xs text-dash-text-muted">{item.subtitle}</p>
             </button>
           ))}
         </div>
       </section>
 
       {step === 1 ? (
-        <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
             Step 1 - Create Test Shell
           </h2>
           <form
@@ -1256,7 +1357,7 @@ export default function TestStudioPage() {
               }
               placeholder="Test title"
               required
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-dash-border px-3 py-2 text-sm"
             />
             <select
               value={createForm.module}
@@ -1267,7 +1368,7 @@ export default function TestStudioPage() {
                   durationMins: e.target.value === "LISTENING" ? 30 : 60,
                 }))
               }
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-dash-border px-3 py-2 text-sm"
             >
               <option value="READING">READING</option>
               <option value="LISTENING">LISTENING</option>
@@ -1282,7 +1383,7 @@ export default function TestStudioPage() {
                   variant: e.target.value as VariantInput,
                 }))
               }
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-dash-border px-3 py-2 text-sm"
             >
               <option value="ACADEMIC">ACADEMIC</option>
               <option value="GENERAL">GENERAL</option>
@@ -1295,7 +1396,7 @@ export default function TestStudioPage() {
                   difficulty: e.target.value as DifficultyInput,
                 }))
               }
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-dash-border px-3 py-2 text-sm"
             >
               <option value="EASY">EASY</option>
               <option value="MEDIUM">MEDIUM</option>
@@ -1312,7 +1413,7 @@ export default function TestStudioPage() {
                   durationMins: Math.max(5, Number(e.target.value) || 60),
                 }))
               }
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-dash-border px-3 py-2 text-sm"
             />
             <select
               value={String(createForm.isPractice)}
@@ -1322,7 +1423,7 @@ export default function TestStudioPage() {
                   isPractice: e.target.value === "true",
                 }))
               }
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-dash-border px-3 py-2 text-sm"
             >
               <option value="true">Practice</option>
               <option value="false">Simulation</option>
@@ -1337,12 +1438,12 @@ export default function TestStudioPage() {
               }
               rows={2}
               placeholder="Description (optional)"
-              className="md:col-span-2 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="md:col-span-2 rounded-lg border border-dash-border px-3 py-2 text-sm"
             />
             <button
               type="submit"
               disabled={creating}
-              className="rounded-xl bg-brand-purple px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+              className="rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted disabled:opacity-60"
             >
               {creating ? "Creating..." : "Create Shell & Go Step 2"}
             </button>
@@ -1352,15 +1453,15 @@ export default function TestStudioPage() {
 
       {step === 2 ? (
         <section className="grid gap-4 xl:grid-cols-[1.05fr_1.95fr]">
-          <article className="space-y-3 rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+          <article className="space-y-3 rounded-xl border border-dash-border bg-dash-surface p-5">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
               Step 2A - Shell Browser
             </h2>
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search shells..."
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-dash-border px-3 py-2 text-sm"
             />
             <div className="grid gap-2 sm:grid-cols-2">
               <select
@@ -1368,7 +1469,7 @@ export default function TestStudioPage() {
                 onChange={(e) =>
                   setModuleFilter(e.target.value as "ALL" | TestModule)
                 }
-                className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="rounded-lg border border-dash-border px-3 py-2 text-sm"
               >
                 <option value="ALL">All modules</option>
                 <option value="READING">READING</option>
@@ -1381,7 +1482,7 @@ export default function TestStudioPage() {
                 onChange={(e) =>
                   setStatusFilter(e.target.value as "ALL" | StatusChip)
                 }
-                className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="rounded-lg border border-dash-border px-3 py-2 text-sm"
               >
                 <option value="ALL">All statuses</option>
                 <option value="DRAFT">Draft</option>
@@ -1395,13 +1496,13 @@ export default function TestStudioPage() {
               type="button"
               onClick={() => void loadTests(false)}
               disabled={refreshing}
-              className="rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 disabled:opacity-60"
+              className="rounded-lg border border-dash-border px-3 py-2 text-xs font-semibold text-dash-text disabled:opacity-60"
             >
               {refreshing ? "Refreshing..." : "Refresh shells"}
             </button>
 
             {loading ? (
-              <div className="h-44 animate-pulse rounded-xl bg-slate-100" />
+              <div className="h-44 animate-pulse rounded-xl bg-dash-border/50" />
             ) : filteredTests.length ? (
               <div className="max-h-[70vh] space-y-2 overflow-y-auto pr-1">
                 {filteredTests.map((test) => {
@@ -1413,8 +1514,8 @@ export default function TestStudioPage() {
                       className={[
                         "rounded-xl border p-3",
                         selected
-                          ? "border-brand-purple bg-brand-purple/5"
-                          : "border-slate-200",
+                          ? "border-dash-accent bg-dash-accent-light"
+                          : "border-dash-border",
                         newShellId === test.id ? "ring-2 ring-emerald-300" : "",
                       ].join(" ")}
                     >
@@ -1427,20 +1528,20 @@ export default function TestStudioPage() {
                         className="w-full text-left"
                       >
                         <div className="flex items-center justify-between gap-2">
-                          <p className="font-semibold text-slate-900">
+                          <p className="font-semibold text-dash-text">
                             {test.title}
                           </p>
                           <span
-                            className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase ${STATUS_CLS[status]}`}
+                            className={`rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase ${STATUS_CLS[status]}`}
                           >
                             {status}
                           </span>
                         </div>
-                        <p className="mt-1 text-xs text-slate-500">
+                        <p className="mt-1 text-xs text-dash-text-muted">
                           {test.module} - {test.variant} - {test.difficulty} -{" "}
                           {test.durationMins} mins
                         </p>
-                        <p className="mt-1 text-xs text-slate-500">
+                        <p className="mt-1 text-xs text-dash-text-muted">
                           Questions: {test.totalQuestions}
                           {typeof test.attemptsCount === "number"
                             ? ` - Attempts: ${test.attemptsCount}`
@@ -1452,7 +1553,7 @@ export default function TestStudioPage() {
                           type="button"
                           onClick={() => void toggleShellActive(test)}
                           disabled={busyTestId === test.id}
-                          className="rounded-lg border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700 disabled:opacity-60"
+                          className="rounded-lg border border-dash-border px-2 py-1 text-xs font-semibold text-dash-text disabled:opacity-60"
                         >
                           {test.isActive ? "Archive" : "Set Active"}
                         </button>
@@ -1462,7 +1563,7 @@ export default function TestStudioPage() {
                             setSelectedTestId(test.id);
                             setStep(3);
                           }}
-                          className="rounded-lg border border-brand-purple/40 bg-brand-purple/5 px-2 py-1 text-xs font-semibold text-brand-purple"
+                          className="rounded-lg border border-dash-accent/30 bg-dash-accent-light px-2 py-1 text-xs font-semibold text-dash-accent"
                         >
                           Open Inspector
                         </button>
@@ -1472,25 +1573,25 @@ export default function TestStudioPage() {
                 })}
               </div>
             ) : (
-              <p className="text-sm text-slate-500">No shells found.</p>
+              <p className="text-sm text-dash-text-muted">No shells found.</p>
             )}
           </article>
 
-          <article className="space-y-4 rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+          <article className="space-y-4 rounded-xl border border-dash-border bg-dash-surface p-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
                 Step 2B - Mapping Workspace
               </h2>
               <div className="flex flex-wrap gap-2">
                 <Link
                   href="/dashboard/admin/question-map"
-                  className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700"
+                  className="rounded-lg border border-dash-border px-3 py-1.5 text-xs font-semibold text-dash-text"
                 >
                   Legacy map builder
                 </Link>
                 <Link
                   href="/dashboard/admin/resources"
-                  className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700"
+                  className="rounded-lg border border-dash-border px-3 py-1.5 text-xs font-semibold text-dash-text"
                 >
                   Legacy shell manager
                 </Link>
@@ -1498,11 +1599,11 @@ export default function TestStudioPage() {
             </div>
 
             {!selectedTest ? (
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-dash-text-muted">
                 Select a shell from the left to start mapping.
               </p>
             ) : !isMappingModule(selectedTest.module) ? (
-              <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+              <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
                 {selectedTest.module} shell selected. In this studio, integrated
                 passage/question mapping is available for Reading and Listening
                 shells. You can still edit shell metadata from the Step 3
@@ -1510,14 +1611,14 @@ export default function TestStudioPage() {
               </div>
             ) : (
               <>
-                <div className="rounded-xl border border-slate-200 p-3">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <div className="rounded-xl border border-dash-border p-3">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
                     Active Shell
                   </p>
-                  <p className="mt-1 text-base font-semibold text-slate-900">
+                  <p className="mt-1 text-base font-semibold text-dash-text">
                     {selectedTest.title}
                   </p>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-dash-text-muted">
                     {selectedTest.module} - {selectedTest.variant} -{" "}
                     {selectedTest.difficulty}
                     {" - "}
@@ -1551,23 +1652,23 @@ export default function TestStudioPage() {
                     return (
                       <article
                         key={partState.part}
-                        className="rounded-xl border border-slate-200 p-3"
+                        className="rounded-xl border border-dash-border p-3"
                       >
                         <div className="flex flex-wrap items-center justify-between gap-2">
-                          <h3 className="font-semibold text-slate-900">
+                          <h3 className="font-semibold text-dash-text">
                             {selectedTest.module === "READING"
                               ? `Passage ${partState.part}`
                               : `Section ${partState.part}`}
                           </h3>
                           <div className="flex items-center gap-2">
-                            <p className="text-xs text-slate-500">
+                            <p className="text-xs text-dash-text-muted">
                               Selected: {count}/{limit}
                             </p>
                             <button
                               type="button"
                               onClick={() => autoFillPart(partState.part)}
                               disabled={!partState.passageId}
-                              className="rounded border border-slate-300 px-2 py-1 text-[11px] font-semibold text-slate-700 disabled:opacity-50"
+                              className="rounded border border-dash-border px-2 py-1 text-[11px] font-semibold text-dash-text disabled:opacity-50"
                             >
                               Auto-fill
                             </button>
@@ -1583,7 +1684,7 @@ export default function TestStudioPage() {
                                 e.target.value,
                               )
                             }
-                            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                            className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                           >
                             <option value="">
                               Select passage/content source
@@ -1603,7 +1704,7 @@ export default function TestStudioPage() {
                         </div>
 
                         {selectedPassage ? (
-                          <div className="mt-2 rounded-lg bg-slate-50 p-2 text-xs text-slate-600">
+                          <div className="mt-2 rounded-lg bg-dash-bg p-2 text-xs text-dash-text-muted">
                             <p>
                               {selectedPassage.content
                                 ? `${selectedPassage.content.slice(0, 180)}...`
@@ -1626,14 +1727,14 @@ export default function TestStudioPage() {
 
                         {partState.passageId &&
                         loadingPassageQuestions === partState.passageId ? (
-                          <p className="mt-3 text-xs text-slate-500">
+                          <p className="mt-3 text-xs text-dash-text-muted">
                             Loading linked questions...
                           </p>
                         ) : null}
 
                         {linkedQuestions.length ? (
                           <div className="mt-3 grid gap-3 lg:grid-cols-[1.4fr_1fr]">
-                            <div className="max-h-72 space-y-2 overflow-y-auto rounded-lg border border-slate-200 p-2">
+                            <div className="max-h-72 space-y-2 overflow-y-auto rounded-lg border border-dash-border p-2">
                               {linkedQuestions.map((question) => {
                                 const checked =
                                   partState.selectedQuestionIds.includes(
@@ -1643,7 +1744,7 @@ export default function TestStudioPage() {
                                 return (
                                   <label
                                     key={question.id}
-                                    className="block rounded-lg border border-slate-100 p-2 text-sm"
+                                    className="block rounded-lg border border-dash-border p-2 text-sm"
                                   >
                                     <div className="flex items-start gap-2">
                                       <input
@@ -1659,10 +1760,10 @@ export default function TestStudioPage() {
                                         className="mt-1"
                                       />
                                       <div>
-                                        <p className="text-xs font-semibold uppercase tracking-wide text-brand-purple">
+                                        <p className="text-xs font-semibold uppercase tracking-wide text-dash-accent">
                                           {question.type}
                                         </p>
-                                        <p className="text-slate-700">
+                                        <p className="text-dash-text">
                                           {question.questionText}
                                         </p>
                                       </div>
@@ -1672,8 +1773,8 @@ export default function TestStudioPage() {
                               })}
                             </div>
 
-                            <div className="max-h-72 space-y-2 overflow-y-auto rounded-lg border border-slate-200 p-2">
-                              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            <div className="max-h-72 space-y-2 overflow-y-auto rounded-lg border border-dash-border p-2">
+                              <p className="text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
                                 Selected Order
                               </p>
                               {partState.selectedQuestionIds.length ? (
@@ -1684,12 +1785,12 @@ export default function TestStudioPage() {
                                     return (
                                       <div
                                         key={`${questionId}-${index}`}
-                                        className="rounded-lg border border-slate-100 p-2"
+                                        className="rounded-lg border border-dash-border p-2"
                                       >
-                                        <p className="text-[11px] font-semibold text-slate-500">
+                                        <p className="text-[11px] font-semibold text-dash-text-muted">
                                           Q{index + 1}
                                         </p>
-                                        <p className="mt-1 text-xs text-slate-700">
+                                        <p className="mt-1 text-xs text-dash-text">
                                           {question?.questionText || questionId}
                                         </p>
                                         <div className="mt-2 flex gap-1">
@@ -1703,7 +1804,7 @@ export default function TestStudioPage() {
                                               )
                                             }
                                             disabled={index === 0}
-                                            className="rounded border border-slate-300 px-1.5 py-0.5 text-[10px] disabled:opacity-40"
+                                            className="rounded border border-dash-border px-1.5 py-0.5 text-[10px] disabled:opacity-40"
                                           >
                                             Up
                                           </button>
@@ -1722,7 +1823,7 @@ export default function TestStudioPage() {
                                                 .length -
                                                 1
                                             }
-                                            className="rounded border border-slate-300 px-1.5 py-0.5 text-[10px] disabled:opacity-40"
+                                            className="rounded border border-dash-border px-1.5 py-0.5 text-[10px] disabled:opacity-40"
                                           >
                                             Down
                                           </button>
@@ -1732,14 +1833,14 @@ export default function TestStudioPage() {
                                   },
                                 )
                               ) : (
-                                <p className="text-xs text-slate-500">
+                                <p className="text-xs text-dash-text-muted">
                                   No questions selected yet.
                                 </p>
                               )}
                             </div>
                           </div>
                         ) : partState.passageId ? (
-                          <p className="mt-3 text-sm text-slate-500">
+                          <p className="mt-3 text-sm text-dash-text-muted">
                             No linked bank questions found for this passage.
                           </p>
                         ) : null}
@@ -1748,13 +1849,13 @@ export default function TestStudioPage() {
                   })}
                 </div>
 
-                <section className="rounded-xl border border-brand-purple/15 bg-slate-50/50 p-3">
+                <section className="rounded-xl border border-dash-border bg-dash-bg/50 p-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
                       Shell CSV Draft Editor
                     </h3>
                     <div className="flex flex-wrap items-center gap-2">
-                      <label className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs">
+                      <label className="inline-flex items-center gap-1 rounded-lg border border-dash-border bg-dash-surface px-2 py-1 text-xs">
                         <input
                           type="checkbox"
                           checked={allowInvalidOverride}
@@ -1767,7 +1868,7 @@ export default function TestStudioPage() {
                       <button
                         type="button"
                         onClick={addCsvRow}
-                        className="rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs font-semibold text-slate-700"
+                        className="rounded-lg border border-dash-border bg-dash-surface px-2 py-1 text-xs font-semibold text-dash-text"
                       >
                         Add row
                       </button>
@@ -1775,7 +1876,7 @@ export default function TestStudioPage() {
                         type="button"
                         onClick={uploadCsvDraft}
                         disabled={uploadingCsv || !csvRows.length}
-                        className="rounded-lg bg-brand-teal px-3 py-1 text-xs font-semibold text-white disabled:opacity-60"
+                        className="rounded-lg bg-dash-accent-muted px-3 py-1 text-xs font-semibold text-white disabled:opacity-60"
                       >
                         {uploadingCsv ? "Uploading..." : "Confirm & Upload"}
                       </button>
@@ -1786,7 +1887,7 @@ export default function TestStudioPage() {
                     <button
                       type="button"
                       onClick={downloadCsvTemplate}
-                      className="rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs font-semibold text-slate-700"
+                      className="rounded-lg border border-dash-border bg-dash-surface px-2 py-1 text-xs font-semibold text-dash-text"
                     >
                       Download template
                     </button>
@@ -1799,7 +1900,7 @@ export default function TestStudioPage() {
                       <select
                         value={defaultPassageId}
                         onChange={(e) => setDefaultPassageId(e.target.value)}
-                        className="rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs"
+                        className="rounded-lg border border-dash-border bg-dash-surface px-2 py-1 text-xs"
                       >
                         <option value="">No default</option>
                         {mappingPassages.map((passage) => (
@@ -1813,7 +1914,7 @@ export default function TestStudioPage() {
                       type="button"
                       onClick={applyDefaultPassageToMissingRows}
                       disabled={!defaultPassageId || !csvRows.length}
-                      className="rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs font-semibold text-slate-700 disabled:opacity-60"
+                      className="rounded-lg border border-dash-border bg-dash-surface px-2 py-1 text-xs font-semibold text-dash-text disabled:opacity-60"
                     >
                       Apply default passage_id
                     </button>
@@ -1824,12 +1925,12 @@ export default function TestStudioPage() {
                       value={csvSearch}
                       onChange={(e) => setCsvSearch(e.target.value)}
                       placeholder="Search rows..."
-                      className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs"
+                      className="rounded-lg border border-dash-border bg-dash-surface px-2 py-1.5 text-xs"
                     />
                     <select
                       value={csvModuleFilter}
                       onChange={(e) => setCsvModuleFilter(e.target.value)}
-                      className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs"
+                      className="rounded-lg border border-dash-border bg-dash-surface px-2 py-1.5 text-xs"
                     >
                       <option value="ALL">All modules</option>
                       <option value="READING">READING</option>
@@ -1839,7 +1940,7 @@ export default function TestStudioPage() {
                     <select
                       value={csvSectionFilter}
                       onChange={(e) => setCsvSectionFilter(e.target.value)}
-                      className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs"
+                      className="rounded-lg border border-dash-border bg-dash-surface px-2 py-1.5 text-xs"
                     >
                       <option value="ALL">All sections</option>
                       {Array.from({ length: 10 }).map((_, idx) => (
@@ -1851,7 +1952,7 @@ export default function TestStudioPage() {
                     <select
                       value={csvDifficultyFilter}
                       onChange={(e) => setCsvDifficultyFilter(e.target.value)}
-                      className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs"
+                      className="rounded-lg border border-dash-border bg-dash-surface px-2 py-1.5 text-xs"
                     >
                       <option value="ALL">All difficulties</option>
                       <option value="EASY">EASY</option>
@@ -1860,16 +1961,16 @@ export default function TestStudioPage() {
                     </select>
                   </div>
 
-                  <p className="mt-3 text-xs text-slate-600">
+                  <p className="mt-3 text-xs text-dash-text-muted">
                     Invalid rows: {validationSummary.invalidRows} - Warning
                     rows: {validationSummary.warningRows}
                   </p>
 
-                  <div className="mt-3 overflow-hidden rounded-xl border border-slate-200 bg-white">
+                  <div className="mt-3 overflow-hidden rounded-xl border border-dash-border bg-dash-surface">
                     <div className="max-h-[58vh] overflow-auto">
                       {filteredDraft.length ? (
-                        <table className="w-max min-w-[1180px] divide-y divide-slate-200 text-xs">
-                          <thead className="sticky top-0 bg-slate-50">
+                        <table className="w-max min-w-[1180px] divide-y divide-dash-border text-xs">
+                          <thead className="sticky top-0 bg-dash-bg">
                             <tr>
                               <th className="px-2 py-2 text-left">#</th>
                               <th className="px-2 py-2 text-left">Actions</th>
@@ -1886,7 +1987,7 @@ export default function TestStudioPage() {
                               </th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-slate-100">
+                          <tbody className="divide-y divide-dash-border">
                             {filteredDraft.map((entry) => {
                               const linkedPassage = entry.row.passage_id
                                 ? passageById.get(entry.row.passage_id) || null
@@ -1912,7 +2013,7 @@ export default function TestStudioPage() {
                                         onClick={() =>
                                           duplicateCsvRow(entry.index)
                                         }
-                                        className="rounded border border-slate-300 px-1.5 py-0.5 text-[10px]"
+                                        className="rounded border border-dash-border px-1.5 py-0.5 text-[10px]"
                                       >
                                         Duplicate
                                       </button>
@@ -1944,7 +2045,7 @@ export default function TestStudioPage() {
                                               )
                                             }
                                             placeholder="manual passage_id"
-                                            className="w-[220px] rounded border border-slate-300 px-1.5 py-1 text-[11px]"
+                                            className="w-[220px] rounded border border-dash-border px-1.5 py-1 text-[11px]"
                                           />
                                           <select
                                             value={entry.row[header] || ""}
@@ -1955,7 +2056,7 @@ export default function TestStudioPage() {
                                                 e.target.value,
                                               )
                                             }
-                                            className="w-[220px] rounded border border-slate-300 px-1.5 py-1 text-[11px]"
+                                            className="w-[220px] rounded border border-dash-border px-1.5 py-1 text-[11px]"
                                           >
                                             <option value="">
                                               Select passage
@@ -1979,13 +2080,13 @@ export default function TestStudioPage() {
                                                   entry.index,
                                                 )
                                               }
-                                              className="rounded border border-brand-purple/30 bg-brand-purple/5 px-1.5 py-0.5 text-[10px] text-brand-purple"
+                                              className="rounded border border-dash-accent/30 bg-dash-accent-light px-1.5 py-0.5 text-[10px] text-dash-accent"
                                             >
                                               Use suggestion
                                             </button>
                                           ) : null}
                                           {linkedPassage ? (
-                                            <p className="text-[10px] text-slate-500">
+                                            <p className="text-[10px] text-dash-text-muted">
                                               Media:{" "}
                                               {linkedPassage.media.length
                                                 ? linkedPassage.media
@@ -2005,7 +2106,7 @@ export default function TestStudioPage() {
                                               e.target.value,
                                             )
                                           }
-                                          className="w-[180px] rounded border border-slate-300 px-1.5 py-1 text-[11px]"
+                                          className="w-[180px] rounded border border-dash-border px-1.5 py-1 text-[11px]"
                                         />
                                       )}
                                     </td>
@@ -2022,7 +2123,7 @@ export default function TestStudioPage() {
                                       </p>
                                     ) : null}
                                     {entry.reason ? (
-                                      <p className="text-[10px] text-slate-500">
+                                      <p className="text-[10px] text-dash-text-muted">
                                         {entry.reason}
                                       </p>
                                     ) : null}
@@ -2033,7 +2134,7 @@ export default function TestStudioPage() {
                           </tbody>
                         </table>
                       ) : (
-                        <div className="p-4 text-sm text-slate-500">
+                        <div className="p-4 text-sm text-dash-text-muted">
                           Upload CSV and edit rows here for this selected shell
                           before final upload.
                         </div>
@@ -2046,14 +2147,14 @@ export default function TestStudioPage() {
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700"
+                    className="rounded-lg border border-dash-border px-4 py-2 text-sm font-semibold text-dash-text"
                   >
                     Back to Step 1
                   </button>
                   <button
                     type="button"
                     onClick={() => setStep(3)}
-                    className="rounded-xl bg-brand-purple px-4 py-2 text-sm font-semibold text-white"
+                    className="rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted disabled:opacity-60"
                   >
                     Continue to Step 3 Inspector
                   </button>
@@ -2066,14 +2167,14 @@ export default function TestStudioPage() {
 
       {step === 3 ? (
         <section className="grid gap-4 xl:grid-cols-[1.8fr_1fr]">
-          <article className="space-y-4 rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+          <article className="space-y-4 rounded-xl border border-dash-border bg-dash-surface p-5">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
               Step 3 - Review & Publish
             </h2>
 
             {selectedTest ? (
               <>
-                <div className="rounded-xl border border-slate-200 p-3 text-sm">
+                <div className="rounded-xl border border-dash-border p-3 text-sm">
                   <p>
                     <span className="font-semibold">Shell:</span>{" "}
                     {selectedTest.title}
@@ -2146,8 +2247,8 @@ export default function TestStudioPage() {
                       ))}
                     </div>
 
-                    <div className="space-y-2 rounded-xl border border-slate-200 p-3">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    <div className="space-y-2 rounded-xl border border-dash-border p-3">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
                         Mapped Breakdown
                       </p>
                       {parts.map((row) => {
@@ -2162,7 +2263,7 @@ export default function TestStudioPage() {
                         return (
                           <div
                             key={row.part}
-                            className="rounded-lg border border-slate-100 p-2 text-xs text-slate-700"
+                            className="rounded-lg border border-dash-border p-2 text-xs text-dash-text"
                           >
                             <p className="font-semibold">
                               {selectedTest.module === "READING"
@@ -2183,15 +2284,15 @@ export default function TestStudioPage() {
                       })}
                     </div>
 
-                    <div className="space-y-3 rounded-xl border border-slate-200 p-3">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    <div className="space-y-3 rounded-xl border border-dash-border p-3">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
                         Publish Settings
                       </p>
                       <Field label="Published test title">
                         <input
                           value={publishTitle}
                           onChange={(e) => setPublishTitle(e.target.value)}
-                          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                          className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                           placeholder="Mapped test title"
                         />
                       </Field>
@@ -2206,7 +2307,7 @@ export default function TestStudioPage() {
                                   e.target.value as ListeningAudioMode,
                                 )
                               }
-                              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                              className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                             >
                               <option value="sequential_section_audio">
                                 Sequential section audio
@@ -2230,7 +2331,7 @@ export default function TestStudioPage() {
                                   ),
                                 )
                               }
-                              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                              className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                             />
                           </Field>
                           <Field label="Transition message">
@@ -2241,13 +2342,13 @@ export default function TestStudioPage() {
                                   e.target.value,
                                 )
                               }
-                              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                              className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                             />
                           </Field>
                         </div>
                       ) : null}
 
-                      <label className="inline-flex items-center gap-2 text-sm text-slate-700">
+                      <label className="inline-flex items-center gap-2 text-sm text-dash-text">
                         <input
                           type="checkbox"
                           checked={archiveShellAfterPublish}
@@ -2262,7 +2363,7 @@ export default function TestStudioPage() {
                         <button
                           type="button"
                           onClick={() => setStep(2)}
-                          className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700"
+                          className="rounded-lg border border-dash-border px-4 py-2 text-sm font-semibold text-dash-text"
                         >
                           Back to Step 2
                         </button>
@@ -2270,7 +2371,7 @@ export default function TestStudioPage() {
                           type="button"
                           onClick={() => void publishMappedTest()}
                           disabled={publishing || !mappingCompleteness.pass}
-                          className="rounded-xl bg-brand-teal px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+                          className="rounded-lg bg-dash-accent-muted px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-90 disabled:opacity-60"
                         >
                           {publishing ? "Publishing..." : "Publish mapped test"}
                         </button>
@@ -2278,39 +2379,39 @@ export default function TestStudioPage() {
                     </div>
                   </>
                 ) : (
-                  <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+                  <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
                     This shell module does not require passage/question mapping
                     publish here.
                   </div>
                 )}
               </>
             ) : (
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-dash-text-muted">
                 Select a shell in Step 2 to inspect and publish.
               </p>
             )}
           </article>
 
-          <aside className="h-fit space-y-3 rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm xl:sticky xl:top-4">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+          <aside className="h-fit space-y-3 rounded-xl border border-dash-border bg-dash-surface p-5 xl:sticky xl:top-4">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
               Inspector Panel
             </h2>
             {selectedTest ? (
               <>
-                <div className="space-y-2 rounded-xl border border-slate-200 p-3">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <div className="space-y-2 rounded-xl border border-dash-border p-3">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
                     Shell Metadata
                   </p>
                   <input
                     value={editTitle}
                     onChange={(e) => setEditTitle(e.target.value)}
-                    className="w-full rounded-lg border border-slate-300 px-2 py-1.5 text-xs"
+                    className="w-full rounded-lg border border-dash-border px-2 py-1.5 text-xs"
                   />
                   <textarea
                     value={editDescription}
                     onChange={(e) => setEditDescription(e.target.value)}
                     rows={2}
-                    className="w-full rounded-lg border border-slate-300 px-2 py-1.5 text-xs"
+                    className="w-full rounded-lg border border-dash-border px-2 py-1.5 text-xs"
                   />
                   <div className="grid grid-cols-2 gap-2">
                     <select
@@ -2318,7 +2419,7 @@ export default function TestStudioPage() {
                       onChange={(e) =>
                         setEditVariant(e.target.value as VariantInput)
                       }
-                      className="rounded-lg border border-slate-300 px-2 py-1.5 text-xs"
+                      className="rounded-lg border border-dash-border px-2 py-1.5 text-xs"
                     >
                       <option value="ACADEMIC">ACADEMIC</option>
                       <option value="GENERAL">GENERAL</option>
@@ -2328,7 +2429,7 @@ export default function TestStudioPage() {
                       onChange={(e) =>
                         setEditDifficulty(e.target.value as DifficultyInput)
                       }
-                      className="rounded-lg border border-slate-300 px-2 py-1.5 text-xs"
+                      className="rounded-lg border border-dash-border px-2 py-1.5 text-xs"
                     >
                       <option value="EASY">EASY</option>
                       <option value="MEDIUM">MEDIUM</option>
@@ -2344,14 +2445,14 @@ export default function TestStudioPage() {
                           Math.max(5, Number(e.target.value) || 60),
                         )
                       }
-                      className="rounded-lg border border-slate-300 px-2 py-1.5 text-xs"
+                      className="rounded-lg border border-dash-border px-2 py-1.5 text-xs"
                     />
                     <select
                       value={String(editIsPractice)}
                       onChange={(e) =>
                         setEditIsPractice(e.target.value === "true")
                       }
-                      className="rounded-lg border border-slate-300 px-2 py-1.5 text-xs"
+                      className="rounded-lg border border-dash-border px-2 py-1.5 text-xs"
                     >
                       <option value="true">Practice</option>
                       <option value="false">Simulation</option>
@@ -2361,22 +2462,22 @@ export default function TestStudioPage() {
                     type="button"
                     onClick={() => void saveSelectedShell()}
                     disabled={savingShell}
-                    className="w-full rounded-lg bg-brand-purple px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-60"
+                    className="w-full rounded-lg bg-dash-accent px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-60"
                   >
                     {savingShell ? "Saving..." : "Save shell metadata"}
                   </button>
                 </div>
 
-                <div className="space-y-2 rounded-xl border border-slate-200 p-3">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <div className="space-y-2 rounded-xl border border-dash-border p-3">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
                     Completeness Snapshot
                   </p>
                   {detailLoading && !selectedDetail ? (
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-dash-text-muted">
                       Loading shell detail...
                     </p>
                   ) : mappingCompleteness ? (
-                    <ul className="space-y-1 text-xs text-slate-700">
+                    <ul className="space-y-1 text-xs text-dash-text">
                       <li>
                         Sections: {mappingCompleteness.sectionCount}/
                         {mappingCompleteness.expectedSections}
@@ -2395,32 +2496,32 @@ export default function TestStudioPage() {
                       </li>
                     </ul>
                   ) : (
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-dash-text-muted">
                       Mapping metrics shown for Reading/Listening shells.
                     </p>
                   )}
                 </div>
 
-                <div className="space-y-2 rounded-xl border border-slate-200 p-3">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <div className="space-y-2 rounded-xl border border-dash-border p-3">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
                     Shortcuts
                   </p>
                   <div className="grid gap-2">
                     <Link
                       href="/dashboard/admin/question-map"
-                      className="rounded-lg border border-slate-300 px-2 py-1.5 text-xs font-semibold text-slate-700"
+                      className="rounded-lg border border-dash-border px-2 py-1.5 text-xs font-semibold text-dash-text"
                     >
                       Legacy assignment wizard
                     </Link>
                     <Link
                       href={`/dashboard/admin/resources/${selectedTest.id}/questions`}
-                      className="rounded-lg border border-slate-300 px-2 py-1.5 text-xs font-semibold text-slate-700"
+                      className="rounded-lg border border-dash-border px-2 py-1.5 text-xs font-semibold text-dash-text"
                     >
                       Legacy question manager
                     </Link>
                     <Link
                       href="/dashboard/admin/resources"
-                      className="rounded-lg border border-slate-300 px-2 py-1.5 text-xs font-semibold text-slate-700"
+                      className="rounded-lg border border-dash-border px-2 py-1.5 text-xs font-semibold text-dash-text"
                     >
                       Legacy shell list
                     </Link>
@@ -2428,7 +2529,7 @@ export default function TestStudioPage() {
                 </div>
               </>
             ) : (
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-dash-text-muted">
                 Select a shell in Step 2 to inspect full details.
               </p>
             )}
@@ -2437,20 +2538,9 @@ export default function TestStudioPage() {
       ) : null}
 
       {passagesLoading && step === 2 ? (
-        <p className="text-xs text-slate-500">Loading passage library...</p>
+        <p className="text-xs text-dash-text-muted">Loading passage library...</p>
       ) : null}
     </div>
-  );
-}
-
-function MetricCard({ label, value }: { label: string; value: string }) {
-  return (
-    <article className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-        {label}
-      </p>
-      <p className="mt-2 text-2xl font-black text-slate-900">{value}</p>
-    </article>
   );
 }
 
@@ -2463,7 +2553,7 @@ function Field({
 }) {
   return (
     <label className="block text-sm">
-      <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <span className="mb-1 block text-[13px] font-medium text-dash-text">
         {label}
       </span>
       {children}
@@ -2479,7 +2569,7 @@ function FieldInline({
   children: React.ReactNode;
 }) {
   return (
-    <label className="inline-flex items-center gap-2 text-xs text-slate-600">
+    <label className="inline-flex items-center gap-2 text-xs text-dash-text-muted">
       <span>{label}</span>
       {children}
     </label>

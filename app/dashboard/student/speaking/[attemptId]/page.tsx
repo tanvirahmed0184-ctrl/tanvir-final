@@ -124,7 +124,7 @@ export default function SpeakingAttemptResultPage() {
 
   if (missingAttemptId) {
     return (
-      <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+      <div className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
         Attempt ID missing
       </div>
     );
@@ -133,15 +133,15 @@ export default function SpeakingAttemptResultPage() {
   if (loading) {
     return (
       <div className="grid gap-4">
-        <div className="h-40 animate-pulse rounded-2xl bg-slate-200" />
-        <div className="h-72 animate-pulse rounded-2xl bg-slate-200" />
+        <div className="h-40 animate-pulse rounded-xl bg-dash-border/50" />
+        <div className="h-72 animate-pulse rounded-xl bg-dash-border/50" />
       </div>
     );
   }
 
   if (error || !data?.attempt) {
     return (
-      <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+      <div className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
         {error || "Speaking attempt not found"}
       </div>
     );
@@ -159,27 +159,27 @@ export default function SpeakingAttemptResultPage() {
     : [];
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/85">
+    <div className="space-y-6">
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
           AI Speaking Result
         </p>
-        <h1 className="mt-2 text-2xl font-bold">Attempt {data.attempt.id}</h1>
-        <p className="mt-1 text-sm text-white/85">
+        <h1 className="mt-2 text-2xl font-semibold text-dash-text">Attempt {data.attempt.id}</h1>
+        <p className="mt-1 text-sm text-dash-text-muted">
           Status: {data.attempt.status} • Started: {formatDate(data.attempt.startedAt)} • Completed:{" "}
           {formatDate(data.attempt.completedAt)}
         </p>
-      </section>
+      </div>
 
       {evaluation ? (
-        <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+        <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {scoreCards.map(([label, value]) => (
-              <article key={label} className="rounded-xl bg-brand-purple/5 p-3">
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <article key={label} className="rounded-xl bg-dash-accent-light p-3">
+                <p className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
                   {label}
                 </p>
-                <p className="text-2xl font-black text-slate-900">
+                <p className="text-2xl font-bold text-dash-text">
                   {Number(value || 0).toFixed(1)}
                 </p>
               </article>
@@ -206,7 +206,7 @@ export default function SpeakingAttemptResultPage() {
           </div>
 
           {evaluation.examinerSummary ? (
-            <p className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
+            <p className="mt-4 rounded-xl border border-dash-border bg-dash-bg p-3 text-sm text-dash-text">
               {evaluation.examinerSummary}
             </p>
           ) : null}
@@ -218,24 +218,24 @@ export default function SpeakingAttemptResultPage() {
           </div>
         </section>
       ) : (
-        <section className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+        <section className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
           Evaluation is not available yet. Please try again shortly.
         </section>
       )}
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted mb-4">
           Turn-by-Turn Transcript
         </h2>
         <div className="mt-3 space-y-2">
           {(data.turns || []).map((turn) => (
-            <article key={turn.id} className="rounded-xl border border-slate-200 p-3">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <article key={turn.id} className="rounded-xl border border-dash-border p-3">
+              <p className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
                 {partLabel(turn.part)} • Turn {turn.sequence}
               </p>
-              <p className="mt-1 text-xs text-slate-600">Examiner: {turn.examinerPrompt}</p>
-              <p className="mt-2 text-sm text-slate-800">{turn.userTranscript || "-"}</p>
-              <p className="mt-2 text-[11px] text-slate-500">
+              <p className="mt-1 text-xs text-dash-text-muted">Examiner: {turn.examinerPrompt}</p>
+              <p className="mt-2 text-sm text-dash-text">{turn.userTranscript || "-"}</p>
+              <p className="mt-2 text-[11px] text-dash-text-light">
                 Duration: {turn.durationMs ? `${Math.round(turn.durationMs / 1000)}s` : "-"} | Fillers:{" "}
                 {turn.fillerWordCount} | Pauses: {turn.pauseCount} | Speech rate:{" "}
                 {turn.speechRateWpm ?? "-"} wpm
@@ -248,13 +248,13 @@ export default function SpeakingAttemptResultPage() {
       <div className="flex flex-wrap gap-3">
         <Link
           href="/dashboard/student/speaking"
-          className="inline-flex rounded-xl bg-brand-purple px-4 py-2 text-sm font-semibold text-white"
+          className="inline-flex rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted"
         >
           Back to Speaking Hub
         </Link>
         <Link
           href="/dashboard/student/progress"
-          className="inline-flex rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700"
+          className="inline-flex rounded-lg border border-dash-border px-4 py-2 text-sm font-medium text-dash-text transition-colors hover:bg-dash-bg"
         >
           Open Progress
         </Link>
@@ -265,29 +265,29 @@ export default function SpeakingAttemptResultPage() {
 
 function FeedbackCard({ title, text }: { title: string; text: string }) {
   return (
-    <article className="rounded-xl border border-slate-200 p-3">
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+    <article className="rounded-xl border border-dash-border p-3">
+      <p className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
         {title}
       </p>
-      <p className="mt-1 text-sm text-slate-700">{text}</p>
+      <p className="mt-1 text-sm text-dash-text">{text}</p>
     </article>
   );
 }
 
 function StringList({ title, items }: { title: string; items: string[] }) {
   return (
-    <article className="rounded-xl border border-slate-200 p-3">
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+    <article className="rounded-xl border border-dash-border p-3">
+      <p className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
         {title}
       </p>
       {items.length ? (
-        <ul className="mt-1 list-disc space-y-1 pl-4 text-sm text-slate-700">
+        <ul className="mt-1 list-disc space-y-1 pl-4 text-sm text-dash-text">
           {items.map((item, idx) => (
             <li key={`${title}-${idx}`}>{item}</li>
           ))}
         </ul>
       ) : (
-        <p className="mt-1 text-sm text-slate-500">No items yet.</p>
+        <p className="mt-1 text-sm text-dash-text-muted">No items yet.</p>
       )}
     </article>
   );

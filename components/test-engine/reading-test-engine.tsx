@@ -119,22 +119,12 @@ export default function ReadingTestEngine({
   const [secondsLeft, setSecondsLeft] = useState(TEST_DURATION_SECONDS);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<EvalPayload | null>(null);
+  const [leavePromptOpen, setLeavePromptOpen] = useState(false);
 
   const allQuestions = useMemo(
     () => sections.flatMap((section) => section.questions),
     [sections],
   );
-
-  const currentSection = useMemo(() => {
-    if (!activeQuestionId) return sections[0] ?? null;
-    return (
-      sections.find((section) =>
-        section.questions.some((question) => question.id === activeQuestionId),
-      ) ??
-      sections[0] ??
-      null
-    );
-  }, [activeQuestionId, sections]);
 
   useEffect(() => {
     let active = true;
@@ -283,6 +273,27 @@ export default function ReadingTestEngine({
     }
   }
 
+  useEffect(() => {
+    if (loading || result) return;
+    window.history.pushState({ examGuard: "reading" }, "", window.location.href);
+    const onPopState = () => {
+      if (submitting || result) return;
+      window.history.pushState({ examGuard: "reading" }, "", window.location.href);
+      setLeavePromptOpen(true);
+    };
+    const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (submitting || result) return;
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("popstate", onPopState);
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+      window.removeEventListener("beforeunload", onBeforeUnload);
+    };
+  }, [loading, result, submitting]);
+
   if (loading) {
     return (
       <div className="p-6 text-sm text-slate-600">Loading reading test...</div>
@@ -327,12 +338,20 @@ export default function ReadingTestEngine({
   });
 
   return (
-    <div className="space-y-4">
-      <div className="sticky top-16 z-20 rounded-2xl border border-brand-purple/20 bg-white p-3 shadow-sm">
+    <div className="min-h-screen space-y-4 bg-[#f7f8f5] p-3 text-slate-900 sm:p-4">
+      <div className="sticky top-0 z-20 rounded-[1.5rem] border border-slate-200/80 bg-white/95 p-3 shadow-[0_18px_55px_-38px_rgba(15,23,42,0.7)] backdrop-blur">
         <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+              IELTS Reading
+            </p>
+            <p className="mt-1 text-sm font-semibold text-slate-800">
+              Split passage workspace
+            </p>
+          </div>
           <div
             className={[
-              "rounded-xl px-3 py-2 text-sm font-semibold",
+              "rounded-2xl px-4 py-2 text-sm font-semibold tabular-nums",
               secondsLeft < 300
                 ? "bg-rose-100 text-rose-700"
                 : "bg-slate-100 text-slate-700",
@@ -341,14 +360,14 @@ export default function ReadingTestEngine({
             Time Left: {formatTime(secondsLeft)}
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="hidden flex-wrap gap-2 md:flex">
             {navItems.slice(0, 12).map((item) => (
               <button
                 key={item.id}
                 type="button"
                 onClick={() => jumpToQuestion(item.id)}
                 className={[
-                  "h-8 w-8 rounded-full text-xs font-bold",
+                  "h-8 w-8 rounded-full text-xs font-bold transition hover:scale-105",
                   item.answered
                     ? "bg-emerald-500 text-white"
                     : item.visited
@@ -365,7 +384,7 @@ export default function ReadingTestEngine({
             type="button"
             onClick={handleSubmit}
             disabled={submitting}
-            className="rounded-xl bg-gradient-to-r from-brand-purple to-brand-teal px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+            className="rounded-2xl bg-gradient-to-r from-slate-900 to-teal-800 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {submitting ? "Submitting..." : "Submit"}
           </button>
@@ -378,42 +397,70 @@ export default function ReadingTestEngine({
         </div>
       ) : null}
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <section className="h-[70vh] overflow-y-auto rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-          <h2 className="mb-3 text-lg font-bold text-slate-900">
-            {currentSection?.title || "Reading Passage"}
-          </h2>
+      <div className="grid gap-4 lg:grid-cols-[0.92fr_1.08fr]">
+        <section className="h-[calc(100vh-150px)] overflow-y-auto rounded-[1.75rem] border border-slate-200/80 bg-white/95 p-5 shadow-[0_20px_70px_-48px_rgba(15,23,42,0.75)]">
+          <div className="sticky -top-5 z-10 -mx-5 mb-4 border-b border-slate-100 bg-white/95 px-5 py-4 backdrop-blur">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+              Reading document
+            </p>
+            <h2 className="mt-1 text-xl font-display tracking-tight text-slate-950">
+              Passages 1-3
+            </h2>
+          </div>
 
-          {currentSection?.media?.filter((item) => item.type === "IMAGE").length ? (
-            <div className="mb-4 grid gap-3">
-              {currentSection.media
-                ?.filter((item) => item.type === "IMAGE")
-                .map((image) => (
-                  <figure key={image.id} className="rounded-xl border border-slate-200 p-2">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={image.url}
-                      alt={image.label || "Passage visual"}
-                      className="max-h-80 w-full rounded-lg object-contain"
-                      loading="lazy"
-                    />
-                    {image.label ? (
-                      <figcaption className="mt-2 text-xs text-slate-500">
-                        {image.label}
-                      </figcaption>
-                    ) : null}
-                  </figure>
-                ))}
-            </div>
-          ) : null}
+          <div className="space-y-10">
+            {sections.map((section, index) => (
+              <article
+                key={section.id}
+                className="border-b border-slate-100 pb-10 last:border-b-0 last:pb-0"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-teal-dark">
+                  Passage {index + 1}
+                </p>
+                <h3 className="mt-2 text-2xl font-display tracking-tight text-slate-950">
+                  {section.title}
+                </h3>
 
-          <p className="whitespace-pre-line text-sm leading-7 text-slate-700">
-            {currentSection?.passage ||
-              "Passage content will appear here for the selected section."}
-          </p>
+                {section.media?.filter((item) => item.type === "IMAGE").length ? (
+                  <div className="my-5 grid gap-3">
+                    {section.media
+                      ?.filter((item) => item.type === "IMAGE")
+                      .map((image) => (
+                        <figure key={image.id} className="rounded-2xl bg-slate-50 p-3">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={image.url}
+                            alt={image.label || `${section.title} visual`}
+                            className="max-h-96 w-full rounded-xl object-contain"
+                            loading="lazy"
+                          />
+                          {image.label ? (
+                            <figcaption className="mt-2 text-xs text-slate-500">
+                              {image.label}
+                            </figcaption>
+                          ) : null}
+                        </figure>
+                      ))}
+                  </div>
+                ) : null}
+
+                <div className="mt-5 whitespace-pre-line text-[15px] leading-8 text-slate-700">
+                  {section.passage || "No passage text available."}
+                </div>
+              </article>
+            ))}
+          </div>
         </section>
 
-        <section className="h-[70vh] space-y-4 overflow-y-auto rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+        <section className="h-[calc(100vh-150px)] space-y-4 overflow-y-auto rounded-[1.75rem] border border-slate-200/80 bg-white/95 p-5 shadow-[0_20px_70px_-48px_rgba(15,23,42,0.75)]">
+          <div className="sticky -top-5 z-10 -mx-5 mb-4 border-b border-slate-100 bg-white/95 px-5 py-4 backdrop-blur">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+              Questions
+            </p>
+            <h2 className="mt-1 text-xl font-display tracking-tight text-slate-950">
+              Answer workspace
+            </h2>
+          </div>
           {sections.map((section) => (
             <div key={section.id} className="space-y-3">
               <h3 className="text-base font-semibold text-slate-900">
@@ -529,39 +576,6 @@ export default function ReadingTestEngine({
         </section>
       </div>
 
-      <section className="space-y-4 rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-        <h2 className="text-base font-semibold text-slate-900">
-          All Reading Passages
-        </h2>
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {sections.map((section) => (
-            <article key={`passage-preview-${section.id}`} className="rounded-xl border border-slate-200 p-3">
-              <h3 className="text-sm font-semibold text-slate-900">{section.title}</h3>
-              {section.media?.filter((item) => item.type === "IMAGE").length ? (
-                <div className="mt-2 grid gap-2">
-                  {section.media
-                    ?.filter((item) => item.type === "IMAGE")
-                    .map((image) => (
-                      <figure key={image.id} className="rounded-lg border border-slate-200 p-1.5">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={image.url}
-                          alt={image.label || `${section.title} visual`}
-                          className="max-h-44 w-full rounded object-contain"
-                          loading="lazy"
-                        />
-                      </figure>
-                    ))}
-                </div>
-              ) : null}
-              <p className="mt-2 line-clamp-8 whitespace-pre-line text-xs leading-6 text-slate-700">
-                {section.passage || "No passage text available."}
-              </p>
-            </article>
-          ))}
-        </div>
-      </section>
-
       <QuestionNavPanel
         items={navItems}
         activeQuestionId={activeQuestionId}
@@ -578,6 +592,39 @@ export default function ReadingTestEngine({
           View Progress Dashboard
         </button>
       </div>
+
+      {leavePromptOpen ? (
+        <div className="fixed inset-0 z-[70] grid place-items-center bg-slate-950/40 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-[2rem] bg-white p-6 shadow-2xl">
+            <h2 className="text-xl font-semibold text-slate-950">
+              Leave reading exam?
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-slate-600">
+              Leaving now will submit your current answers and run evaluation.
+              Cancel to stay inside the exam.
+            </p>
+            <div className="mt-6 flex gap-2">
+              <button
+                type="button"
+                onClick={() => setLeavePromptOpen(false)}
+                className="flex-1 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700"
+              >
+                Stay in exam
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setLeavePromptOpen(false);
+                  void handleSubmit();
+                }}
+                className="flex-1 rounded-2xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white"
+              >
+                Submit exam
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

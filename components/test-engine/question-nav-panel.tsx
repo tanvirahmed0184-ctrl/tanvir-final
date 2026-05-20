@@ -1,4 +1,5 @@
-import { Flag } from "lucide-react";
+import { useState } from "react";
+import { Flag, Grid3X3, X } from "lucide-react";
 
 type QuestionNavItem = {
   id: string;
@@ -44,21 +45,59 @@ export default function QuestionNavPanel({
   onToggleReview,
   className,
 }: QuestionNavPanelProps) {
+  const [collapsed, setCollapsed] = useState(true);
+  const answeredCount = items.filter((item) => item.answered).length;
+
+  if (collapsed) {
+    return (
+      <button
+        type="button"
+        onClick={() => setCollapsed(false)}
+        className="fixed right-4 top-1/2 z-50 inline-flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white/95 text-slate-800 shadow-2xl shadow-slate-900/15 backdrop-blur transition hover:scale-105 hover:border-brand-teal/30 hover:text-brand-teal-dark"
+        aria-label="Open answer navigator"
+      >
+        <Grid3X3 size={18} />
+        <span className="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-teal px-1 text-[10px] font-bold text-white">
+          {answeredCount}
+        </span>
+      </button>
+    );
+  }
+
   return (
-    <aside
-      className={[
-        "rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm",
-        className || "",
-      ].join(" ")}
-    >
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-700">
-          Question Navigation
-        </h3>
-        <p className="text-xs text-slate-500">{items.length} questions</p>
+    <>
+      <button
+        type="button"
+        className="fixed inset-0 z-40 bg-slate-950/10 backdrop-blur-[1px]"
+        onClick={() => setCollapsed(true)}
+        aria-label="Close answer navigator backdrop"
+      />
+      <aside
+        className={[
+          "fixed right-4 top-24 z-50 max-h-[calc(100vh-7rem)] w-[min(22rem,calc(100vw-2rem))] overflow-y-auto rounded-[1.5rem] border border-slate-200/80 bg-white/95 p-4 shadow-2xl shadow-slate-900/15 backdrop-blur-xl transition-all",
+          className || "",
+        ].join(" ")}
+      >
+      <div className="mb-4 flex items-center justify-between gap-2">
+        <div>
+          <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-700">
+            Answer Map
+          </h3>
+          <p className="mt-1 text-xs text-slate-500">
+            {answeredCount}/{items.length} answered
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setCollapsed(true)}
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-600 transition hover:border-brand-teal/30 hover:text-brand-teal-dark"
+          aria-label="Collapse answer navigator"
+        >
+          <X size={16} />
+        </button>
       </div>
 
-      <div className="grid grid-cols-5 gap-2 sm:grid-cols-6 md:grid-cols-5 lg:grid-cols-4">
+      <div className="grid grid-cols-5 gap-2 sm:grid-cols-6">
         {items.map((item) => {
           const active = item.id === activeQuestionId;
           return (
@@ -117,5 +156,6 @@ export default function QuestionNavPanel({
         </div>
       </div>
     </aside>
+    </>
   );
 }

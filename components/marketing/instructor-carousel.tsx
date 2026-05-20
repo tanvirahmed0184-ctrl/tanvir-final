@@ -5,11 +5,11 @@ import { useEffect, useMemo, useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
-  Expand,
-  Eye,
-  Heart,
-  MessageCircle,
-  Star,
+  ArrowUpRight,
+  BadgeCheck,
+  BookOpenCheck,
+  CalendarClock,
+  Sparkles,
 } from "lucide-react";
 
 type InstructorCard = {
@@ -23,6 +23,7 @@ type InstructorCard = {
   views: number;
   avatarUrl: string | null;
   experienceYears: number | null;
+  specialties?: string[];
 };
 
 function getVisibleCount(width: number): number {
@@ -109,11 +110,11 @@ export default function InstructorCarousel() {
 
   if (loading) {
     return (
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
         {Array.from({ length: 4 }).map((_, idx) => (
           <div
             key={idx}
-            className="h-[280px] animate-pulse rounded-2xl bg-slate-200"
+            className="h-[360px] animate-pulse rounded-[2rem] bg-slate-100"
           />
         ))}
       </div>
@@ -138,106 +139,135 @@ export default function InstructorCarousel() {
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-end gap-2">
-        <button
-          type="button"
-          onClick={goPrev}
-          aria-label="Previous instructors"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition hover:bg-slate-50"
-        >
-          <ChevronLeft size={16} />
-        </button>
-        <button
-          type="button"
-          onClick={goNext}
-          aria-label="Next instructors"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition hover:bg-slate-50"
-        >
-          <ChevronRight size={16} />
-        </button>
+      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+        <p className="max-w-xl text-sm leading-6 text-slate-500">
+          Live instructor profiles are pulled from your platform data. New
+          published instructors appear here automatically.
+        </p>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={goPrev}
+            aria-label="Previous instructors"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-brand-teal/30 hover:bg-slate-50"
+          >
+            <ChevronLeft size={17} />
+          </button>
+          <button
+            type="button"
+            onClick={goNext}
+            aria-label="Next instructors"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-brand-teal/30 hover:bg-slate-50"
+          >
+            <ChevronRight size={17} />
+          </button>
+        </div>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
         {visible.map((expert, index) => {
-          const emphasizeMiddle =
-            realVisibleCount >= 4
-              ? index === 1 || index === 2
-              : realVisibleCount === 3
-                ? index === 1
-                : realVisibleCount === 2
-                  ? index === 1
-                  : true;
+          const initials = expert.name
+            .split(" ")
+            .map((part) => part[0])
+            .join("")
+            .slice(0, 2);
+          const tags =
+            expert.specialties && expert.specialties.length
+              ? expert.specialties.slice(0, 3)
+              : [expert.role, "IELTS Coaching"].slice(0, 2);
 
           return (
             <Link
               key={`${expert.id}-${index}`}
               href={`/instructors/${expert.id}`}
-              className={[
-                "group block transform transition-all duration-500",
-                emphasizeMiddle
-                  ? "scale-100 xl:scale-[1.07]"
-                  : "scale-95 opacity-90",
-              ].join(" ")}
+              className="group block"
             >
-              <div className="relative mx-auto w-full max-w-[260px]">
-                <div className="pointer-events-none absolute -left-0 top-6 h-[204px] w-full rounded-2xl bg-slate-900/60 transition-all duration-300 group-hover:-left-2 group-hover:top-3 group-hover:scale-[1.03]" />
-
-                <article className="relative rounded-2xl bg-[#252525] p-4 text-white shadow-xl">
-                  <div className="mb-2 flex justify-end opacity-100 transition duration-300 md:opacity-0 md:group-hover:opacity-100">
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-slate-500 text-slate-100 shadow-md transition group-hover:scale-110 group-hover:bg-slate-400">
-                      <Expand size={14} />
-                    </span>
+              <article className="relative flex min-h-[360px] flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-4 shadow-sm transition-all duration-500 hover:-translate-y-1 hover:border-brand-teal/30 hover:shadow-2xl hover:shadow-slate-200/70">
+                <div className="relative overflow-hidden rounded-[1.5rem] bg-slate-100">
+                  <div
+                    className="h-48 bg-cover bg-center transition duration-700 group-hover:scale-105"
+                    style={
+                      expert.avatarUrl
+                        ? { backgroundImage: `url(${expert.avatarUrl})` }
+                        : undefined
+                    }
+                  >
+                    {!expert.avatarUrl ? (
+                      <div className="flex h-full items-center justify-center bg-gradient-to-br from-slate-100 via-teal-50 to-purple-50 text-3xl font-display text-slate-500">
+                        {initials}
+                      </div>
+                    ) : null}
                   </div>
-
-                  <div className="flex min-h-[92px] items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-teal-600/35 via-cyan-600/30 to-emerald-600/35 p-3">
-                    <label className="relative inline-block h-[52px] w-[20px]">
-                      <input
-                        type="checkbox"
-                        className="peer sr-only"
-                        defaultChecked={expert.likes > 20}
-                        readOnly
-                        aria-label={`${expert.name} highlight status`}
-                      />
-                      <span className="absolute inset-0 rounded-md bg-zinc-300 transition peer-checked:bg-lime-500" />
-                      <span className="absolute -left-[10px] top-1 h-2 w-10 rounded-md bg-white shadow-[0_6px_7px_rgba(0,0,0,0.3)] transition duration-300 peer-checked:translate-y-9" />
-                    </label>
+                  <div className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-semibold text-teal-800 shadow-sm backdrop-blur">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    Available
                   </div>
+                  <div className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-slate-600 shadow-sm backdrop-blur transition group-hover:text-brand-purple">
+                    <ArrowUpRight size={15} />
+                  </div>
+                </div>
 
-                  <div className="mt-4 flex items-center gap-3">
-                    <div className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-teal-300/40 bg-teal-400/20 text-sm font-bold text-teal-100">
-                      {expert.name
-                        .split(" ")
-                        .map((part) => part[0])
-                        .join("")}
-                    </div>
+                <div className="flex flex-1 flex-col p-2 pt-5">
+                  <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <h3 className="truncate text-sm font-semibold text-white">
+                      <h3 className="truncate text-lg font-display leading-tight tracking-tight text-slate-950">
                         {expert.name}
                       </h3>
-                      <p className="truncate text-xs text-white/70">
+                      <p className="mt-1 line-clamp-2 text-sm leading-5 text-slate-500">
                         {expert.role}
                       </p>
                     </div>
+                    <BadgeCheck
+                      size={19}
+                      className="mt-0.5 shrink-0 text-brand-teal-dark"
+                    />
                   </div>
-                </article>
-              </div>
 
-              <div className="mx-auto mt-5 flex max-w-[260px] items-center justify-between gap-2">
-                <span className="inline-flex translate-y-0 items-center gap-1 rounded-md bg-slate-700 px-2.5 py-1 text-xs text-white opacity-100 transition duration-200 md:translate-y-2 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100">
-                  <Heart size={12} /> {expert.likes}
-                </span>
-                <span className="inline-flex translate-y-0 items-center gap-1 rounded-md bg-slate-700 px-2.5 py-1 text-xs text-white opacity-100 transition duration-200 md:translate-y-2 md:opacity-0 md:delay-75 md:group-hover:translate-y-0 md:group-hover:opacity-100">
-                  <MessageCircle size={12} /> {expert.comments}
-                </span>
-                <span className="inline-flex translate-y-0 items-center gap-1 rounded-md bg-slate-700 px-2.5 py-1 text-xs text-white opacity-100 transition duration-200 md:translate-y-2 md:opacity-0 md:delay-100 md:group-hover:translate-y-0 md:group-hover:opacity-100">
-                  <Eye size={12} /> {expert.views}
-                </span>
-              </div>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full bg-slate-100 px-3 py-1 text-[11px] font-semibold text-slate-600"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
 
-              <p className="mx-auto mt-3 inline-flex items-center gap-1 rounded-full bg-brand-teal/10 px-3 py-1 text-xs font-semibold text-brand-teal-dark">
-                <Star size={12} />
-                {expert.score}
-              </p>
+                  <div className="mt-auto grid grid-cols-2 gap-2 pt-5">
+                    <div className="rounded-2xl bg-slate-50 p-3">
+                      <p className="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                        <BookOpenCheck size={12} />
+                        Rating
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-slate-900">
+                        {expert.score}
+                      </p>
+                    </div>
+                    <div className="rounded-2xl bg-slate-50 p-3">
+                      <p className="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                        <CalendarClock size={12} />
+                        Experience
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-slate-900">
+                        {expert.experienceYears != null
+                          ? `${expert.experienceYears}+ years`
+                          : "Verified"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-brand-teal-dark">
+                      <Sparkles size={13} />
+                      View profile
+                    </span>
+                    <span className="text-[11px] font-medium text-slate-400">
+                      {expert.views} views
+                    </span>
+                  </div>
+                </div>
+              </article>
             </Link>
           );
         })}

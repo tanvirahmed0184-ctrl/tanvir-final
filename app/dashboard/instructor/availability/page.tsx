@@ -131,54 +131,54 @@ export default function InstructorAvailabilityPage() {
   }
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <h1 className="text-2xl font-bold">Availability Manager</h1>
-        <p className="mt-2 text-sm text-white/85">
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-dash-text">Availability Manager</h1>
+        <p className="mt-1 text-sm text-dash-text-muted">
           Set your upcoming speaking session slots for students to book.
         </p>
-      </section>
+      </div>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted mb-4">
           Add New Slot
         </h2>
 
-        <form onSubmit={createSlot} className="mt-3 grid gap-3 md:grid-cols-2">
-          <label className="block text-sm">
-            <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <form onSubmit={createSlot} className="grid gap-4 md:grid-cols-2">
+          <label className="block">
+            <span className="mb-1.5 block text-[13px] font-medium text-dash-text">
               Start Time
             </span>
             <input
               type="datetime-local"
               value={startTime}
               onChange={(e) => setStartTime(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+              className="w-full rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
               required
             />
           </label>
 
-          <label className="block text-sm">
-            <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <label className="block">
+            <span className="mb-1.5 block text-[13px] font-medium text-dash-text">
               End Time
             </span>
             <input
               type="datetime-local"
               value={endTime}
               onChange={(e) => setEndTime(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+              className="w-full rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
               required
             />
           </label>
 
-          <label className="block text-sm md:col-span-2">
-            <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <label className="block md:col-span-2">
+            <span className="mb-1.5 block text-[13px] font-medium text-dash-text">
               Timezone
             </span>
             <select
               value={timezone}
               onChange={(e) => setTimezone(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+              className="w-full rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
             >
               {TIMEZONES.map((tz) => (
                 <option key={tz} value={tz}>
@@ -192,56 +192,60 @@ export default function InstructorAvailabilityPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="rounded-xl bg-brand-purple px-4 py-2 text-sm font-semibold text-white disabled:opacity-70"
+              className="rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted disabled:opacity-60"
             >
               {submitting ? "Saving..." : "Create Availability Slot"}
             </button>
           </div>
         </form>
 
-        {error ? (
-          <div className="mt-3 rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+        {error && (
+          <div className="mt-4 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
             {error}
           </div>
-        ) : null}
+        )}
 
-        {message ? (
-          <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+        {message && (
+          <div className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
             {message}
           </div>
-        ) : null}
+        )}
       </section>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted mb-4">
           Upcoming Open Slots
         </h2>
 
         {loading ? (
-          <div className="mt-3 h-40 animate-pulse rounded-xl bg-slate-200" />
+          <div className="space-y-2">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="h-10 animate-pulse rounded-lg bg-dash-border/50" />
+            ))}
+          </div>
         ) : upcoming.length ? (
-          <div className="mt-3 overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200 text-sm">
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-sm">
               <thead>
-                <tr>
-                  <th className="px-3 py-2 text-left">Start</th>
-                  <th className="px-3 py-2 text-left">End</th>
-                  <th className="px-3 py-2 text-left">Timezone</th>
-                  <th className="px-3 py-2 text-left">Instructor</th>
+                <tr className="border-b border-dash-border">
+                  <th className="px-3 py-2.5 text-left text-xs font-medium text-dash-text-muted">Start</th>
+                  <th className="px-3 py-2.5 text-left text-xs font-medium text-dash-text-muted">End</th>
+                  <th className="px-3 py-2.5 text-left text-xs font-medium text-dash-text-muted">Timezone</th>
+                  <th className="px-3 py-2.5 text-left text-xs font-medium text-dash-text-muted">Instructor</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-dash-border">
                 {upcoming.map((slot) => (
-                  <tr key={slot.id}>
-                    <td className="px-3 py-2">
+                  <tr key={slot.id} className="hover:bg-dash-bg transition-colors">
+                    <td className="px-3 py-2.5 text-dash-text">
                       {formatSlot(slot.startTime, timezone)}
                     </td>
-                    <td className="px-3 py-2">
+                    <td className="px-3 py-2.5 text-dash-text">
                       {formatSlot(slot.endTime, timezone)}
                     </td>
-                    <td className="px-3 py-2">{slot.timezone}</td>
-                    <td className="px-3 py-2">
-                      {slot.instructor?.name || slot.instructor?.email || "-"}
+                    <td className="px-3 py-2.5 text-dash-text-muted font-mono text-xs">{slot.timezone}</td>
+                    <td className="px-3 py-2.5 text-dash-text">
+                      {slot.instructor?.name || slot.instructor?.email || "—"}
                     </td>
                   </tr>
                 ))}
@@ -249,7 +253,9 @@ export default function InstructorAvailabilityPage() {
             </table>
           </div>
         ) : (
-          <p className="mt-3 text-sm text-slate-600">No open slots yet.</p>
+          <p className="text-sm text-dash-text-muted py-4 text-center">
+            No open slots yet. Create one above to start.
+          </p>
         )}
       </section>
     </div>

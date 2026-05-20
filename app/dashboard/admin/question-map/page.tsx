@@ -397,15 +397,13 @@ export default function AdminQuestionMapPage() {
   }
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <h1 className="text-2xl font-bold">Question Map Builder</h1>
-        <p className="mt-2 text-sm text-white/85">
-          Build tests from linked question bank items with IELTS rule checks.
-        </p>
-      </section>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-dash-text">Question Map Builder</h1>
+        <p className="mt-1 text-sm text-dash-text-muted">Build tests from linked question bank items with IELTS rule checks.</p>
+      </div>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
         <div className="flex flex-wrap gap-2">
           {([1, 2, 3] as const).map((n) => (
             <button
@@ -413,10 +411,10 @@ export default function AdminQuestionMapPage() {
               type="button"
               onClick={() => setStep(n)}
               className={[
-                "rounded-xl px-4 py-2 text-sm font-semibold",
+                "rounded-lg px-4 py-2 text-sm font-medium",
                 step === n
-                  ? "bg-brand-purple text-white"
-                  : "bg-slate-100 text-slate-700",
+                  ? "bg-dash-accent text-white"
+                  : "bg-dash-bg text-dash-text",
               ].join(" ")}
             >
               Step {n}
@@ -426,8 +424,8 @@ export default function AdminQuestionMapPage() {
       </section>
 
       {step === 1 ? (
-        <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
             Step 1 - Test Setup
           </h2>
 
@@ -436,7 +434,7 @@ export default function AdminQuestionMapPage() {
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               />
             </Field>
 
@@ -444,7 +442,7 @@ export default function AdminQuestionMapPage() {
               <select
                 value={module}
                 onChange={(e) => setModule(e.target.value as ModuleInput)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               >
                 <option value="READING">READING</option>
                 <option value="LISTENING">LISTENING</option>
@@ -458,7 +456,7 @@ export default function AdminQuestionMapPage() {
               <select
                 value={kind}
                 onChange={(e) => setKind(e.target.value as KindInput)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               >
                 <option value="PRACTICE">PRACTICE</option>
                 <option value="MOCK">MOCK</option>
@@ -470,7 +468,7 @@ export default function AdminQuestionMapPage() {
               <select
                 value={variant}
                 onChange={(e) => setVariant(e.target.value as VariantInput)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               >
                 <option value="ACADEMIC">ACADEMIC</option>
                 <option value="GENERAL">GENERAL</option>
@@ -483,7 +481,7 @@ export default function AdminQuestionMapPage() {
                 onChange={(e) =>
                   setDifficulty(e.target.value as DifficultyInput)
                 }
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               >
                 <option value="EASY">EASY</option>
                 <option value="MEDIUM">MEDIUM</option>
@@ -502,7 +500,7 @@ export default function AdminQuestionMapPage() {
                 onChange={(e) =>
                   setDurationMins(Math.max(10, Number(e.target.value) || 60))
                 }
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               />
             </Field>
 
@@ -510,7 +508,7 @@ export default function AdminQuestionMapPage() {
               <input
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               />
             </Field>
           </div>
@@ -523,7 +521,7 @@ export default function AdminQuestionMapPage() {
                   onChange={(e) =>
                     setListeningAudioMode(e.target.value as ListeningAudioMode)
                   }
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                 >
                   <option value="sequential_section_audio">
                     Sequential section audio (S1 -&gt; S4)
@@ -544,14 +542,14 @@ export default function AdminQuestionMapPage() {
                       Math.max(0, Math.min(120, Number(e.target.value) || 0)),
                     )
                   }
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                 />
               </Field>
               <Field label="Section Transition Voice Message">
                 <input
                   value={listeningSectionTransitionMessage}
                   onChange={(e) => setListeningSectionTransitionMessage(e.target.value)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   placeholder={DEFAULT_SECTION_TRANSITION_MESSAGE}
                 />
               </Field>
@@ -562,7 +560,7 @@ export default function AdminQuestionMapPage() {
             type="button"
             onClick={() => setStep(2)}
             disabled={!title.trim()}
-            className="mt-4 rounded-xl bg-brand-purple px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+            className="mt-4 rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted disabled:opacity-60"
           >
             Continue to Step 2
           </button>
@@ -570,21 +568,21 @@ export default function AdminQuestionMapPage() {
       ) : null}
 
       {step === 2 ? (
-        <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
             Step 2 - Mapping
           </h2>
 
           {loading ? (
-            <div className="mt-3 h-40 animate-pulse rounded-xl bg-slate-200" />
+            <div className="mt-3 h-40 animate-pulse rounded-xl bg-dash-border/50" />
           ) : module === "WRITING" ? (
             <div className="mt-3 grid gap-3 sm:grid-cols-2">
-              <article className="space-y-3 rounded-xl border border-slate-200 p-3">
+              <article className="space-y-3 rounded-xl border border-dash-border p-3">
                 <Field label="Task 1 Prompt">
                   <select
                     value={task1PromptId}
                     onChange={(e) => setTask1PromptId(e.target.value)}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   >
                     <option value="">Select Task 1</option>
                     {task1Prompts.map((p) => (
@@ -596,7 +594,7 @@ export default function AdminQuestionMapPage() {
                 </Field>
 
                 {selectedTask1Prompt ? (
-                  <div className="rounded-lg bg-slate-50 p-2 text-xs text-slate-700">
+                  <div className="rounded-lg bg-dash-bg p-2 text-xs text-dash-text">
                     <p className="font-semibold">Prompt Preview</p>
                     <p className="mt-1 line-clamp-4">
                       {selectedTask1Prompt.promptText}
@@ -608,7 +606,7 @@ export default function AdminQuestionMapPage() {
                   <img
                     src={task1ImageUrl || selectedTask1Prompt?.imageUrl || ""}
                     alt="Task 1 visual"
-                    className="max-h-44 w-full rounded-lg border border-slate-200 object-contain"
+                    className="max-h-44 w-full rounded-lg border border-dash-border object-contain"
                   />
                 ) : null}
 
@@ -617,17 +615,17 @@ export default function AdminQuestionMapPage() {
                     value={task1ImageUrl}
                     onChange={(e) => setTask1ImageUrl(e.target.value)}
                     placeholder={selectedTask1Prompt?.imageUrl || "https://..."}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   />
                 </Field>
               </article>
 
-              <article className="space-y-3 rounded-xl border border-slate-200 p-3">
+              <article className="space-y-3 rounded-xl border border-dash-border p-3">
                 <Field label="Task 2 Prompt">
                   <select
                     value={task2PromptId}
                     onChange={(e) => setTask2PromptId(e.target.value)}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   >
                     <option value="">Select Task 2</option>
                     {task2Prompts.map((p) => (
@@ -639,7 +637,7 @@ export default function AdminQuestionMapPage() {
                 </Field>
 
                 {selectedTask2Prompt ? (
-                  <div className="rounded-lg bg-slate-50 p-2 text-xs text-slate-700">
+                  <div className="rounded-lg bg-dash-bg p-2 text-xs text-dash-text">
                     <p className="font-semibold">Prompt Preview</p>
                     <p className="mt-1 line-clamp-4">
                       {selectedTask2Prompt.promptText}
@@ -651,7 +649,7 @@ export default function AdminQuestionMapPage() {
                   <img
                     src={task2ImageUrl || selectedTask2Prompt?.imageUrl || ""}
                     alt="Task 2 visual"
-                    className="max-h-44 w-full rounded-lg border border-slate-200 object-contain"
+                    className="max-h-44 w-full rounded-lg border border-dash-border object-contain"
                   />
                 ) : null}
 
@@ -660,7 +658,7 @@ export default function AdminQuestionMapPage() {
                     value={task2ImageUrl}
                     onChange={(e) => setTask2ImageUrl(e.target.value)}
                     placeholder={selectedTask2Prompt?.imageUrl || "https://..."}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   />
                 </Field>
               </article>
@@ -686,15 +684,15 @@ export default function AdminQuestionMapPage() {
                 return (
                   <article
                     key={p.part}
-                    className="rounded-xl border border-slate-200 p-3"
+                    className="rounded-xl border border-dash-border p-3"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <h3 className="font-semibold text-slate-900">
+                      <h3 className="font-semibold text-dash-text">
                         {module === "READING"
                           ? `Passage ${p.part}`
                           : `Section ${p.part}`}
                       </h3>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-dash-text-muted">
                         Selected: {count}/{max}
                       </p>
                     </div>
@@ -705,7 +703,7 @@ export default function AdminQuestionMapPage() {
                         onChange={(e) =>
                           void onSelectPassage(p.part, e.target.value)
                         }
-                        className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                        className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                       >
                         <option value="">Select linked source</option>
                         {filteredPassages
@@ -723,7 +721,7 @@ export default function AdminQuestionMapPage() {
                     </div>
 
                     {selectedPassage ? (
-                      <div className="mt-2 rounded-lg bg-slate-50 p-2 text-xs text-slate-600">
+                      <div className="mt-2 rounded-lg bg-dash-bg p-2 text-xs text-dash-text-muted">
                         <p>
                           {selectedPassage.content
                             ? `${selectedPassage.content.slice(0, 140)}...`
@@ -741,14 +739,14 @@ export default function AdminQuestionMapPage() {
                     ) : null}
 
                     {linkedQuestions.length ? (
-                      <div className="mt-3 max-h-64 space-y-2 overflow-y-auto rounded-lg border border-slate-200 p-2">
+                      <div className="mt-3 max-h-64 space-y-2 overflow-y-auto rounded-lg border border-dash-border p-2">
                         {linkedQuestions.map((q) => {
                           const checked = p.selectedQuestionIds.includes(q.id);
                           const disableNew = !checked && count >= max;
                           return (
                             <label
                               key={q.id}
-                              className="block rounded-lg border border-slate-100 p-2 text-sm"
+                              className="block rounded-lg border border-dash-border p-2 text-sm"
                             >
                               <div className="flex items-start gap-2">
                                 <input
@@ -759,10 +757,10 @@ export default function AdminQuestionMapPage() {
                                   className="mt-1"
                                 />
                                 <div>
-                                  <p className="text-xs font-semibold uppercase tracking-wide text-brand-purple">
+                                  <p className="text-xs font-semibold uppercase tracking-wide text-dash-accent">
                                     {q.type}
                                   </p>
-                                  <p className="text-slate-700">
+                                  <p className="text-dash-text">
                                     {q.questionText}
                                   </p>
                                 </div>
@@ -772,7 +770,7 @@ export default function AdminQuestionMapPage() {
                         })}
                       </div>
                     ) : p.passageId ? (
-                      <p className="mt-3 text-sm text-slate-500">
+                      <p className="mt-3 text-sm text-dash-text-muted">
                         No linked questions found for this source.
                       </p>
                     ) : null}
@@ -786,14 +784,14 @@ export default function AdminQuestionMapPage() {
             <button
               type="button"
               onClick={() => setStep(1)}
-              className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700"
+              className="rounded-lg border border-dash-border px-4 py-2 text-sm font-semibold text-dash-text"
             >
               Back
             </button>
             <button
               type="button"
               onClick={() => setStep(3)}
-              className="rounded-xl bg-brand-purple px-4 py-2 text-sm font-semibold text-white"
+              className="rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted disabled:opacity-60"
             >
               Continue to Review
             </button>
@@ -802,12 +800,12 @@ export default function AdminQuestionMapPage() {
       ) : null}
 
       {step === 3 ? (
-        <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
             Step 3 - Review & Create
           </h2>
 
-          <div className="mt-3 rounded-xl border border-slate-200 p-3 text-sm">
+          <div className="mt-3 rounded-xl border border-dash-border p-3 text-sm">
             <p>
               <span className="font-semibold">Name:</span> {title || "-"}
             </p>
@@ -869,7 +867,7 @@ export default function AdminQuestionMapPage() {
             <button
               type="button"
               onClick={() => setStep(2)}
-              className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700"
+              className="rounded-lg border border-dash-border px-4 py-2 text-sm font-semibold text-dash-text"
             >
               Back
             </button>
@@ -877,7 +875,7 @@ export default function AdminQuestionMapPage() {
               type="button"
               onClick={createTest}
               disabled={saving || !compliance.pass || !title.trim()}
-              className="rounded-xl bg-brand-teal px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+              className="rounded-lg bg-dash-accent-muted px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-90 disabled:opacity-60"
             >
               {saving ? "Creating..." : "Create Test"}
             </button>
@@ -886,13 +884,13 @@ export default function AdminQuestionMapPage() {
       ) : null}
 
       {error ? (
-        <div className="whitespace-pre-line rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+        <div className="whitespace-pre-line rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
           {error}
         </div>
       ) : null}
 
       {message ? (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
           {message}
         </div>
       ) : null}
@@ -909,7 +907,7 @@ function Field({
 }) {
   return (
     <label className="block text-sm">
-      <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <span className="mb-1 block text-[13px] font-medium text-dash-text">
         {label}
       </span>
       {children}

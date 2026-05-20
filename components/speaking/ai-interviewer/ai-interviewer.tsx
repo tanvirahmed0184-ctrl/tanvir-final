@@ -124,6 +124,7 @@ export default function AIInterviewer() {
   >([]);
   const [selectedMode, setSelectedMode] = useState<string>("simulation");
   const [loadingModes, setLoadingModes] = useState(false);
+  const [leavePromptOpen, setLeavePromptOpen] = useState(false);
 
   const {
     isRecording,
@@ -690,6 +691,32 @@ export default function AIInterviewer() {
     }
   }, [processTurnSnapshot, state.pendingRetry]);
 
+  const finalizeAndEvaluateCurrentAttempt = useCallback(async () => {
+    const attemptId = stateRef.current.attemptId;
+    if (!attemptId) return;
+    clearTimers();
+    stopSpeaking();
+    if (isRecording) {
+      await abortRecording();
+    }
+    dispatch({ type: "transition", phase: "evaluating" });
+    await fetch(`/api/speaking/attempt/${attemptId}/finalize`, {
+      method: "POST",
+    });
+    await fetch(`/api/speaking/attempt/${attemptId}/evaluate`, {
+      method: "POST",
+    }).catch(() => undefined);
+    const res = await fetch(`/api/speaking/attempt/${attemptId}/result`, {
+      cache: "no-store",
+    });
+    const data = (await res.json().catch(() => null)) as SpeakingResultResponse | null;
+    if (res.ok && data?.attempt) {
+      hydrateFromResult(data);
+    } else {
+      dispatch({ type: "transition", phase: "complete" });
+    }
+  }, [abortRecording, clearTimers, hydrateFromResult, isRecording, stopSpeaking]);
+
   const phase = state.phase as SessionPhase;
   const currentPrompt = state.currentPrompt;
   const latestTurn = state.turns.length ? state.turns[state.turns.length - 1] : null;
@@ -698,16 +725,76 @@ export default function AIInterviewer() {
   const evalProvider = state.provider || null;
   const evalPronProvider = state.evaluation?.pronunciationSummary?.provider || null;
 
+  useEffect(() => {
+    const activeExam =
+      state.attemptId &&
+      phase !== "idle" &&
+      phase !== "complete" &&
+      phase !== "error";
+    if (!activeExam) return;
+    window.history.pushState({ examGuard: "speaking" }, "", window.location.href);
+    const onPopState = () => {
+      window.history.pushState({ examGuard: "speaking" }, "", window.location.href);
+      setLeavePromptOpen(true);
+    };
+    const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("popstate", onPopState);
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+      window.removeEventListener("beforeunload", onBeforeUnload);
+    };
+  }, [phase, state.attemptId]);
+
   return (
-    <section className="space-y-4 rounded-2xl border border-brand-purple/20 bg-white p-5 shadow-sm">
-      <header className="rounded-xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-4 text-white">
-        <h2 className="text-lg font-bold">AI Speaking Interviewer</h2>
-        <p className="mt-1 text-sm text-white/85">{statusText}</p>
+    <section className="space-y-5 rounded-[2rem] border border-slate-200/80 bg-[#f7f8f5] p-4 shadow-[0_24px_80px_-55px_rgba(15,23,42,0.8)]">
+      <header className="relative overflow-hidden rounded-[1.75rem] bg-slate-950 p-6 text-white">
+        <div className="absolute right-0 top-0 h-56 w-56 rounded-bl-[8rem] bg-brand-teal/20 blur-2xl" />
+        <div className="relative grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/45">
+              AI examiner environment
+            </p>
+            <h2 className="mt-3 text-3xl font-display tracking-tight">
+              Speaking test room
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-white/60">
+              {statusText}
+            </p>
+          </div>
+
+          <div className="flex justify-center lg:justify-end">
+            <div className="relative flex h-56 w-56 items-center justify-center rounded-full border border-white/10 bg-white/[0.03]">
+              <div
+                className={[
+                  "absolute rounded-full border transition-all duration-300",
+                  isRecording
+                    ? "border-brand-teal/60 bg-brand-teal/10"
+                    : isSpeaking
+                      ? "border-brand-purple-light/60 bg-brand-purple/10"
+                      : "border-white/10 bg-white/[0.02]",
+                ].join(" ")}
+                style={{
+                  inset: `${Math.max(10, 32 - micLevel * 28)}px`,
+                  boxShadow: isRecording
+                    ? `0 0 ${24 + micLevel * 80}px rgba(14,165,160,0.45)`
+                    : undefined,
+                }}
+              />
+              <div className="relative flex h-32 w-32 items-center justify-center rounded-full bg-white text-slate-950 shadow-2xl">
+                {isRecording ? <Mic size={42} /> : isSpeaking ? <Volume2 size={42} /> : <MicOff size={40} />}
+              </div>
+            </div>
+          </div>
+        </div>
       </header>
 
-      <div className="rounded-xl border border-brand-purple/15 bg-slate-50 p-3">
+      <div className="rounded-[1.5rem] border border-slate-200 bg-white/95 p-4">
         <WaveVisualizer isRecording={isRecording} level={micLevel} />
-        <div className="mt-2 flex items-center gap-2">
+        <div className="mt-3 flex items-center gap-2">
           <div className="h-2 flex-1 rounded-full bg-slate-200">
             <div
               className={[
@@ -722,7 +809,7 @@ export default function AIInterviewer() {
           </span>
         </div>
         {!isRecording ? (
-          <p className="mt-1 text-[11px] text-slate-500">
+          <p className="mt-2 text-[11px] text-slate-500">
             Start recording and speak. If this stays near 0%, browser is using wrong mic input.
           </p>
         ) : null}
@@ -754,7 +841,7 @@ export default function AIInterviewer() {
           <button
             type="button"
             onClick={() => void startTest()}
-            className="inline-flex items-center gap-2 rounded-xl bg-brand-purple px-4 py-2 text-sm font-semibold text-white"
+            className="inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/10"
           >
             Start AI Test
           </button>
@@ -766,8 +853,8 @@ export default function AIInterviewer() {
             onClick={() => void handleMicClick()}
             disabled={!canUseMic}
             className={[
-              "inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-white",
-              isRecording ? "bg-rose-600" : "bg-brand-teal",
+              "inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/10",
+              isRecording ? "bg-rose-600" : "bg-brand-teal-dark",
               !canUseMic ? "cursor-not-allowed opacity-70" : "",
             ].join(" ")}
           >
@@ -779,7 +866,7 @@ export default function AIInterviewer() {
         <button
           type="button"
           onClick={() => void resetTest()}
-          className="inline-flex items-center gap-2 rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700"
+            className="inline-flex items-center gap-2 rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700"
         >
           <RefreshCcw size={15} />
           Reset
@@ -789,7 +876,7 @@ export default function AIInterviewer() {
           <button
             type="button"
             onClick={() => void retryLastStep()}
-            className="inline-flex items-center gap-2 rounded-xl border border-brand-purple/40 bg-brand-purple/5 px-4 py-2 text-sm font-semibold text-brand-purple"
+            className="inline-flex items-center gap-2 rounded-2xl border border-brand-purple/40 bg-brand-purple/5 px-5 py-3 text-sm font-semibold text-brand-purple"
           >
             <Loader2 size={15} />
             Retry Last Step
@@ -823,7 +910,7 @@ export default function AIInterviewer() {
       ) : null}
 
       {currentPrompt ? (
-        <div className="rounded-xl border border-brand-purple/20 bg-brand-purple/5 p-3 text-sm text-slate-700">
+        <div className="rounded-[1.5rem] border border-brand-teal/20 bg-teal-50/70 p-5 text-sm text-slate-700">
           <p className="font-semibold text-slate-900">
             {partLabel(currentPrompt.part)} - Question {currentPrompt.index + 1}
             {state.totalQuestions ? ` / ${state.totalQuestions}` : ""}
@@ -870,7 +957,7 @@ export default function AIInterviewer() {
         </p>
       ) : null}
 
-      <div className="max-h-80 space-y-2 overflow-auto rounded-xl border border-brand-purple/15 bg-white p-3">
+      <div className="max-h-[28rem] space-y-3 overflow-auto rounded-[1.5rem] border border-slate-200 bg-white/95 p-4">
         {state.turns.length === 0 ? (
           <p className="text-sm text-slate-500">Your spoken turns will appear here.</p>
         ) : null}
@@ -878,7 +965,7 @@ export default function AIInterviewer() {
         {state.turns.map((turn, idx) => (
           <div
             key={`${turn.id}-${idx}`}
-            className="space-y-1 rounded-xl border border-slate-200 px-3 py-2 text-sm"
+            className="space-y-2 rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-sm"
           >
             <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
               {partLabel(turn.part)} - Turn {turn.sequence}
@@ -1017,6 +1104,39 @@ export default function AIInterviewer() {
       ) : null}
 
       <p className="text-xs text-slate-500">Attempt status: {state.attemptStatus}</p>
+
+      {leavePromptOpen ? (
+        <div className="fixed inset-0 z-[70] grid place-items-center bg-slate-950/40 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-[2rem] bg-white p-6 shadow-2xl">
+            <h2 className="text-xl font-semibold text-slate-950">
+              Leave speaking exam?
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-slate-600">
+              Leaving now will finalize the speaking attempt and request
+              evaluation from the existing speaking workflow.
+            </p>
+            <div className="mt-6 flex gap-2">
+              <button
+                type="button"
+                onClick={() => setLeavePromptOpen(false)}
+                className="flex-1 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700"
+              >
+                Stay in exam
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setLeavePromptOpen(false);
+                  void finalizeAndEvaluateCurrentAttempt();
+                }}
+                className="flex-1 rounded-2xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white"
+              >
+                Finalize exam
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }

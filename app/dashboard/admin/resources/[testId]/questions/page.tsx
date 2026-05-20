@@ -266,22 +266,22 @@ export default function AdminQuestionManagerPage() {
   }
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <h1 className="text-2xl font-bold">Question Manager</h1>
-        <p className="mt-2 text-sm text-white/85">Test ID: {testId || "N/A"}</p>
-      </section>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-dash-text">Question Manager</h1>
+        <p className="mt-1 text-sm text-dash-text-muted">Test ID: {testId || "N/A"}</p>
+      </div>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
         <div className="mb-3 flex gap-2">
           <button
             type="button"
             onClick={() => setTab("manual")}
             className={[
-              "rounded-xl px-4 py-2 text-sm font-semibold",
+              "rounded-lg px-4 py-2 text-sm font-medium",
               tab === "manual"
-                ? "bg-brand-purple text-white"
-                : "bg-slate-100 text-slate-700",
+                ? "bg-dash-accent text-white"
+                : "bg-dash-bg text-dash-text",
             ].join(" ")}
           >
             Add Question
@@ -290,10 +290,10 @@ export default function AdminQuestionManagerPage() {
             type="button"
             onClick={() => setTab("csv")}
             className={[
-              "rounded-xl px-4 py-2 text-sm font-semibold",
+              "rounded-lg px-4 py-2 text-sm font-medium",
               tab === "csv"
-                ? "bg-brand-teal text-white"
-                : "bg-slate-100 text-slate-700",
+                ? "bg-dash-accent-muted text-white"
+                : "bg-dash-bg text-dash-text",
             ].join(" ")}
           >
             CSV Upload
@@ -301,7 +301,7 @@ export default function AdminQuestionManagerPage() {
         </div>
 
         {message ? (
-          <div className="mb-3 rounded-xl border border-brand-purple/20 bg-brand-purple/5 p-3 text-sm text-slate-700">
+          <div className="mb-3 rounded-lg border border-dash-border bg-dash-accent-light px-4 py-3 text-sm text-dash-text">
             {message}
           </div>
         ) : null}
@@ -315,7 +315,7 @@ export default function AdminQuestionManagerPage() {
                   onChange={(e) =>
                     setQuestionType(e.target.value as QuestionType)
                   }
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                 >
                   {QUESTION_TYPES.map((qt) => (
                     <option key={qt} value={qt}>
@@ -335,7 +335,7 @@ export default function AdminQuestionManagerPage() {
                         )
                       : setCorrectAnswer(e.target.value)
                   }
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                 />
               </Field>
             </div>
@@ -346,7 +346,7 @@ export default function AdminQuestionManagerPage() {
                 onChange={(e) => setQuestionText(e.target.value)}
                 rows={3}
                 required
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               />
             </Field>
 
@@ -355,7 +355,7 @@ export default function AdminQuestionManagerPage() {
                 value={explanation}
                 onChange={(e) => setExplanation(e.target.value)}
                 rows={2}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
               />
             </Field>
 
@@ -365,28 +365,28 @@ export default function AdminQuestionManagerPage() {
                   <input
                     value={optionA}
                     onChange={(e) => setOptionA(e.target.value)}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   />
                 </Field>
                 <Field label="Option B">
                   <input
                     value={optionB}
                     onChange={(e) => setOptionB(e.target.value)}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   />
                 </Field>
                 <Field label="Option C">
                   <input
                     value={optionC}
                     onChange={(e) => setOptionC(e.target.value)}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   />
                 </Field>
                 <Field label="Option D">
                   <input
                     value={optionD}
                     onChange={(e) => setOptionD(e.target.value)}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                   />
                 </Field>
               </div>
@@ -394,7 +394,7 @@ export default function AdminQuestionManagerPage() {
 
             <button
               type="submit"
-              className="rounded-xl bg-brand-purple px-4 py-2 text-sm font-semibold text-white"
+              className="rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted disabled:opacity-60"
             >
               Add Question
             </button>
@@ -405,7 +405,7 @@ export default function AdminQuestionManagerPage() {
               <button
                 type="button"
                 onClick={downloadTemplate}
-                className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700"
+                className="rounded-lg border border-dash-border px-4 py-2 text-sm font-semibold text-dash-text"
               >
                 Download Template
               </button>
@@ -419,27 +419,27 @@ export default function AdminQuestionManagerPage() {
                 type="button"
                 onClick={confirmCsvUpload}
                 disabled={!csvRows.length}
-                className="rounded-xl bg-brand-teal px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+                className="rounded-lg bg-dash-accent-muted px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-90 disabled:opacity-60"
               >
                 Confirm Upload
               </button>
             </div>
 
-            <div className="overflow-x-auto rounded-xl border border-slate-200">
-              <table className="min-w-full divide-y divide-slate-200 text-sm">
-                <thead className="bg-slate-50">
+            <div className="overflow-x-auto rounded-xl border border-dash-border">
+              <table className="min-w-full divide-y divide-dash-border text-sm">
+                <thead className="bg-dash-bg">
                   <tr>
                     {TEMPLATE_HEADERS.map((h) => (
                       <th
                         key={h}
-                        className="px-3 py-2 text-left text-xs uppercase tracking-wide text-slate-500"
+                        className="px-3 py-2 text-left text-xs uppercase tracking-wide text-dash-text-muted"
                       >
                         {h}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 bg-white">
+                <tbody className="divide-y divide-dash-border bg-dash-surface">
                   {csvRows.length ? (
                     csvRows.map((row, idx) => (
                       <tr key={idx}>
@@ -456,7 +456,7 @@ export default function AdminQuestionManagerPage() {
                   ) : (
                     <tr>
                       <td
-                        className="px-3 py-6 text-center text-sm text-slate-500"
+                        className="px-3 py-6 text-center text-sm text-dash-text-muted"
                         colSpan={8}
                       >
                         Upload a CSV file to preview rows.
@@ -470,31 +470,31 @@ export default function AdminQuestionManagerPage() {
         )}
       </section>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
           Existing Questions
         </h2>
 
         {loading ? (
-          <div className="mt-3 h-32 animate-pulse rounded-xl bg-slate-200" />
+          <div className="mt-3 h-32 animate-pulse rounded-xl bg-dash-border/50" />
         ) : (
           <div className="mt-3 space-y-2">
             {questions.length ? (
               questions.map((q) => (
                 <article
                   key={q.id}
-                  className="rounded-xl border border-slate-200 p-3"
+                  className="rounded-xl border border-dash-border p-3"
                 >
-                  <p className="text-xs font-semibold uppercase tracking-wide text-brand-purple">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-dash-accent">
                     {q.type}
                   </p>
-                  <p className="mt-1 text-sm text-slate-800">
+                  <p className="mt-1 text-sm text-dash-text">
                     {q.questionText}
                   </p>
                 </article>
               ))
             ) : (
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-dash-text-muted">
                 No questions found for this test yet.
               </p>
             )}
@@ -514,7 +514,7 @@ function Field({
 }) {
   return (
     <label className="block text-sm">
-      <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <span className="mb-1 block text-[13px] font-medium text-dash-text">
         {label}
       </span>
       {children}

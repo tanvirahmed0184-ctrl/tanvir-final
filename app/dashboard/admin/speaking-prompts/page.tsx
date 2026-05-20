@@ -447,30 +447,28 @@ export default function AdminSpeakingPromptsPage() {
   }
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <h1 className="text-2xl font-bold">Speaking Prompt Manager</h1>
-        <p className="mt-2 text-sm text-white/85">
-          Manage multiple named speaking sets per test, reorder prompts via drag/drop, and import/export JSON.
-        </p>
-      </section>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-dash-text">Speaking Prompt Manager</h1>
+        <p className="mt-1 text-sm text-dash-text-muted">Manage multiple named speaking sets per test, reorder prompts via drag/drop, and import/export JSON.</p>
+      </div>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
         {loadingTests ? (
-          <div className="h-20 animate-pulse rounded-xl bg-slate-100" />
+          <div className="h-20 animate-pulse rounded-xl bg-dash-border/50" />
         ) : tests.length === 0 ? (
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-dash-text-muted">
             No SPEAKING test found. Create one from Test Manager first.
           </p>
         ) : (
           <label className="block text-sm">
-            <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <span className="mb-1 block text-[13px] font-medium text-dash-text">
               Speaking Test
             </span>
             <select
               value={selectedTestId}
               onChange={(e) => setSelectedTestId(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
             >
               {tests.map((test) => (
                 <option key={test.id} value={test.id}>
@@ -483,17 +481,17 @@ export default function AdminSpeakingPromptsPage() {
       </section>
 
       {selectedTest ? (
-        <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+        <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
           <form onSubmit={savePromptSets} className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted">
                 Sets for {selectedTest.title}
               </h2>
               <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={addSet}
-                  className="rounded-lg border border-slate-300 px-3 py-1 text-xs font-semibold text-slate-700"
+                  className="rounded-lg border border-dash-border px-3 py-1 text-xs font-semibold text-dash-text"
                 >
                   + New Set
                 </button>
@@ -501,7 +499,7 @@ export default function AdminSpeakingPromptsPage() {
                   type="button"
                   onClick={duplicateCurrentSet}
                   disabled={!selectedSet}
-                  className="rounded-lg border border-slate-300 px-3 py-1 text-xs font-semibold text-slate-700 disabled:opacity-60"
+                  className="rounded-lg border border-dash-border px-3 py-1 text-xs font-semibold text-dash-text disabled:opacity-60"
                 >
                   Duplicate Set
                 </button>
@@ -517,14 +515,14 @@ export default function AdminSpeakingPromptsPage() {
                   type="button"
                   onClick={exportSetsJson}
                   disabled={sets.length === 0}
-                  className="rounded-lg border border-slate-300 px-3 py-1 text-xs font-semibold text-slate-700 disabled:opacity-60"
+                  className="rounded-lg border border-dash-border px-3 py-1 text-xs font-semibold text-dash-text disabled:opacity-60"
                 >
                   Export JSON
                 </button>
                 <button
                   type="button"
                   onClick={() => importFileRef.current?.click()}
-                  className="rounded-lg border border-slate-300 px-3 py-1 text-xs font-semibold text-slate-700"
+                  className="rounded-lg border border-dash-border px-3 py-1 text-xs font-semibold text-dash-text"
                 >
                   Import JSON
                 </button>
@@ -539,18 +537,18 @@ export default function AdminSpeakingPromptsPage() {
             </div>
 
             {error ? (
-              <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+              <div className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
                 {error}
               </div>
             ) : null}
             {success ? (
-              <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+              <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
                 {success}
               </div>
             ) : null}
 
             {loadingSets ? (
-              <div className="h-24 animate-pulse rounded-xl bg-slate-100" />
+              <div className="h-24 animate-pulse rounded-xl bg-dash-border/50" />
             ) : (
               <>
                 <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
@@ -565,31 +563,31 @@ export default function AdminSpeakingPromptsPage() {
                         className={[
                           "rounded-xl border p-3 text-left",
                           isSelected
-                            ? "border-brand-purple bg-brand-purple/5"
-                            : "border-slate-200 bg-white",
+                            ? "border-dash-accent bg-dash-accent-light"
+                            : "border-dash-border bg-dash-surface",
                         ].join(" ")}
                       >
                         <div className="flex items-center justify-between gap-2">
-                          <p className="text-sm font-semibold text-slate-900">{set.name}</p>
+                          <p className="text-sm font-semibold text-dash-text">{set.name}</p>
                           <span
                             className={[
-                              "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+                              "rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide",
                               isActiveSet
                                 ? "bg-emerald-100 text-emerald-700"
-                                : "bg-slate-100 text-slate-600",
+                                : "bg-dash-bg text-dash-text-muted",
                             ].join(" ")}
                           >
                             {isActiveSet ? "Live" : "Draft"}
                           </span>
                         </div>
-                        <p className="mt-1 text-xs text-slate-500">{set.prompts.length} prompts</p>
+                        <p className="mt-1 text-xs text-dash-text-muted">{set.prompts.length} prompts</p>
                       </button>
                     );
                   })}
                 </div>
 
                 {selectedSet ? (
-                  <div className="space-y-4 rounded-xl border border-slate-200 p-3">
+                  <div className="space-y-4 rounded-xl border border-dash-border p-3">
                     <div className="grid gap-3 md:grid-cols-[1fr_200px]">
                       <Field label="Set Name">
                         <input
@@ -602,7 +600,7 @@ export default function AdminSpeakingPromptsPage() {
                               id: set.id,
                             }));
                           }}
-                          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                          className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                         />
                       </Field>
                       <Field label="Active in Speaking">
@@ -613,7 +611,7 @@ export default function AdminSpeakingPromptsPage() {
                             "h-10 w-full rounded-lg border text-sm font-semibold",
                             activeSetId === selectedSet.id
                               ? "border-emerald-300 bg-emerald-50 text-emerald-700"
-                              : "border-slate-300 bg-white text-slate-700",
+                              : "border-dash-border bg-dash-surface text-dash-text",
                           ].join(" ")}
                         >
                           {activeSetId === selectedSet.id ? "Live Set" : "Set as Live"}
@@ -625,34 +623,34 @@ export default function AdminSpeakingPromptsPage() {
                       <button
                         type="button"
                         onClick={() => addPrompt("PART_1")}
-                        className="rounded-lg border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700"
+                        className="rounded-lg border border-dash-border px-2 py-1 text-xs font-semibold text-dash-text"
                       >
                         + Part 1
                       </button>
                       <button
                         type="button"
                         onClick={() => addPrompt("PART_2_PREP")}
-                        className="rounded-lg border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700"
+                        className="rounded-lg border border-dash-border px-2 py-1 text-xs font-semibold text-dash-text"
                       >
                         + Part 2 Prep
                       </button>
                       <button
                         type="button"
                         onClick={() => addPrompt("PART_2")}
-                        className="rounded-lg border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700"
+                        className="rounded-lg border border-dash-border px-2 py-1 text-xs font-semibold text-dash-text"
                       >
                         + Part 2
                       </button>
                       <button
                         type="button"
                         onClick={() => addPrompt("PART_3")}
-                        className="rounded-lg border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700"
+                        className="rounded-lg border border-dash-border px-2 py-1 text-xs font-semibold text-dash-text"
                       >
                         + Part 3
                       </button>
                     </div>
 
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-dash-text-muted">
                       Drag and drop prompt cards to reorder. You can also use up/down arrows.
                     </p>
 
@@ -668,10 +666,10 @@ export default function AdminSpeakingPromptsPage() {
                             movePrompt(dragFromIndex, idx);
                             setDragFromIndex(null);
                           }}
-                          className="rounded-xl border border-slate-200 p-3"
+                          className="rounded-xl border border-dash-border p-3"
                         >
                           <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-dash-text-muted">
                               Prompt {idx + 1}
                             </p>
                             <div className="flex flex-wrap gap-2">
@@ -679,7 +677,7 @@ export default function AdminSpeakingPromptsPage() {
                                 type="button"
                                 onClick={() => movePrompt(idx, Math.max(0, idx - 1))}
                                 disabled={idx === 0}
-                                className="rounded-md border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700 disabled:opacity-50"
+                                className="rounded-md border border-dash-border px-2 py-1 text-xs font-semibold text-dash-text disabled:opacity-50"
                               >
                                 Up
                               </button>
@@ -692,7 +690,7 @@ export default function AdminSpeakingPromptsPage() {
                                   )
                                 }
                                 disabled={idx === selectedSet.prompts.length - 1}
-                                className="rounded-md border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700 disabled:opacity-50"
+                                className="rounded-md border border-dash-border px-2 py-1 text-xs font-semibold text-dash-text disabled:opacity-50"
                               >
                                 Down
                               </button>
@@ -713,7 +711,7 @@ export default function AdminSpeakingPromptsPage() {
                                 onChange={(e) =>
                                   updatePrompt(idx, "part", e.target.value as SpeakingPart)
                                 }
-                                className="w-full rounded-lg border border-slate-300 px-2 py-2 text-sm"
+                                className="w-full rounded-lg border border-dash-border px-2 py-2 text-sm"
                               >
                                 <option value="PART_1">PART_1</option>
                                 <option value="PART_2_PREP">PART_2_PREP</option>
@@ -729,7 +727,7 @@ export default function AdminSpeakingPromptsPage() {
                                 onChange={(e) =>
                                   updatePrompt(idx, "prepSeconds", Number(e.target.value) || 0)
                                 }
-                                className="w-full rounded-lg border border-slate-300 px-2 py-2 text-sm"
+                                className="w-full rounded-lg border border-dash-border px-2 py-2 text-sm"
                               />
                             </Field>
                             <Field label="Target (s)">
@@ -744,7 +742,7 @@ export default function AdminSpeakingPromptsPage() {
                                     Number(e.target.value) || 45,
                                   )
                                 }
-                                className="w-full rounded-lg border border-slate-300 px-2 py-2 text-sm"
+                                className="w-full rounded-lg border border-dash-border px-2 py-2 text-sm"
                               />
                             </Field>
                             <Field label="Hard Limit (s)">
@@ -759,7 +757,7 @@ export default function AdminSpeakingPromptsPage() {
                                     Number(e.target.value) || 80,
                                   )
                                 }
-                                className="w-full rounded-lg border border-slate-300 px-2 py-2 text-sm"
+                                className="w-full rounded-lg border border-dash-border px-2 py-2 text-sm"
                               />
                             </Field>
                           </div>
@@ -770,7 +768,7 @@ export default function AdminSpeakingPromptsPage() {
                                 value={row.prompt}
                                 onChange={(e) => updatePrompt(idx, "prompt", e.target.value)}
                                 rows={3}
-                                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                                className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
                               />
                             </Field>
                             <Field label="Silence Prompt (s)">
@@ -785,7 +783,7 @@ export default function AdminSpeakingPromptsPage() {
                                     Number(e.target.value) || 11,
                                   )
                                 }
-                                className="w-full rounded-lg border border-slate-300 px-2 py-2 text-sm"
+                                className="w-full rounded-lg border border-dash-border px-2 py-2 text-sm"
                               />
                             </Field>
                           </div>
@@ -793,7 +791,7 @@ export default function AdminSpeakingPromptsPage() {
                       ))}
 
                       {selectedSet.prompts.length === 0 ? (
-                        <div className="rounded-xl border border-dashed border-slate-300 p-4 text-sm text-slate-500">
+                        <div className="rounded-xl border border-dashed border-dash-border p-4 text-sm text-dash-text-muted">
                           This set is empty. Add prompts with the buttons above.
                         </div>
                       ) : null}
@@ -807,7 +805,7 @@ export default function AdminSpeakingPromptsPage() {
               <button
                 type="submit"
                 disabled={saving || loadingSets}
-                className="rounded-xl bg-brand-purple px-4 py-2 text-sm font-semibold text-white disabled:opacity-70"
+                className="rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted disabled:opacity-60"
               >
                 {saving ? "Saving..." : "Save All Sets"}
               </button>
@@ -828,7 +826,7 @@ function Field({
 }) {
   return (
     <label className="block text-sm">
-      <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <span className="mb-1 block text-[13px] font-medium text-dash-text">
         {label}
       </span>
       {children}
