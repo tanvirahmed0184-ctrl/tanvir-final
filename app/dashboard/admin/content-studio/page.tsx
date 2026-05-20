@@ -933,14 +933,28 @@ export default function ContentStudioPage() {
                   placeholder="https://..."
                 />
               </Field>
-              <Field label="Upload file (optional)">
-                <input
-                  type="file"
-                  accept={mediaType === "IMAGE" ? "image/*" : "audio/*"}
-                  onChange={(e) => setMediaFile(e.target.files?.[0] || null)}
-                  className="w-full rounded-lg border border-dash-border px-3 py-2 text-sm"
-                />
-              </Field>
+              <div>
+                <p className="mb-1 block text-[13px] font-medium text-dash-text">
+                  Upload file (optional)
+                </p>
+                <label className="group flex min-h-32 cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-dash-accent/35 bg-dash-accent-light/45 px-4 py-5 text-center transition hover:border-dash-accent hover:bg-dash-accent-light">
+                  <input
+                    type="file"
+                    accept={mediaType === "IMAGE" ? "image/*" : "audio/*"}
+                    onChange={(e) => setMediaFile(e.target.files?.[0] || null)}
+                    className="sr-only"
+                  />
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-dash-accent shadow-sm">
+                    {mediaType === "IMAGE" ? "IMG" : "AUD"}
+                  </span>
+                  <span className="mt-3 text-sm font-semibold text-dash-text">
+                    {mediaFile ? mediaFile.name : "Drop or choose media"}
+                  </span>
+                  <span className="mt-1 text-xs text-dash-text-muted">
+                    {mediaType === "IMAGE" ? "Images for passages or prompts" : "Audio source for listening"}
+                  </span>
+                </label>
+              </div>
               <Field label="Label (optional)">
                 <input
                   value={mediaLabel}
@@ -1002,11 +1016,15 @@ export default function ContentStudioPage() {
             >
               Download CSV Template
             </button>
-            <input
-              type="file"
-              accept=".csv,text/csv"
-              onChange={onCsvFileChange}
-            />
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-dash-accent/35 bg-dash-accent-light/50 px-3 py-2 text-xs font-semibold text-dash-accent transition hover:border-dash-accent hover:bg-dash-accent-light">
+              Import CSV Draft
+              <input
+                type="file"
+                accept=".csv,text/csv"
+                onChange={onCsvFileChange}
+                className="sr-only"
+              />
+            </label>
             <FieldInline label="Default passage_id fallback">
               <select
                 value={defaultPassageId}

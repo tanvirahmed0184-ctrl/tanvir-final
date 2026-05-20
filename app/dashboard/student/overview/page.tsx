@@ -155,7 +155,7 @@ export default function StudentOverviewPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Page header */}
       <div>
         <h1 className="text-2xl font-semibold text-dash-text">
@@ -167,7 +167,7 @@ export default function StudentOverviewPage() {
       </div>
 
       {/* KPI Cards */}
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <MetricCard
           title="Current Band"
           value={(currentBand ?? 0).toFixed(1)}
@@ -191,8 +191,8 @@ export default function StudentOverviewPage() {
       </section>
 
       {/* Charts */}
-      <section className="grid gap-4 xl:grid-cols-2">
-        <div className="rounded-xl border border-dash-border bg-dash-surface p-5">
+      <section className="grid gap-6 xl:grid-cols-2">
+        <div className="rounded-[2rem] bg-white/70 p-5 shadow-[0_22px_70px_-50px_rgba(27,46,38,0.5)]">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted mb-4">
             Band Score Trend
           </h2>
@@ -235,7 +235,7 @@ export default function StudentOverviewPage() {
           </div>
         </div>
 
-        <div className="rounded-xl border border-dash-border bg-dash-surface p-5">
+        <div className="rounded-[2rem] bg-white/70 p-5 shadow-[0_22px_70px_-50px_rgba(27,46,38,0.5)]">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted mb-4">
             Skill Balance
           </h2>
@@ -259,7 +259,7 @@ export default function StudentOverviewPage() {
       </section>
 
       {/* Recent Tests */}
-      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+      <section className="rounded-[2rem] bg-white/70 p-5 shadow-[0_22px_70px_-50px_rgba(27,46,38,0.5)]">
         <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted mb-4">
           Recent Tests
         </h2>
@@ -312,7 +312,7 @@ export default function StudentOverviewPage() {
       </section>
 
       {/* Recommended Actions */}
-      <section className="rounded-xl border border-dash-accent/15 bg-dash-accent-light/30 p-5">
+      <section className="rounded-[2rem] bg-dash-accent-light/45 p-6">
         <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-accent mb-3">
           Recommended Actions
         </h2>
@@ -345,7 +345,7 @@ function MetricCard({
   note: string;
 }) {
   return (
-    <article className="rounded-xl border border-dash-border bg-dash-surface p-4">
+    <article className="rounded-[1.5rem] bg-white/60 p-5 shadow-[0_20px_50px_-44px_rgba(27,46,38,0.55)]">
       <p className="text-[11px] font-semibold uppercase tracking-wider text-dash-text-muted">
         {title}
       </p>

@@ -64,6 +64,16 @@ export default function IeltsJournalFeed() {
     [articles, visibleCount],
   );
 
+  function articleKey(article: JournalArticle, index: number): string {
+    return [
+      article.id || "article",
+      article.url || "url",
+      article.source || "source",
+      article.publishedAt || "date",
+      index,
+    ].join("::");
+  }
+
   if (loading) {
     return (
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
@@ -99,7 +109,7 @@ export default function IeltsJournalFeed() {
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         {visibleArticles.map((article, index) => (
           <a
-            key={article.id}
+            key={articleKey(article, index)}
             href={article.url}
             target="_blank"
             rel="noreferrer"

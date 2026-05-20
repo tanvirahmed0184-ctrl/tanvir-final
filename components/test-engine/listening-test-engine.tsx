@@ -881,7 +881,7 @@ export default function ListeningTestEngine({
         </div>
       ) : null}
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="grid gap-4">
         <section className="h-[calc(100vh-250px)] min-h-[520px] space-y-4 overflow-y-auto rounded-[1.75rem] border border-slate-200/80 bg-white/95 p-5 shadow-[0_20px_70px_-48px_rgba(15,23,42,0.75)]">
           {sections.map((section) => (
             <article key={section.id} className="space-y-3">
@@ -965,7 +965,6 @@ export default function ListeningTestEngine({
           items={navItems}
           onJump={jumpToQuestion}
           onToggleReview={toggleReview}
-          className="h-fit"
         />
       </div>
     </div>

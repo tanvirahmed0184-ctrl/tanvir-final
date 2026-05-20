@@ -128,21 +128,23 @@ export default function ExamInstructionsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8">
-      <div className="rounded-3xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-6 text-white shadow-lg">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/85">
+    <div className="min-h-screen bg-[#f7f5ee] px-4 py-8">
+      <div className="mx-auto max-w-5xl">
+      <div className="relative overflow-hidden rounded-[2.25rem] bg-white p-8 shadow-[0_30px_90px_-60px_rgba(15,23,42,0.7)]">
+        <div className="absolute right-0 top-0 h-56 w-56 rounded-bl-[8rem] bg-emerald-100" />
+        <p className="relative text-xs font-semibold uppercase tracking-[0.2em] text-emerald-800">
           IELTS Test Instructions
         </p>
-        <h1 className="mt-2 text-3xl font-black">
+        <h1 className="relative mt-3 text-4xl font-display tracking-tight text-slate-950 md:text-5xl">
           Read Carefully Before You Start
         </h1>
-        <p className="mt-2 text-sm text-white/85">
+        <p className="relative mt-3 max-w-2xl text-base leading-7 text-slate-600">
           Follow the instructions below for the selected module and begin when
           you are ready.
         </p>
       </div>
 
-      <div className="mt-6 rounded-2xl border border-brand-purple/15 bg-white p-5 shadow-sm">
+      <div className="mt-6 rounded-[2rem] bg-white/80 p-6 shadow-[0_24px_75px_-58px_rgba(15,23,42,0.75)]">
         <div className="flex flex-wrap gap-2">
           {(["READING", "LISTENING", "WRITING"] as Module[]).map((item) => (
             <button
@@ -150,10 +152,10 @@ export default function ExamInstructionsPage() {
               type="button"
               onClick={() => setModuleType(item)}
               className={[
-                "rounded-xl border px-4 py-2 text-sm font-semibold transition",
+                "rounded-full border px-4 py-2 text-sm font-semibold transition",
                 moduleType === item
-                  ? "border-brand-purple bg-brand-purple text-white"
-                  : "border-brand-purple/20 bg-white text-slate-700 hover:bg-brand-purple/5",
+                  ? "border-emerald-800 bg-emerald-900 text-white"
+                  : "border-slate-200 bg-white text-slate-700 hover:border-emerald-200",
               ].join(" ")}
             >
               {item[0] + item.slice(1).toLowerCase()}
@@ -161,14 +163,14 @@ export default function ExamInstructionsPage() {
           ))}
         </div>
 
-        <div className="mt-5 grid gap-4 sm:grid-cols-2">
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          <div className="rounded-[1.5rem] bg-slate-50 p-4">
             <p className="inline-flex items-center gap-2 text-sm font-semibold text-slate-900">
               <Clock3 size={16} className="text-brand-purple" />
               Duration: {current.duration}
             </p>
           </div>
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+          <div className="rounded-[1.5rem] bg-slate-50 p-4">
             <p className="inline-flex items-center gap-2 text-sm font-semibold text-slate-900">
               <ListChecks size={16} className="text-brand-teal" />
               Attempt ID: {attemptId || "N/A"}
@@ -180,7 +182,7 @@ export default function ExamInstructionsPage() {
           {current.bullets.map((line) => (
             <li
               key={line}
-              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700"
+              className="rounded-2xl bg-slate-50 px-4 py-3 text-sm leading-6 text-slate-700"
             >
               {line}
             </li>
@@ -201,17 +203,18 @@ export default function ExamInstructionsPage() {
             type="button"
             onClick={startTest}
             disabled={!attemptId}
-            className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-brand-purple to-brand-teal px-5 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+            className="inline-flex items-center justify-center rounded-2xl bg-emerald-900 px-6 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
           >
             Start Test
           </button>
           <Link
             href="/exam-library/reading"
-            className="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700"
+            className="rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700"
           >
             Back to Library
           </Link>
         </div>
+      </div>
       </div>
     </div>
   );

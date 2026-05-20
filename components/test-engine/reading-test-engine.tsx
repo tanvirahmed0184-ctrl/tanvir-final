@@ -125,17 +125,6 @@ export default function ReadingTestEngine({
     [sections],
   );
 
-  const currentSection = useMemo(() => {
-    if (!activeQuestionId) return sections[0] ?? null;
-    return (
-      sections.find((section) =>
-        section.questions.some((question) => question.id === activeQuestionId),
-      ) ??
-      sections[0] ??
-      null
-    );
-  }, [activeQuestionId, sections]);
-
   useEffect(() => {
     let active = true;
 
@@ -386,45 +375,59 @@ export default function ReadingTestEngine({
         </div>
       ) : null}
 
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
-        <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-[0.92fr_1.08fr]">
         <section className="h-[calc(100vh-150px)] overflow-y-auto rounded-[1.75rem] border border-slate-200/80 bg-white/95 p-5 shadow-[0_20px_70px_-48px_rgba(15,23,42,0.75)]">
           <div className="sticky -top-5 z-10 -mx-5 mb-4 border-b border-slate-100 bg-white/95 px-5 py-4 backdrop-blur">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-              Passage
+              Reading document
             </p>
             <h2 className="mt-1 text-xl font-display tracking-tight text-slate-950">
-              {currentSection?.title || "Reading Passage"}
+              Passages 1-3
             </h2>
           </div>
 
-          {currentSection?.media?.filter((item) => item.type === "IMAGE").length ? (
-            <div className="mb-4 grid gap-3">
-              {currentSection.media
-                ?.filter((item) => item.type === "IMAGE")
-                .map((image) => (
-                  <figure key={image.id} className="rounded-xl border border-slate-200 p-2">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={image.url}
-                      alt={image.label || "Passage visual"}
-                      className="max-h-80 w-full rounded-lg object-contain"
-                      loading="lazy"
-                    />
-                    {image.label ? (
-                      <figcaption className="mt-2 text-xs text-slate-500">
-                        {image.label}
-                      </figcaption>
-                    ) : null}
-                  </figure>
-                ))}
-            </div>
-          ) : null}
+          <div className="space-y-10">
+            {sections.map((section, index) => (
+              <article
+                key={section.id}
+                className="border-b border-slate-100 pb-10 last:border-b-0 last:pb-0"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-teal-dark">
+                  Passage {index + 1}
+                </p>
+                <h3 className="mt-2 text-2xl font-display tracking-tight text-slate-950">
+                  {section.title}
+                </h3>
 
-          <p className="whitespace-pre-line text-sm leading-7 text-slate-700">
-            {currentSection?.passage ||
-              "Passage content will appear here for the selected section."}
-          </p>
+                {section.media?.filter((item) => item.type === "IMAGE").length ? (
+                  <div className="my-5 grid gap-3">
+                    {section.media
+                      ?.filter((item) => item.type === "IMAGE")
+                      .map((image) => (
+                        <figure key={image.id} className="rounded-2xl bg-slate-50 p-3">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={image.url}
+                            alt={image.label || `${section.title} visual`}
+                            className="max-h-96 w-full rounded-xl object-contain"
+                            loading="lazy"
+                          />
+                          {image.label ? (
+                            <figcaption className="mt-2 text-xs text-slate-500">
+                              {image.label}
+                            </figcaption>
+                          ) : null}
+                        </figure>
+                      ))}
+                  </div>
+                ) : null}
+
+                <div className="mt-5 whitespace-pre-line text-[15px] leading-8 text-slate-700">
+                  {section.passage || "No passage text available."}
+                </div>
+              </article>
+            ))}
+          </div>
         </section>
 
         <section className="h-[calc(100vh-150px)] space-y-4 overflow-y-auto rounded-[1.75rem] border border-slate-200/80 bg-white/95 p-5 shadow-[0_20px_70px_-48px_rgba(15,23,42,0.75)]">
@@ -549,48 +552,14 @@ export default function ReadingTestEngine({
             </div>
           ))}
         </section>
-        </div>
-        <QuestionNavPanel
-          items={navItems}
-          activeQuestionId={activeQuestionId}
-          onJump={jumpToQuestion}
-          onToggleReview={toggleReview}
-          className="h-fit"
-        />
       </div>
 
-      <section className="space-y-4 rounded-[1.5rem] border border-slate-200/80 bg-white/90 p-4 shadow-sm">
-        <h2 className="text-base font-semibold text-slate-900">
-          All Reading Passages
-        </h2>
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {sections.map((section) => (
-            <article key={`passage-preview-${section.id}`} className="rounded-xl border border-slate-200 p-3">
-              <h3 className="text-sm font-semibold text-slate-900">{section.title}</h3>
-              {section.media?.filter((item) => item.type === "IMAGE").length ? (
-                <div className="mt-2 grid gap-2">
-                  {section.media
-                    ?.filter((item) => item.type === "IMAGE")
-                    .map((image) => (
-                      <figure key={image.id} className="rounded-lg border border-slate-200 p-1.5">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={image.url}
-                          alt={image.label || `${section.title} visual`}
-                          className="max-h-44 w-full rounded object-contain"
-                          loading="lazy"
-                        />
-                      </figure>
-                    ))}
-                </div>
-              ) : null}
-              <p className="mt-2 line-clamp-8 whitespace-pre-line text-xs leading-6 text-slate-700">
-                {section.passage || "No passage text available."}
-              </p>
-            </article>
-          ))}
-        </div>
-      </section>
+      <QuestionNavPanel
+        items={navItems}
+        activeQuestionId={activeQuestionId}
+        onJump={jumpToQuestion}
+        onToggleReview={toggleReview}
+      />
 
       <div className="flex justify-end">
         <button
