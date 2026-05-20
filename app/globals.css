@@ -380,11 +380,20 @@
     transform: translateY(-1px);
   }
 
-  .dashboard-workspace button[class*="bg-dash-accent"],
-  .dashboard-workspace a[class*="bg-dash-accent"] {
+  .dashboard-workspace button[class*="bg-dash-accent"]:not([class*="bg-dash-accent-light"]),
+  .dashboard-workspace a[class*="bg-dash-accent"]:not([class*="bg-dash-accent-light"]) {
     background:
       linear-gradient(135deg, #2d7a5f 0%, #3d9474 100%);
     box-shadow: 0 14px 30px -18px rgba(45, 122, 95, 0.9);
+  }
+
+  .dashboard-workspace [class*="bg-dash-accent-light"] {
+    background-color: #e6f4ee;
+  }
+
+  .dashboard-workspace [class*="bg-dash-accent-light"][class*="text-dash-accent"],
+  .dashboard-workspace [class*="bg-dash-accent-light"] [class*="text-dash-accent"] {
+    color: #23644d;
   }
 
   .dashboard-workspace button[class*="border-dash-border"],

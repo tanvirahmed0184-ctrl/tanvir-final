@@ -14,9 +14,13 @@ import {
   UserCheck,
   Target,
   BarChart3,
+  BookOpenText,
   Zap,
+  Globe2,
+  ShieldCheck,
 } from "lucide-react";
 import InstructorCarousel from "@/components/marketing/instructor-carousel";
+import IeltsJournalFeed from "@/components/marketing/ielts-journal-feed";
 
 const skillCards = [
   {
@@ -91,28 +95,42 @@ const scoreFeatures = [
   "Track band movement over time and by module",
 ];
 
-const credentials = [
-  "Aligned with IELTS-style exam structure and timing",
-  "Trusted by students from multiple countries",
-  "AI feedback tuned for practical score improvement",
-  "Performance analytics designed for clear progress",
-  "Real-time practice simulation with authentic UX",
-  "Built for both Academic and General candidates",
-];
-
-const topics = [
-  "Education",
-  "Health",
-  "Technology",
-  "Environment",
-  "Media",
-  "Urbanization",
-  "Globalization",
-  "Culture",
-  "Work Life",
-  "Government",
-  "Travel",
-  "Communication",
+const whyPanels = [
+  {
+    title: "Exam-native structure",
+    label: "Authentic flow",
+    description:
+      "Practice inside IELTS-style timing, navigation, section logic, and scoring expectations instead of disconnected drills.",
+    icon: BookOpenText,
+  },
+  {
+    title: "Human teaching layer",
+    label: "Expert guidance",
+    description:
+      "Learners can move from AI feedback to real instructor coaching when they need sharper diagnosis and accountability.",
+    icon: UserCheck,
+  },
+  {
+    title: "Progress intelligence",
+    label: "Clear analytics",
+    description:
+      "Band trends, weak areas, and attempt history turn practice into a measurable preparation system.",
+    icon: BarChart3,
+  },
+  {
+    title: "Global learner fit",
+    label: "Academic + General",
+    description:
+      "The platform supports multiple IELTS goals with a calm interface designed for long study sessions.",
+    icon: Globe2,
+  },
+  {
+    title: "Safe learning engine",
+    label: "Trusted workflow",
+    description:
+      "Content, tests, and speaking sets follow structured publishing flows so students receive consistent practice.",
+    icon: ShieldCheck,
+  },
 ];
 
 const stats = [
@@ -162,6 +180,7 @@ function SectionReveal({
 
 export default function MarketingHomePage() {
   const [wordIndex, setWordIndex] = useState(0);
+  const [activeWhy, setActiveWhy] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -470,67 +489,141 @@ export default function MarketingHomePage() {
       </section>
 
       {/* ===== CREDENTIALS SECTION ===== */}
-      <section className="py-24 lg:py-32 bg-slate-50/80 border-y border-slate-100">
+      <section className="relative overflow-hidden py-24 lg:py-32 bg-[#f6f2e9] border-y border-amber-100/70">
+        <div className="absolute inset-0 opacity-60 [background-image:linear-gradient(rgba(120,80,30,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(120,80,30,0.04)_1px,transparent_1px)] [background-size:48px_48px]" />
         <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
           <SectionReveal>
-            <div className="mb-16 lg:mb-20 text-center">
-              <span className="inline-flex items-center gap-3 text-sm font-mono text-slate-400 mb-5 justify-center">
-                <span className="w-8 h-px bg-slate-300" />
+            <div className="relative mb-16 lg:mb-20 text-center">
+              <span className="inline-flex items-center gap-3 text-sm font-mono text-amber-900/45 mb-5 justify-center">
+                <span className="w-8 h-px bg-amber-900/25" />
                 Why Choose Us
-                <span className="w-8 h-px bg-slate-300" />
+                <span className="w-8 h-px bg-amber-900/25" />
               </span>
               <h2 className="text-4xl lg:text-5xl font-display tracking-tight">
-                Credentials you can trust.
+                Credentials as a living library.
               </h2>
+              <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600">
+                A tactile, book-inspired view of what makes the platform
+                reliable for serious IELTS preparation.
+              </p>
             </div>
           </SectionReveal>
 
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {credentials.map((item, index) => (
-              <SectionReveal key={item} delay={index * 80}>
-                <div className="flex items-start gap-3 rounded-xl bg-white p-5 border border-slate-100 transition-all duration-300 hover:shadow-md hover:border-brand-teal/20 h-full">
-                  <CheckCircle2
-                    size={18}
-                    className="mt-0.5 text-brand-teal shrink-0"
-                  />
-                  <span className="text-sm text-slate-700 leading-relaxed">{item}</span>
-                </div>
-              </SectionReveal>
-            ))}
+          <div className="relative">
+            <div className="hidden gap-3 lg:flex min-h-[420px]">
+              {whyPanels.map((panel, index) => {
+                const Icon = panel.icon;
+                const active = activeWhy === index;
+                return (
+                  <button
+                    key={panel.title}
+                    type="button"
+                    onMouseEnter={() => setActiveWhy(index)}
+                    onFocus={() => setActiveWhy(index)}
+                    onClick={() => setActiveWhy(index)}
+                    className={[
+                      "group relative overflow-hidden rounded-[2rem] border border-amber-900/10 bg-white/72 p-6 text-left shadow-xl shadow-amber-900/5 transition-all duration-500",
+                      active ? "flex-[2.6]" : "flex-[0.62]",
+                    ].join(" ")}
+                  >
+                    <div className="absolute inset-y-0 left-0 w-3 bg-gradient-to-b from-amber-900/20 via-brand-teal/30 to-brand-purple/20" />
+                    <div className="flex h-full flex-col">
+                      <div className="flex items-center justify-between gap-4">
+                        <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-900">
+                          <Icon size={19} />
+                        </span>
+                        <span className="font-mono text-xs text-amber-900/35">
+                          0{index + 1}
+                        </span>
+                      </div>
+                      <div
+                        className={[
+                          "mt-auto transition-all duration-500",
+                          active ? "max-w-lg" : "max-w-[9rem]",
+                        ].join(" ")}
+                      >
+                        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-teal-dark">
+                          {panel.label}
+                        </p>
+                        <h3
+                          className={[
+                            "mt-3 font-display tracking-tight text-slate-950 transition-all duration-500",
+                            active ? "text-4xl" : "text-2xl [writing-mode:vertical-rl] rotate-180",
+                          ].join(" ")}
+                        >
+                          {panel.title}
+                        </h3>
+                        <p
+                          className={[
+                            "mt-5 text-sm leading-7 text-slate-600 transition-all duration-500",
+                            active ? "opacity-100" : "max-h-0 overflow-hidden opacity-0",
+                          ].join(" ")}
+                        >
+                          {panel.description}
+                        </p>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="grid gap-4 lg:hidden">
+              {whyPanels.map((panel, index) => {
+                const Icon = panel.icon;
+                return (
+                  <article
+                    key={panel.title}
+                    className="rounded-[2rem] border border-amber-900/10 bg-white/80 p-6 shadow-lg shadow-amber-900/5"
+                  >
+                    <div className="flex items-start gap-4">
+                      <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-amber-900">
+                        <Icon size={19} />
+                      </span>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-teal-dark">
+                          0{index + 1} / {panel.label}
+                        </p>
+                        <h3 className="mt-2 text-2xl font-display tracking-tight text-slate-950">
+                          {panel.title}
+                        </h3>
+                        <p className="mt-3 text-sm leading-7 text-slate-600">
+                          {panel.description}
+                        </p>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ===== TOPICS SECTION ===== */}
+      {/* ===== IELTS JOURNAL SECTION ===== */}
       <section className="py-24 lg:py-32 bg-white">
         <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
           <SectionReveal>
-            <div className="mb-12 text-center">
-              <span className="inline-flex items-center gap-3 text-sm font-mono text-slate-400 mb-5 justify-center">
-                <span className="w-8 h-px bg-slate-300" />
-                Common Themes
-                <span className="w-8 h-px bg-slate-300" />
-              </span>
-              <h2 className="text-4xl lg:text-5xl font-display tracking-tight">
-                Important topics.
-              </h2>
-              <p className="mt-3 text-base text-slate-500 max-w-lg mx-auto">
-                Practice with the most common IELTS themes across all modules.
+            <div className="mb-14 grid gap-8 lg:grid-cols-[0.7fr_1.3fr] lg:items-end">
+              <div>
+                <span className="inline-flex items-center gap-3 text-sm font-mono text-slate-400 mb-5">
+                  <span className="w-8 h-px bg-slate-300" />
+                  IELTS Journal
+                </span>
+                <h2 className="text-4xl lg:text-5xl font-display tracking-tight">
+                  Live article discovery.
+                </h2>
+              </div>
+              <p className="max-w-2xl text-base leading-7 text-slate-500 lg:ml-auto">
+                Real IELTS and education articles from trusted source feeds:
+                universities, Cambridge/British Council related results,
+                IELTS organizations, and global education publications.
               </p>
             </div>
           </SectionReveal>
 
           <SectionReveal delay={200}>
-            <div className="flex flex-wrap justify-center gap-2.5">
-              {topics.map((topic) => (
-                <span
-                  key={topic}
-                  className="cursor-pointer rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-600 transition-all duration-300 hover:border-brand-purple/30 hover:bg-brand-purple/5 hover:text-brand-purple hover-lift"
-                >
-                  {topic}
-                </span>
-              ))}
-            </div>
+            <IeltsJournalFeed />
           </SectionReveal>
         </div>
       </section>

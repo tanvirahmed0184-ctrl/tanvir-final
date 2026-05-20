@@ -62,6 +62,7 @@ export async function GET() {
         email: instructor.email,
         role:
           profile?.headline || profile?.specialties?.[0] || "IELTS Instructor",
+        specialties: profile?.specialties ?? [],
         score:
           averageBand != null
             ? `Band ${averageBand.toFixed(1)} Mentor`
