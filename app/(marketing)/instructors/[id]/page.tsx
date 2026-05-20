@@ -40,7 +40,6 @@ export default function InstructorPublicProfilePage() {
     if (!id) return;
 
     let active = true;
-    setLoading(true);
 
     fetch(`/api/marketing/instructors/${id}`, { cache: "no-store" })
       .then(async (res) => {

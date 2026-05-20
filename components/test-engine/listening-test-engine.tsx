@@ -666,12 +666,12 @@ export default function ListeningTestEngine({
     if (loading || result || sessionPhase === "submitted") return;
     window.history.pushState({ examGuard: "listening" }, "", window.location.href);
     const onPopState = () => {
-      if (submitting || result || sessionPhase === "submitted") return;
+      if (submitting || result) return;
       window.history.pushState({ examGuard: "listening" }, "", window.location.href);
       setLeavePromptOpen(true);
     };
     const onBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (submitting || result || sessionPhase === "submitted") return;
+      if (submitting || result) return;
       event.preventDefault();
       event.returnValue = "";
     };

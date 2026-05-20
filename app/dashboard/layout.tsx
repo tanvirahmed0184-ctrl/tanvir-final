@@ -158,13 +158,6 @@ export default function DashboardLayout({
   const links = LINKS[role];
   const breadcrumbs = useMemo(() => buildBreadcrumb(pathname), [pathname]);
   const isAdminLike = role === "ADMIN" || role === "SUPER_ADMIN";
-  const homeByRole =
-    role === "ADMIN" || role === "SUPER_ADMIN"
-      ? "/dashboard/admin"
-      : role === "INSTRUCTOR"
-        ? "/dashboard/instructor/availability"
-        : "/dashboard/student/overview";
-
   useEffect(() => {
     if (loading || !user) return;
     const isAdminPath = pathname.startsWith("/dashboard/admin");
