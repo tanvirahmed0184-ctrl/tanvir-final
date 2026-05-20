@@ -12,6 +12,8 @@ export default {
         "brand-teal-dark": "#0B8A86",
         "brand-teal-light": "#14B8B3",
         "brand-cyan": "#06B6D4",
+        "brand-navy": "#0f0a2e",
+        "brand-navy-light": "#1a1145",
         "dash-bg": "#f8faf9",
         "dash-surface": "#ffffff",
         "dash-border": "#e8eeeb",
@@ -28,6 +30,10 @@ export default {
       fontFamily: {
         display: ["var(--font-display)", "Georgia", "serif"],
         mono: ["var(--font-mono)", "monospace"],
+      },
+      animation: {
+        "fade-up": "fade-up 0.7s cubic-bezier(0.22,1,0.36,1) forwards",
+        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
     },
   },
