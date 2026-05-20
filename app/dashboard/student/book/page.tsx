@@ -129,23 +129,23 @@ export default function StudentBookPage() {
   }
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <h1 className="text-2xl font-bold">Book an IELTS Instructor</h1>
-        <p className="mt-2 text-sm text-white/85">
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-dash-text">Book an IELTS Instructor</h1>
+        <p className="mt-1 text-sm text-dash-text-muted">
           Choose an available expert session and receive targeted speaking
           feedback.
         </p>
-      </section>
+      </div>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-        <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+        <label className="text-[13px] font-medium text-dash-text">
           Timezone
         </label>
         <select
           value={timezone}
           onChange={(e) => setTimezone(e.target.value)}
-          className="mt-2 w-full max-w-xs rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+          className="mt-2 w-full max-w-xs rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
         >
           {TIMEZONES.map((tz) => (
             <option key={tz} value={tz}>
@@ -156,13 +156,13 @@ export default function StudentBookPage() {
       </section>
 
       {bookingError ? (
-        <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+        <div className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
           {bookingError}
         </div>
       ) : null}
 
       {bookingId ? (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
           <p className="inline-flex items-center gap-2 font-semibold">
             <CalendarCheck2 size={16} />
             Booking confirmed ({bookingId})
@@ -193,14 +193,14 @@ export default function StudentBookPage() {
           {Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
-              className="h-36 animate-pulse rounded-2xl bg-slate-200"
+              className="h-36 animate-pulse rounded-xl bg-dash-border/50"
             />
           ))}
         </div>
       ) : null}
 
       {!loading && error ? (
-        <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+        <div className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
           {error}
         </div>
       ) : null}
@@ -215,14 +215,14 @@ export default function StudentBookPage() {
               return (
                 <article
                   key={instructor.id}
-                  className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm"
+                  className="rounded-xl border border-dash-border bg-dash-surface p-5"
                 >
-                  <h2 className="text-lg font-semibold text-slate-900">
+                  <h2 className="text-lg font-semibold text-dash-text">
                     {instructor.name || instructor.email}
                   </h2>
-                  <p className="text-xs text-slate-500">{instructor.email}</p>
+                  <p className="text-xs text-dash-text-muted">{instructor.email}</p>
 
-                  <p className="mt-3 rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-700">
+                  <p className="mt-3 rounded-lg bg-dash-bg px-3 py-2 text-sm text-dash-text">
                     {formatSlot(slot.startTime, slot.endTime, timezone)}
                   </p>
 
@@ -230,7 +230,7 @@ export default function StudentBookPage() {
                     type="button"
                     onClick={() => bookSlot(slot.id)}
                     disabled={disabled}
-                    className="mt-4 inline-flex rounded-xl bg-brand-purple px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                    className="mt-4 inline-flex rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted disabled:opacity-60"
                   >
                     {disabled ? "Booking..." : "Book"}
                   </button>
@@ -238,7 +238,7 @@ export default function StudentBookPage() {
               );
             })
           ) : (
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-600 md:col-span-2">
+            <div className="rounded-xl border border-dash-border bg-dash-surface p-5 text-sm text-dash-text-muted md:col-span-2">
               No open instructor slots right now. Check again shortly.
             </div>
           )}

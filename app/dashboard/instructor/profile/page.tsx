@@ -89,12 +89,12 @@ export default function InstructorProfilePage() {
   }
 
   if (loading) {
-    return <div className="h-64 animate-pulse rounded-2xl bg-slate-200" />;
+    return <div className="h-64 animate-pulse rounded-xl bg-dash-border/50" />;
   }
 
   if (!profile) {
     return (
-      <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+      <div className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
         {error || "Unable to load instructor profile."}
       </div>
     );
@@ -103,31 +103,31 @@ export default function InstructorProfilePage() {
   return (
     <form
       onSubmit={onSave}
-      className="space-y-4 rounded-2xl border border-brand-purple/15 bg-white p-5 shadow-sm"
+      className="space-y-4 rounded-xl border border-dash-border bg-dash-surface p-5"
     >
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">
+        <h1 className="text-2xl font-semibold text-dash-text">
           Instructor Public Profile
         </h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <p className="mt-1 text-sm text-dash-text-muted">
           This information is shown on the landing page card and instructor
           details page.
         </p>
       </div>
 
       {error ? (
-        <div className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+        <div className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
           {error}
         </div>
       ) : null}
 
       {success ? (
-        <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
           {success}
         </div>
       ) : null}
 
-      <label className="block text-sm font-medium text-slate-700">
+      <label className="block text-[13px] font-medium text-dash-text">
         Headline
         <input
           value={profile.headline ?? ""}
@@ -137,11 +137,11 @@ export default function InstructorProfilePage() {
             )
           }
           placeholder="IELTS Speaking and Writing Mentor"
-          className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+          className="mt-1 w-full rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
         />
       </label>
 
-      <label className="block text-sm font-medium text-slate-700">
+      <label className="block text-[13px] font-medium text-dash-text">
         Bio
         <textarea
           value={profile.bio ?? ""}
@@ -151,11 +151,11 @@ export default function InstructorProfilePage() {
             )
           }
           rows={4}
-          className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+          className="mt-1 w-full rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
         />
       </label>
 
-      <label className="block text-sm font-medium text-slate-700">
+      <label className="block text-[13px] font-medium text-dash-text">
         History
         <textarea
           value={profile.history ?? ""}
@@ -165,12 +165,12 @@ export default function InstructorProfilePage() {
             )
           }
           rows={4}
-          className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+          className="mt-1 w-full rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
         />
       </label>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-[13px] font-medium text-dash-text">
           Achievements (one per line)
           <textarea
             value={profile.achievements.join("\n")}
@@ -188,11 +188,11 @@ export default function InstructorProfilePage() {
               )
             }
             rows={5}
-            className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+            className="mt-1 w-full rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
           />
         </label>
 
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-[13px] font-medium text-dash-text">
           Specialties (comma separated)
           <textarea
             value={profile.specialties.join(", ")}
@@ -210,13 +210,13 @@ export default function InstructorProfilePage() {
               )
             }
             rows={5}
-            className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+            className="mt-1 w-full rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
           />
         </label>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-[13px] font-medium text-dash-text">
           Experience Years
           <input
             type="number"
@@ -234,11 +234,11 @@ export default function InstructorProfilePage() {
                   : prev,
               )
             }
-            className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+            className="mt-1 w-full rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
           />
         </label>
 
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-[13px] font-medium text-dash-text">
           Avatar URL (optional)
           <input
             value={profile.avatarUrl ?? ""}
@@ -247,7 +247,7 @@ export default function InstructorProfilePage() {
                 prev ? { ...prev, avatarUrl: e.target.value } : prev,
               )
             }
-            className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+            className="mt-1 w-full rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
           />
         </label>
       </div>
@@ -255,7 +255,7 @@ export default function InstructorProfilePage() {
       <button
         type="submit"
         disabled={saving}
-        className="inline-flex items-center gap-2 rounded-xl bg-brand-purple px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+        className="inline-flex items-center gap-2 rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted disabled:opacity-60"
       >
         <Save size={16} />
         {saving ? "Saving..." : "Save Public Profile"}

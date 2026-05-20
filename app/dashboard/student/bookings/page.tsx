@@ -97,14 +97,14 @@ export default function StudentBookingsPage() {
   }, [bookings, statusFilter]);
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <h1 className="text-2xl font-bold">My Bookings</h1>
-        <p className="mt-2 text-sm text-white/85">
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-dash-text">My Bookings</h1>
+        <p className="mt-1 text-sm text-dash-text-muted">
           Track your scheduled instructor sessions, meeting links, and feedback
           notes.
         </p>
-      </section>
+      </div>
 
       <section className="grid gap-4 md:grid-cols-4">
         <StatCard label="Total" value={stats.total} />
@@ -113,7 +113,7 @@ export default function StudentBookingsPage() {
         <StatCard label="Cancelled" value={stats.cancelled} />
       </section>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div className="flex flex-wrap gap-2">
             {(["ALL", "UPCOMING", "COMPLETED", "CANCELLED"] as const).map(
@@ -123,10 +123,10 @@ export default function StudentBookingsPage() {
                   type="button"
                   onClick={() => setStatusFilter(status)}
                   className={[
-                    "rounded-lg px-3 py-1.5 text-xs font-semibold",
+                    "rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors",
                     statusFilter === status
-                      ? "bg-brand-purple text-white"
-                      : "bg-slate-100 text-slate-700 hover:bg-slate-200",
+                      ? "bg-dash-accent text-white"
+                      : "bg-dash-bg text-dash-text-muted hover:bg-dash-border",
                   ].join(" ")}
                 >
                   {status}
@@ -137,45 +137,45 @@ export default function StudentBookingsPage() {
         </div>
 
         {loading ? (
-          <div className="mt-4 h-56 animate-pulse rounded-xl bg-slate-200" />
+          <div className="mt-4 h-56 animate-pulse rounded-xl bg-dash-border/50" />
         ) : error ? (
-          <div className="mt-4 rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+          <div className="mt-4 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
             {error}
           </div>
         ) : filtered.length ? (
           <div className="mt-4 overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200 text-sm">
+            <table className="min-w-full divide-y divide-dash-border text-sm">
               <thead>
                 <tr>
-                  <th className="px-3 py-2 text-left">Booking</th>
-                  <th className="px-3 py-2 text-left">Instructor</th>
-                  <th className="px-3 py-2 text-left">Schedule</th>
-                  <th className="px-3 py-2 text-left">Status</th>
-                  <th className="px-3 py-2 text-left">Meet</th>
-                  <th className="px-3 py-2 text-left">Notes</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-dash-text-muted">Booking</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-dash-text-muted">Instructor</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-dash-text-muted">Schedule</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-dash-text-muted">Status</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-dash-text-muted">Meet</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-dash-text-muted">Notes</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-dash-border">
                 {filtered.map((b) => (
-                  <tr key={b.id}>
+                  <tr key={b.id} className="hover:bg-dash-bg transition-colors">
                     <td className="px-3 py-2">
-                      <p className="font-medium text-slate-900">{b.id}</p>
-                      <p className="text-xs text-slate-500">
+                      <p className="font-medium text-dash-text">{b.id}</p>
+                      <p className="text-xs text-dash-text-muted">
                         Created{" "}
                         {new Date(b.createdAt).toISOString().slice(0, 10)}
                       </p>
                     </td>
                     <td className="px-3 py-2">
-                      <p className="font-medium text-slate-900">
+                      <p className="font-medium text-dash-text">
                         {b.instructor.name}
                       </p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-dash-text-muted">
                         {b.instructor.email}
                       </p>
                     </td>
                     <td className="px-3 py-2">
                       <p>{formatDateTime(b.slot.startTime, b.slot.timezone)}</p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-dash-text-muted">
                         Ends {formatDateTime(b.slot.endTime, b.slot.timezone)}
                       </p>
                     </td>
@@ -199,17 +199,17 @@ export default function StudentBookingsPage() {
                           href={b.meetLink}
                           target="_blank"
                           rel="noreferrer"
-                          className="rounded-lg bg-brand-teal px-3 py-1.5 text-xs font-semibold text-white"
+                          className="rounded-lg bg-dash-accent px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-dash-accent-muted"
                         >
                           Join
                         </a>
                       ) : (
-                        <span className="text-xs text-slate-500">
+                        <span className="text-xs text-dash-text-muted">
                           Not available
                         </span>
                       )}
                     </td>
-                    <td className="px-3 py-2 text-xs text-slate-700">
+                    <td className="px-3 py-2 text-xs text-dash-text-muted">
                       {b.notes?.trim() || "-"}
                     </td>
                   </tr>
@@ -218,7 +218,7 @@ export default function StudentBookingsPage() {
             </table>
           </div>
         ) : (
-          <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+          <div className="mt-4 rounded-xl border border-dash-border bg-dash-bg p-4 text-sm text-dash-text-muted">
             No bookings found for this filter.
           </div>
         )}
@@ -229,11 +229,11 @@ export default function StudentBookingsPage() {
 
 function StatCard({ label, value }: { label: string; value: number }) {
   return (
-    <article className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+    <article className="rounded-xl border border-dash-border bg-dash-surface p-5">
+      <p className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted mb-4">
         {label}
       </p>
-      <p className="mt-2 text-2xl font-black text-slate-900">
+      <p className="mt-2 text-2xl font-bold text-dash-text">
         {value.toLocaleString()}
       </p>
     </article>

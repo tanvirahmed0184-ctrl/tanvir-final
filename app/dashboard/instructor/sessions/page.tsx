@@ -136,14 +136,14 @@ export default function InstructorSessionsPage() {
   );
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <h1 className="text-2xl font-bold">Session Queue</h1>
-        <p className="mt-2 text-sm text-white/85">
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-dash-text">Session Queue</h1>
+        <p className="mt-1 text-sm text-dash-text-muted">
           Track booked speaking sessions, open meeting links, and review
           completed notes.
         </p>
-      </section>
+      </div>
 
       <section className="grid gap-4 md:grid-cols-4">
         <StatCard label="Total Sessions" value={counts.total} />
@@ -152,22 +152,22 @@ export default function InstructorSessionsPage() {
         <StatCard label="Cancelled" value={counts.cancelled} />
       </section>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <label className="block w-full max-w-md text-sm">
-            <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <span className="mb-1 block text-[13px] font-medium text-dash-text">
               Search Sessions
             </span>
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by student, email, booking ID, or focus area"
-              className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+              className="w-full rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
             />
           </label>
 
           <label className="block text-sm">
-            <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <span className="mb-1 block text-[13px] font-medium text-dash-text">
               Status Filter
             </span>
             <select
@@ -175,7 +175,7 @@ export default function InstructorSessionsPage() {
               onChange={(e) =>
                 setFilter(e.target.value as "ALL" | SessionStatus)
               }
-              className="rounded-xl border border-slate-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
             >
               <option value="ALL">All</option>
               <option value="UPCOMING">Upcoming</option>
@@ -186,23 +186,23 @@ export default function InstructorSessionsPage() {
         </div>
 
         {loading ? (
-          <div className="mt-4 h-52 animate-pulse rounded-xl bg-slate-200" />
+          <div className="mt-4 h-52 animate-pulse rounded-xl bg-dash-border/50" />
         ) : filtered.length ? (
           <div className="mt-4 grid gap-3">
             {filtered.map((session) => (
               <article
                 key={session.id}
-                className="rounded-xl border border-slate-200 p-4"
+                className="rounded-xl border border-dash-border p-4 hover:bg-dash-bg transition-colors"
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-brand-purple">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-dash-accent">
                       {session.id}
                     </p>
-                    <h2 className="mt-1 text-base font-bold text-slate-900">
+                    <h2 className="mt-1 text-base font-bold text-dash-text">
                       {session.studentName}
                     </h2>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-dash-text-muted">
                       {session.studentEmail}
                     </p>
                   </div>
@@ -221,7 +221,7 @@ export default function InstructorSessionsPage() {
                   </span>
                 </div>
 
-                <div className="mt-3 grid gap-2 text-sm text-slate-700 sm:grid-cols-2">
+                <div className="mt-3 grid gap-2 text-sm text-dash-text sm:grid-cols-2">
                   <p>
                     <span className="font-semibold">Start:</span>{" "}
                     {formatDateTime(session.startTime, session.timezone)}
@@ -246,18 +246,18 @@ export default function InstructorSessionsPage() {
                       href={session.meetLink}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-lg bg-brand-purple px-3 py-1.5 text-xs font-semibold text-white"
+                      className="rounded-lg bg-dash-accent px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-dash-accent-muted"
                     >
                       Open Meet Link
                     </a>
                   ) : (
-                    <span className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600">
+                    <span className="rounded-lg bg-dash-bg px-3 py-1.5 text-xs font-medium text-dash-text-muted">
                       Meet link unavailable
                     </span>
                   )}
 
                   {session.notes ? (
-                    <span className="rounded-lg bg-brand-teal/10 px-3 py-1.5 text-xs text-brand-teal">
+                    <span className="rounded-lg bg-dash-accent-light px-3 py-1.5 text-xs text-dash-accent">
                       Notes: {session.notes}
                     </span>
                   ) : null}
@@ -266,7 +266,7 @@ export default function InstructorSessionsPage() {
             ))}
           </div>
         ) : (
-          <p className="mt-4 text-sm text-slate-600">
+          <p className="mt-4 text-sm text-dash-text-muted">
             No sessions found for current filters.
           </p>
         )}
@@ -277,11 +277,11 @@ export default function InstructorSessionsPage() {
 
 function StatCard({ label, value }: { label: string; value: number }) {
   return (
-    <article className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+    <article className="rounded-xl border border-dash-border bg-dash-surface p-5">
+      <p className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted mb-4">
         {label}
       </p>
-      <p className="mt-2 text-2xl font-black text-slate-900">
+      <p className="mt-2 text-2xl font-bold text-dash-text">
         {value.toLocaleString()}
       </p>
     </article>

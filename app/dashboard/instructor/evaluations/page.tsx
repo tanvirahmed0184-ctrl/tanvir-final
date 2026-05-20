@@ -165,14 +165,14 @@ export default function InstructorEvaluationsPage() {
   );
 
   return (
-    <div className="space-y-5">
-      <section className="rounded-2xl bg-gradient-to-r from-brand-purple via-brand-purple-dark to-brand-teal p-5 text-white shadow-lg">
-        <h1 className="text-2xl font-bold">Evaluation Review</h1>
-        <p className="mt-2 text-sm text-white/85">
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-dash-text">Evaluation Review</h1>
+        <p className="mt-1 text-sm text-dash-text-muted">
           Monitor speaking and writing assessments with strengths, weaknesses,
           and summaries.
         </p>
-      </section>
+      </div>
 
       <section className="grid gap-4 md:grid-cols-4">
         <MetricCard
@@ -184,22 +184,22 @@ export default function InstructorEvaluationsPage() {
         <MetricCard label="Average Band" value={stats.avgBand.toFixed(1)} />
       </section>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
         <div className="flex flex-wrap items-end gap-3">
           <label className="block min-w-60 flex-1 text-sm">
-            <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <span className="mb-1 block text-[13px] font-medium text-dash-text">
               Search
             </span>
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by learner, email, attempt ID, or eval ID"
-              className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+              className="w-full rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
             />
           </label>
 
           <label className="block text-sm">
-            <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <span className="mb-1 block text-[13px] font-medium text-dash-text">
               Module
             </span>
             <select
@@ -207,7 +207,7 @@ export default function InstructorEvaluationsPage() {
               onChange={(e) =>
                 setModuleFilter(e.target.value as "ALL" | EvalModule)
               }
-              className="rounded-xl border border-slate-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
             >
               <option value="ALL">All</option>
               <option value="WRITING">Writing</option>
@@ -216,7 +216,7 @@ export default function InstructorEvaluationsPage() {
           </label>
 
           <label className="block text-sm">
-            <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <span className="mb-1 block text-[13px] font-medium text-dash-text">
               Status
             </span>
             <select
@@ -224,7 +224,7 @@ export default function InstructorEvaluationsPage() {
               onChange={(e) =>
                 setStatusFilter(e.target.value as "ALL" | "READY" | "REVIEWED")
               }
-              className="rounded-xl border border-slate-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-dash-border bg-dash-bg px-3 py-2 text-sm outline-none transition-colors focus:border-dash-accent focus:ring-2 focus:ring-dash-accent/10"
             >
               <option value="ALL">All</option>
               <option value="READY">Ready</option>
@@ -234,32 +234,32 @@ export default function InstructorEvaluationsPage() {
         </div>
 
         {loading ? (
-          <div className="mt-4 h-56 animate-pulse rounded-xl bg-slate-200" />
+          <div className="mt-4 h-56 animate-pulse rounded-xl bg-dash-border/50" />
         ) : filtered.length ? (
           <div className="mt-4 grid gap-3">
             {filtered.map((item) => (
               <article
                 key={item.id}
-                className="rounded-xl border border-slate-200 p-4"
+                className="rounded-xl border border-dash-border p-4 hover:bg-dash-bg transition-colors"
               >
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-brand-purple">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-dash-accent">
                       {item.id} - {item.attemptId}
                     </p>
-                    <h2 className="mt-1 text-base font-bold text-slate-900">
+                    <h2 className="mt-1 text-base font-bold text-dash-text">
                       {item.studentName}
                     </h2>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-dash-text-muted">
                       {item.studentEmail}
                     </p>
                   </div>
 
                   <div className="text-right">
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-dash-text-muted">
                       {formatDate(item.createdAt)}
                     </p>
-                    <p className="mt-1 text-sm font-bold text-slate-900">
+                    <p className="mt-1 text-sm font-bold text-dash-text">
                       {item.module} - Band {item.overallBand.toFixed(1)}
                     </p>
                     <span
@@ -275,11 +275,11 @@ export default function InstructorEvaluationsPage() {
                   </div>
                 </div>
 
-                <p className="mt-3 text-sm text-slate-700">{item.summary}</p>
+                <p className="mt-3 text-sm text-dash-text-muted">{item.summary}</p>
 
                 <div className="mt-3 grid gap-3 md:grid-cols-2">
                   <div className="rounded-lg bg-emerald-50 p-3">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-emerald-700">
                       Strengths
                     </p>
                     <ul className="mt-2 space-y-1 text-sm text-emerald-800">
@@ -290,7 +290,7 @@ export default function InstructorEvaluationsPage() {
                   </div>
 
                   <div className="rounded-lg bg-rose-50 p-3">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-rose-700">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-rose-700">
                       Weaknesses
                     </p>
                     <ul className="mt-2 space-y-1 text-sm text-rose-800">
@@ -304,7 +304,7 @@ export default function InstructorEvaluationsPage() {
             ))}
           </div>
         ) : (
-          <p className="mt-4 text-sm text-slate-600">
+          <p className="mt-4 text-sm text-dash-text-muted">
             No evaluations found for current filters.
           </p>
         )}
@@ -315,11 +315,11 @@ export default function InstructorEvaluationsPage() {
 
 function MetricCard({ label, value }: { label: string; value: string }) {
   return (
-    <article className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+    <article className="rounded-xl border border-dash-border bg-dash-surface p-5">
+      <p className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted mb-4">
         {label}
       </p>
-      <p className="mt-2 text-2xl font-black text-slate-900">{value}</p>
+      <p className="mt-2 text-2xl font-bold text-dash-text">{value}</p>
     </article>
   );
 }

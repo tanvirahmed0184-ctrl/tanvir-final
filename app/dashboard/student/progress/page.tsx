@@ -200,24 +200,24 @@ export default function StudentProgressPage() {
   if (loading) {
     return (
       <div className="grid gap-4">
-        <div className="h-72 animate-pulse rounded-2xl bg-slate-200" />
-        <div className="h-72 animate-pulse rounded-2xl bg-slate-200" />
+        <div className="h-72 animate-pulse rounded-xl bg-dash-border/50" />
+        <div className="h-72 animate-pulse rounded-xl bg-dash-border/50" />
       </div>
     );
   }
 
   if (!attempts.length) {
     return (
-      <div className="rounded-2xl border border-brand-purple/15 bg-white p-8 text-center shadow-sm">
-        <h1 className="text-2xl font-bold text-slate-900">
+      <div className="rounded-xl border border-dash-border bg-dash-surface p-8 text-center">
+        <h1 className="text-2xl font-bold text-dash-text">
           No progress data yet
         </h1>
-        <p className="mt-2 text-sm text-slate-600">
+        <p className="mt-2 text-sm text-dash-text-muted">
           Complete a test to see your progress.
         </p>
         <Link
           href="/exam-library/reading"
-          className="mt-5 inline-flex rounded-xl bg-gradient-to-r from-brand-purple to-brand-teal px-5 py-2.5 text-sm font-semibold text-white"
+          className="mt-5 inline-flex rounded-lg bg-dash-accent px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted"
         >
           Start a Practice Test
         </Link>
@@ -226,10 +226,10 @@ export default function StudentProgressPage() {
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <section className="grid gap-4 xl:grid-cols-2">
-        <div className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <div className="rounded-xl border border-dash-border bg-dash-surface p-5">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted mb-4">
             Band Over Time
           </h2>
           <div className="mt-3 h-72">
@@ -267,8 +267,8 @@ export default function StudentProgressPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <div className="rounded-xl border border-dash-border bg-dash-surface p-5">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted mb-4">
             Current Skill Bands
           </h2>
           <div className="mt-3 h-72">
@@ -289,23 +289,23 @@ export default function StudentProgressPage() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted mb-4">
           Weakness by Question Type
         </h2>
 
         <div className="mt-3 overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-200 text-sm">
+          <table className="min-w-full divide-y divide-dash-border text-sm">
             <thead>
               <tr>
-                <th className="px-3 py-2 text-left">Question Type</th>
-                <th className="px-3 py-2 text-left">% Wrong</th>
-                <th className="px-3 py-2 text-left">Priority</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-dash-text-muted">Question Type</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-dash-text-muted">% Wrong</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-dash-text-muted">Priority</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-dash-border">
               {MOCK_WEAKNESS.map((row) => (
-                <tr key={row.questionType}>
+                <tr key={row.questionType} className="hover:bg-dash-bg transition-colors">
                   <td className="px-3 py-2">{row.questionType}</td>
                   <td className="px-3 py-2">{row.wrongPercent}%</td>
                   <td className="px-3 py-2">
@@ -333,24 +333,24 @@ export default function StudentProgressPage() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-brand-purple/15 bg-white p-4 shadow-sm">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+      <section className="rounded-xl border border-dash-border bg-dash-surface p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted mb-4">
           Recent Attempts
         </h2>
         <div className="mt-3 overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-200 text-sm">
+          <table className="min-w-full divide-y divide-dash-border text-sm">
             <thead>
               <tr>
-                <th className="px-3 py-2 text-left">Attempt</th>
-                <th className="px-3 py-2 text-left">Module</th>
-                <th className="px-3 py-2 text-left">Band</th>
-                <th className="px-3 py-2 text-left">Date</th>
-                <th className="px-3 py-2 text-left">Review</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-dash-text-muted">Attempt</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-dash-text-muted">Module</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-dash-text-muted">Band</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-dash-text-muted">Date</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-dash-text-muted">Review</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-dash-border">
               {attempts.slice(0, 8).map((row) => (
-                <tr key={row.id}>
+                <tr key={row.id} className="hover:bg-dash-bg transition-colors">
                   <td className="px-3 py-2">{row.id}</td>
                   <td className="px-3 py-2">{row.module}</td>
                   <td className="px-3 py-2">{row.band.toFixed(1)}</td>
@@ -358,7 +358,7 @@ export default function StudentProgressPage() {
                   <td className="px-3 py-2">
                     <Link
                       href={row.reviewPath || "/dashboard/student/overview"}
-                      className="font-semibold text-brand-purple hover:underline"
+                      className="font-medium text-dash-accent hover:underline"
                     >
                       Review
                     </Link>
@@ -370,17 +370,17 @@ export default function StudentProgressPage() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-brand-teal/25 bg-brand-teal/5 p-4">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-700">
+      <section className="rounded-xl border border-dash-border bg-dash-accent-light p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-dash-text-muted mb-4">
           Recommended Next Test
         </h2>
-        <p className="mt-2 text-sm text-slate-700">
+        <p className="mt-2 text-sm text-dash-text">
           Based on your weakest pattern, start with a Reading test focused on
           TRUE/FALSE/NOT GIVEN and summary completion.
         </p>
         <Link
           href="/exam-library/reading"
-          className="mt-4 inline-flex rounded-xl bg-brand-teal px-4 py-2 text-sm font-semibold text-white"
+          className="mt-4 inline-flex rounded-lg bg-dash-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-dash-accent-muted"
         >
           Start Recommended Test
         </Link>
