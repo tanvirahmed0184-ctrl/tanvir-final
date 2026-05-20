@@ -42,6 +42,8 @@ export async function PATCH(request: Request) {
       examDate?: Date | null;
       studyProfession?: string | null;
       examReason?: string | null;
+      weakSkills?: string[];
+      examTimeline?: string | null;
       onboardingCompleted?: boolean;
       timezone?: string;
     } = {};
@@ -97,6 +99,17 @@ export async function PATCH(request: Request) {
     if ("examReason" in body) {
       data.examReason =
         body.examReason === null ? null : String(body.examReason);
+    }
+
+    if ("weakSkills" in body) {
+      data.weakSkills = Array.isArray(body.weakSkills)
+        ? body.weakSkills.map((item) => String(item)).filter(Boolean)
+        : [];
+    }
+
+    if ("examTimeline" in body) {
+      data.examTimeline =
+        body.examTimeline === null ? null : String(body.examTimeline);
     }
 
     if ("onboardingCompleted" in body) {

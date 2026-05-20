@@ -4,10 +4,6 @@ import { FormEvent, useMemo, useState } from "react";
 import Link from "next/link";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
-type Role = "STUDENT" | "INSTRUCTOR" | "ADMIN";
-
-const ROLE_OPTIONS: Role[] = ["STUDENT", "INSTRUCTOR", "ADMIN"];
-
 function normalizeError(error: unknown): string {
   if (error instanceof Error && error.message) return error.message;
   return "Something went wrong. Please try again.";
@@ -16,7 +12,6 @@ function normalizeError(error: unknown): string {
 export default function LoginPage() {
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
 
-  const [role, setRole] = useState<Role>("STUDENT");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,7 +37,7 @@ export default function LoginPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ role }),
+        body: JSON.stringify({}),
       });
 
       if (!ensureResponse.ok) {
@@ -57,7 +52,7 @@ export default function LoginPage() {
         profile?: { onboardingCompleted?: boolean } | null;
       } | null;
 
-      const resolvedRole = ensureData?.user?.role || role;
+      const resolvedRole = ensureData?.user?.role || "STUDENT";
 
       if (resolvedRole === "ADMIN" || resolvedRole === "SUPER_ADMIN") {
         window.location.replace("/dashboard/admin/analytics");
@@ -86,37 +81,15 @@ export default function LoginPage() {
   return (
     <div className="space-y-6">
       <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-semibold text-slate-900">Welcome Back</h1>
-        <p className="text-sm text-slate-600">
-          Sign in to continue your IELTS Flow preparation.
+        <h1 className="text-3xl font-display tracking-tight text-slate-950">
+          Welcome back
+        </h1>
+        <p className="text-sm leading-6 text-slate-600">
+          One secure login. We’ll route you to the right workspace automatically.
         </p>
       </div>
 
       <form className="space-y-4" onSubmit={handleSubmit}>
-        <div className="space-y-2">
-          <span className="block text-sm font-medium text-slate-700">Role</span>
-          <div className="grid grid-cols-3 gap-2 rounded-xl bg-slate-100 p-1">
-            {ROLE_OPTIONS.map((option) => {
-              const active = role === option;
-              return (
-                <button
-                  key={option}
-                  type="button"
-                  onClick={() => setRole(option)}
-                  className={[
-                    "rounded-lg px-3 py-2 text-sm font-medium transition",
-                    active
-                      ? "bg-brand-purple text-white shadow"
-                      : "text-slate-700 hover:bg-slate-200",
-                  ].join(" ")}
-                >
-                  {option[0] + option.slice(1).toLowerCase()}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
         <div className="space-y-2">
           <label
             htmlFor="email"
@@ -131,7 +104,7 @@ export default function LoginPage() {
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15"
             placeholder="you@example.com"
           />
         </div>
@@ -150,7 +123,7 @@ export default function LoginPage() {
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15"
             placeholder="Your password"
           />
         </div>
@@ -164,7 +137,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-xl bg-brand-purple px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-purple-dark disabled:cursor-not-allowed disabled:opacity-70"
+          className="w-full rounded-2xl bg-emerald-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isSubmitting ? "Signing in..." : "Sign In"}
         </button>

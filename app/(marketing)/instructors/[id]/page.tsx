@@ -9,9 +9,6 @@ import {
   BadgeCheck,
   BookOpenCheck,
   CalendarClock,
-  Eye,
-  MessageCircle,
-  ThumbsUp,
 } from "lucide-react";
 
 type InstructorDetails = {
@@ -96,131 +93,122 @@ export default function InstructorPublicProfilePage() {
   }
 
   return (
-    <div className="bg-slate-50 py-10">
-      <div className="mx-auto max-w-5xl space-y-6 px-4">
+    <div className="bg-[#f7f5ee] py-10">
+      <div className="mx-auto max-w-6xl space-y-6 px-4">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700"
+          className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm"
         >
           <ArrowLeft size={16} /> Back to Home
         </Link>
 
-        <section className="rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900 p-6 text-white shadow-xl">
-          <div className="grid gap-5 md:grid-cols-[100px_1fr]">
-            <div className="inline-flex h-24 w-24 items-center justify-center rounded-2xl border border-white/20 bg-white/10 text-2xl font-bold">
+        <section className="relative overflow-hidden rounded-[2.5rem] bg-white p-8 shadow-[0_30px_90px_-65px_rgba(15,23,42,0.75)]">
+          <div className="absolute right-0 top-0 h-72 w-72 rounded-bl-[10rem] bg-emerald-100" />
+          <div className="relative grid gap-6 md:grid-cols-[140px_1fr_auto] md:items-center">
+            <div className="inline-flex h-32 w-32 items-center justify-center rounded-[2rem] bg-gradient-to-br from-emerald-100 to-white text-3xl font-display text-emerald-900 shadow-inner">
               {instructor.name
                 .split(" ")
                 .map((part) => part[0])
                 .join("")}
             </div>
             <div>
-              <h1 className="text-2xl font-bold">{instructor.name}</h1>
-              <p className="mt-1 text-sm text-white/80">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-800">
+                IELTS Mentor
+              </p>
+              <h1 className="mt-2 text-4xl font-display tracking-tight text-slate-950">
+                {instructor.name}
+              </h1>
+              <p className="mt-2 max-w-2xl text-base leading-7 text-slate-600">
                 {instructor.headline}
               </p>
-              <div className="mt-4 flex flex-wrap gap-2 text-xs text-white/85">
-                <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1">
+              <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1 font-semibold text-emerald-800">
                   <BookOpenCheck size={13} /> {instructor.completedSessions}{" "}
                   Sessions
                 </span>
-                <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1">
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1 font-semibold text-emerald-800">
                   <BadgeCheck size={13} />
                   {instructor.averageBand != null
                     ? `Avg Band ${instructor.averageBand.toFixed(1)}`
                     : "Verified Mentor"}
                 </span>
                 {instructor.experienceYears != null ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1 font-semibold text-emerald-800">
                     <CalendarClock size={13} /> {instructor.experienceYears}{" "}
                     Years Experience
                   </span>
                 ) : null}
               </div>
             </div>
+            <Link
+              href="/dashboard/student/book"
+              className="inline-flex rounded-2xl bg-emerald-900 px-5 py-3 text-sm font-semibold text-white"
+            >
+              Book Session
+            </Link>
           </div>
         </section>
 
-        <section className="grid gap-4 md:grid-cols-3">
-          <div className="rounded-2xl bg-white p-4 shadow-sm">
-            <p className="text-xs uppercase tracking-wide text-slate-500">
-              Likes
-            </p>
-            <p className="mt-1 inline-flex items-center gap-2 text-xl font-bold text-slate-900">
-              <ThumbsUp size={18} className="text-teal-600" />{" "}
-              {instructor.likes}
-            </p>
-          </div>
-          <div className="rounded-2xl bg-white p-4 shadow-sm">
-            <p className="text-xs uppercase tracking-wide text-slate-500">
-              Comments
-            </p>
-            <p className="mt-1 inline-flex items-center gap-2 text-xl font-bold text-slate-900">
-              <MessageCircle size={18} className="text-teal-600" />{" "}
-              {instructor.comments}
-            </p>
-          </div>
-          <div className="rounded-2xl bg-white p-4 shadow-sm">
-            <p className="text-xs uppercase tracking-wide text-slate-500">
-              Views
-            </p>
-            <p className="mt-1 inline-flex items-center gap-2 text-xl font-bold text-slate-900">
-              <Eye size={18} className="text-teal-600" /> {instructor.views}
-            </p>
-          </div>
-        </section>
-
-        <section className="rounded-2xl bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-slate-900">About</h2>
-          <p className="mt-2 text-sm leading-relaxed text-slate-700">
-            {instructor.bio}
-          </p>
-        </section>
-
-        <section className="rounded-2xl bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-slate-900">History</h2>
-          <p className="mt-2 text-sm leading-relaxed text-slate-700">
-            {instructor.history}
-          </p>
-        </section>
-
-        <section className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
-            <h2 className="inline-flex items-center gap-2 text-lg font-semibold text-slate-900">
-              <Award size={18} className="text-teal-700" /> Achievements
-            </h2>
-            <ul className="mt-3 space-y-2 text-sm text-slate-700">
-              {instructor.achievements.map((item) => (
-                <li key={item} className="rounded-lg bg-slate-50 px-3 py-2">
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-slate-900">
-              Specialties
-            </h2>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {instructor.specialties.map((item) => (
-                <span
-                  key={item}
-                  className="rounded-full bg-teal-50 px-3 py-1 text-xs font-semibold text-teal-700"
-                >
-                  {item}
-                </span>
-              ))}
+        <section className="grid gap-6 lg:grid-cols-[1fr_2fr]">
+          <aside className="space-y-6">
+            <div className="rounded-[2rem] bg-white/80 p-6 shadow-sm">
+              <h2 className="text-lg font-semibold text-slate-950">Skills</h2>
+              <div className="mt-4 space-y-4">
+                {instructor.specialties.slice(0, 4).map((skill, index) => (
+                  <div key={skill}>
+                    <div className="mb-1 flex justify-between text-sm">
+                      <span className="font-medium text-slate-700">{skill}</span>
+                      <span className="text-slate-400">{85 - index * 7}%</span>
+                    </div>
+                    <div className="h-2 rounded-full bg-slate-100">
+                      <div
+                        className="h-full rounded-full bg-emerald-700"
+                        style={{ width: `${85 - index * 7}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+            <div className="rounded-[2rem] bg-white/80 p-6 shadow-sm">
+              <h2 className="text-lg font-semibold text-slate-950">Specialties</h2>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {instructor.specialties.map((item) => (
+                  <span key={item} className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-800">
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </aside>
 
-        <section className="rounded-2xl bg-white p-6 text-center shadow-sm">
-          <Link
-            href="/dashboard/student/book"
-            className="inline-flex rounded-xl bg-brand-purple px-5 py-2.5 text-sm font-semibold text-white"
-          >
-            Book Session With This Instructor
-          </Link>
+          <div className="space-y-6">
+            <section className="rounded-[2rem] bg-white/80 p-6 shadow-sm">
+              <h2 className="text-xl font-semibold text-slate-950">About me</h2>
+              <p className="mt-3 text-sm leading-7 text-slate-700">{instructor.bio}</p>
+            </section>
+            <section className="rounded-[2rem] bg-white/80 p-6 shadow-sm">
+              <h2 className="text-xl font-semibold text-slate-950">Experience</h2>
+              <div className="mt-4 border-l border-emerald-200 pl-5">
+                <p className="relative text-sm leading-7 text-slate-700 before:absolute before:-left-[1.58rem] before:top-2 before:h-3 before:w-3 before:rounded-full before:bg-emerald-700">
+                  {instructor.history}
+                </p>
+              </div>
+            </section>
+            <section className="rounded-[2rem] bg-white/80 p-6 shadow-sm">
+              <h2 className="inline-flex items-center gap-2 text-xl font-semibold text-slate-950">
+                <Award size={18} className="text-emerald-700" /> Achievements
+              </h2>
+              <ul className="mt-4 space-y-2 text-sm text-slate-700">
+                {instructor.achievements.map((item) => (
+                  <li key={item} className="flex gap-2">
+                    <span className="mt-2 h-1.5 w-1.5 rounded-full bg-emerald-700" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
         </section>
       </div>
     </div>

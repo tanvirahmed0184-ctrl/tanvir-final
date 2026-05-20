@@ -5,10 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
-type Role = "STUDENT" | "INSTRUCTOR" | "ADMIN";
-
-const ROLE_OPTIONS: Role[] = ["STUDENT", "INSTRUCTOR", "ADMIN"];
-
 function normalizeError(error: unknown): string {
   if (error instanceof Error && error.message) return error.message;
   return "Something went wrong. Please try again.";
@@ -18,7 +14,6 @@ export default function RegisterPage() {
   const router = useRouter();
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
 
-  const [role, setRole] = useState<Role>("STUDENT");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -56,7 +51,7 @@ export default function RegisterPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ role, name }),
+        body: JSON.stringify({ name }),
       });
 
       if (!ensureResponse.ok) {
@@ -84,39 +79,16 @@ export default function RegisterPage() {
   return (
     <div className="space-y-6">
       <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-semibold text-slate-900">
-          Create Account
+        <h1 className="text-3xl font-display tracking-tight text-slate-950">
+          Create your student account
         </h1>
-        <p className="text-sm text-slate-600">
-          Start your IELTS Flow journey in under a minute.
+        <p className="text-sm leading-6 text-slate-600">
+          Public registration is for students. Instructor access starts through
+          application and admin approval.
         </p>
       </div>
 
       <form className="space-y-4" onSubmit={handleSubmit}>
-        <div className="space-y-2">
-          <span className="block text-sm font-medium text-slate-700">Role</span>
-          <div className="grid grid-cols-3 gap-2 rounded-xl bg-slate-100 p-1">
-            {ROLE_OPTIONS.map((option) => {
-              const active = role === option;
-              return (
-                <button
-                  key={option}
-                  type="button"
-                  onClick={() => setRole(option)}
-                  className={[
-                    "rounded-lg px-3 py-2 text-sm font-medium transition",
-                    active
-                      ? "bg-brand-purple text-white shadow"
-                      : "text-slate-700 hover:bg-slate-200",
-                  ].join(" ")}
-                >
-                  {option[0] + option.slice(1).toLowerCase()}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
         <div className="space-y-2">
           <label
             htmlFor="name"
@@ -130,7 +102,7 @@ export default function RegisterPage() {
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15"
             placeholder="Tanvir Ahmed"
           />
         </div>
@@ -149,7 +121,7 @@ export default function RegisterPage() {
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15"
             placeholder="you@example.com"
           />
         </div>
@@ -168,7 +140,7 @@ export default function RegisterPage() {
             autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15"
             placeholder="Create a secure password"
           />
         </div>
@@ -188,7 +160,7 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-xl bg-brand-purple px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-purple-dark disabled:cursor-not-allowed disabled:opacity-70"
+          className="w-full rounded-2xl bg-emerald-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isSubmitting ? "Creating account..." : "Create Account"}
         </button>
@@ -201,6 +173,12 @@ export default function RegisterPage() {
           className="font-medium text-brand-purple hover:underline"
         >
           Sign in
+        </Link>
+      </p>
+      <p className="text-center text-xs text-slate-500">
+        Want to become an instructor?{" "}
+        <Link href="/instructor-application" className="font-semibold text-emerald-800">
+          Apply here
         </Link>
       </p>
     </div>

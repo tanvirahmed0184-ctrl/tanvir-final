@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Bot } from "lucide-react";
-import AIInterviewer from "@/components/speaking/ai-interviewer/ai-interviewer";
+import { ArrowLeft, Bot, Mic, ShieldCheck } from "lucide-react";
 
 export default function AISpeakingExamPage() {
   return (
@@ -25,13 +24,50 @@ export default function AISpeakingExamPage() {
         </p>
       </div>
 
-      <div className="rounded-3xl border border-dash-border bg-dash-surface p-4">
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-dash-accent-light px-3 py-1 text-xs font-semibold uppercase tracking-wide text-dash-accent">
-          <Bot size={14} />
-          Dedicated experience
-        </div>
-        <AIInterviewer />
-      </div>
+      <section className="grid gap-4 lg:grid-cols-[0.85fr_1.15fr]">
+        <article className="rounded-3xl border border-dash-border bg-dash-surface p-6">
+          <span className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-dash-accent-light text-dash-accent">
+            <Mic size={22} />
+          </span>
+          <h2 className="mt-5 text-2xl font-semibold text-dash-text">
+            Before you enter the AI exam room
+          </h2>
+          <p className="mt-3 text-sm leading-6 text-dash-text-muted">
+            Allow microphone access, use headphones if possible, and speak in a
+            quiet environment. Once the exam starts, leaving can finalize the
+            attempt.
+          </p>
+          <Link
+            href="/dashboard/student/speaking/ai/exam"
+            className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-dash-accent px-5 py-3 text-sm font-semibold text-white"
+          >
+            <Bot size={16} />
+            Start AI Examiner
+          </Link>
+        </article>
+
+        <article className="rounded-3xl border border-dash-border bg-dash-surface p-6">
+          <p className="workspace-section-title">Speaking instructions</p>
+          <div className="mt-5 grid gap-3">
+            {[
+              "The AI examiner will read each prompt aloud.",
+              "Answer naturally and avoid reading prepared scripts.",
+              "Your audio, transcript, timing, pauses, and response quality are used for feedback.",
+              "If you attempt to leave during the exam, you will be warned first.",
+            ].map((line, index) => (
+              <div
+                key={line}
+                className="flex gap-3 rounded-2xl bg-white/65 p-4"
+              >
+                <ShieldCheck size={17} className="mt-0.5 text-dash-accent" />
+                <p className="text-sm leading-6 text-dash-text">
+                  <span className="font-semibold">0{index + 1}.</span> {line}
+                </p>
+              </div>
+            ))}
+          </div>
+        </article>
+      </section>
     </div>
   );
 }

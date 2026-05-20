@@ -7,9 +7,9 @@ import {
   LogOut,
   Search,
   X,
+  Home,
   LayoutDashboard,
   BookOpen,
-  Mic,
   BarChart3,
   Users,
   Settings,
@@ -38,7 +38,6 @@ const LINKS: Record<Role, NavLink[]> = {
   STUDENT: [
     { label: "Overview", href: "/dashboard/student/overview", icon: LayoutDashboard },
     { label: "Practice", href: "/exam-library/reading", icon: BookOpen },
-    { label: "Speaking", href: "/dashboard/student/speaking", icon: Mic },
     { label: "Progress", href: "/dashboard/student/progress", icon: TrendingUp },
     { label: "Book Instructor", href: "/dashboard/student/book", icon: Calendar },
     { label: "My Bookings", href: "/dashboard/student/bookings", icon: CalendarCheck },
@@ -54,9 +53,10 @@ const LINKS: Record<Role, NavLink[]> = {
     { label: "Studio Hub", href: "/dashboard/admin", icon: LayoutDashboard },
     { label: "Content Studio", href: "/dashboard/admin/content-studio", icon: BookOpen },
     { label: "Test Studio", href: "/dashboard/admin/test-studio", icon: Target },
-    { label: "Speaking Studio", href: "/dashboard/admin/speaking-studio", icon: Mic },
+    { label: "Speaking Studio", href: "/dashboard/admin/speaking-studio", icon: User },
     { label: "Analytics", href: "/dashboard/admin/analytics", icon: BarChart3 },
     { label: "Users", href: "/dashboard/admin/users", icon: Users },
+    { label: "Instructor Applications", href: "/dashboard/admin/instructor-applications", icon: ClipboardList },
     { label: "Settings", href: "/dashboard/admin/settings", icon: Settings },
     { label: "Legacy Tools", href: "/dashboard/admin/legacy", icon: Archive },
   ],
@@ -64,9 +64,10 @@ const LINKS: Record<Role, NavLink[]> = {
     { label: "Studio Hub", href: "/dashboard/admin", icon: LayoutDashboard },
     { label: "Content Studio", href: "/dashboard/admin/content-studio", icon: BookOpen },
     { label: "Test Studio", href: "/dashboard/admin/test-studio", icon: Target },
-    { label: "Speaking Studio", href: "/dashboard/admin/speaking-studio", icon: Mic },
+    { label: "Speaking Studio", href: "/dashboard/admin/speaking-studio", icon: User },
     { label: "Analytics", href: "/dashboard/admin/analytics", icon: BarChart3 },
     { label: "Users", href: "/dashboard/admin/users", icon: Users },
+    { label: "Instructor Applications", href: "/dashboard/admin/instructor-applications", icon: ClipboardList },
     { label: "Settings", href: "/dashboard/admin/settings", icon: Settings },
     { label: "Legacy Tools", href: "/dashboard/admin/legacy", icon: Archive },
   ],
@@ -157,6 +158,26 @@ export default function DashboardLayout({
   const links = LINKS[role];
   const breadcrumbs = useMemo(() => buildBreadcrumb(pathname), [pathname]);
   const isAdminLike = role === "ADMIN" || role === "SUPER_ADMIN";
+  const homeByRole =
+    role === "ADMIN" || role === "SUPER_ADMIN"
+      ? "/dashboard/admin"
+      : role === "INSTRUCTOR"
+        ? "/dashboard/instructor/availability"
+        : "/dashboard/student/overview";
+
+  useEffect(() => {
+    if (loading || !user) return;
+    const isAdminPath = pathname.startsWith("/dashboard/admin");
+    const isInstructorPath = pathname.startsWith("/dashboard/instructor");
+    const isStudentPath = pathname.startsWith("/dashboard/student");
+    if ((role === "ADMIN" || role === "SUPER_ADMIN") && !isAdminPath) {
+      router.replace("/dashboard/admin");
+    } else if (role === "INSTRUCTOR" && !isInstructorPath) {
+      router.replace("/dashboard/instructor/availability");
+    } else if (role === "STUDENT" && !isStudentPath) {
+      router.replace("/dashboard/student/overview");
+    }
+  }, [loading, pathname, role, router, user]);
 
   useEffect(() => {
     if (!searchOpen || !isAdminLike) return;
@@ -276,13 +297,13 @@ export default function DashboardLayout({
   const roleLabel = role === "SUPER_ADMIN" ? "Super Admin" : role === "ADMIN" ? "Admin" : role === "INSTRUCTOR" ? "Instructor" : "Student";
 
   return (
-    <div className="flex h-screen overflow-hidden bg-dash-bg dashboard-root">
+    <div className="flex min-h-screen bg-dash-bg dashboard-root">
       {/* Desktop Sidebar */}
       {loading ? (
         <SidebarSkeleton />
       ) : (
-        <aside className="hidden lg:flex lg:w-64 lg:flex-col bg-dash-sidebar">
-          <div className="flex h-full flex-col">
+        <aside className="hidden lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-64 lg:flex-col bg-dash-sidebar">
+          <div className="flex min-h-0 flex-1 flex-col">
             {/* Sidebar header */}
             <div className="flex items-center gap-3 px-5 py-5 border-b border-white/8">
               <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-dash-accent text-xs font-bold text-white">
@@ -296,6 +317,13 @@ export default function DashboardLayout({
 
             {/* Navigation */}
             <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
+              <Link
+                href="/"
+                className="mb-3 flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-medium text-white/70 transition-all duration-150 hover:bg-dash-sidebar-hover hover:text-white"
+              >
+                <Home size={16} className="text-white/45" />
+                Home
+              </Link>
               {links.map((link) => {
                 const active = pathname === link.href;
                 const Icon = link.icon;
@@ -387,9 +415,9 @@ export default function DashboardLayout({
       )}
 
       {/* Main content */}
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex min-w-0 flex-1 flex-col">
         {/* Top header */}
-        <header className="flex h-16 shrink-0 items-center justify-between border-b border-dash-border/80 bg-white/85 px-4 shadow-[0_1px_0_rgba(30,63,50,0.04)] backdrop-blur-xl lg:px-8">
+        <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-dash-border/80 bg-white/85 px-4 shadow-[0_1px_0_rgba(30,63,50,0.04)] backdrop-blur-xl lg:px-8">
           <div className="flex items-center gap-3 min-w-0">
             {/* Mobile hamburger */}
             <button
@@ -421,6 +449,13 @@ export default function DashboardLayout({
           </div>
 
           <div className="flex items-center gap-2">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[13px] font-medium text-dash-text-muted transition-colors hover:bg-dash-accent-light hover:text-dash-accent"
+            >
+              <Home size={14} />
+              <span className="hidden sm:inline">Home</span>
+            </Link>
             {isAdminLike && (
               <button
                 type="button"
@@ -448,7 +483,7 @@ export default function DashboardLayout({
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto dashboard-scroll">
+        <main className="flex-1 dashboard-scroll">
           <div className="dashboard-workspace mx-auto max-w-[1480px] px-4 py-6 lg:px-8 lg:py-8">
             {children}
           </div>

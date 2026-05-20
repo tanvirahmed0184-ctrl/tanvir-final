@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 type Step = 1 | 2 | 3;
 
 const REASONS = ["Work", "Study", "Migration", "Other"] as const;
+const SKILLS = ["Reading", "Writing", "Listening", "Speaking"] as const;
 
 function normalizeError(error: unknown): string {
   if (error instanceof Error && error.message) return error.message;
@@ -34,6 +35,8 @@ export default function OnboardingPage() {
   const [studyProfession, setStudyProfession] = useState("");
   const [examReason, setExamReason] =
     useState<(typeof REASONS)[number]>("Study");
+  const [weakSkills, setWeakSkills] = useState<string[]>([]);
+  const [examTimeline, setExamTimeline] = useState("Next 3 months");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -48,10 +51,10 @@ export default function OnboardingPage() {
         await patchProfile({ targetBand });
         setStep(2);
       } else if (step === 2) {
-        await patchProfile({ studyProfession });
+        await patchProfile({ studyProfession, weakSkills });
         setStep(3);
       } else {
-        await patchProfile({ examReason, onboardingCompleted: true });
+        await patchProfile({ examReason, examTimeline, onboardingCompleted: true });
         router.replace("/dashboard/student/overview");
       }
     } catch (error) {
@@ -62,24 +65,26 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       <header className="space-y-2 text-center">
-        <h1 className="text-2xl font-semibold text-slate-900">
-          Set Up Your Plan
+        <h1 className="text-3xl font-display tracking-tight text-slate-950">
+          Shape your IELTS plan
         </h1>
-        <p className="text-sm text-slate-600">Step {step}/3</p>
+        <p className="text-sm leading-6 text-slate-600">
+          Step {step}/3 — a guided setup for your study workspace.
+        </p>
       </header>
 
       <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
         <div
-          className="h-full rounded-full bg-brand-purple transition-all duration-300"
+          className="h-full rounded-full bg-emerald-800 transition-all duration-300"
           style={{ width: `${progress}%` }}
         />
       </div>
 
       {step === 1 ? (
-        <section className="space-y-4">
-          <h2 className="text-lg font-medium text-slate-900">
+        <section className="space-y-5 rounded-[1.5rem] bg-emerald-50/70 p-5">
+          <h2 className="text-xl font-semibold text-slate-950">
             What is your target band score?
           </h2>
           <div className="space-y-3">
@@ -90,7 +95,7 @@ export default function OnboardingPage() {
               step={0.5}
               value={targetBand}
               onChange={(e) => setTargetBand(Number(e.target.value))}
-              className="w-full accent-brand-purple"
+              className="w-full accent-emerald-800"
             />
             <p className="text-sm text-slate-700">
               Target Band:{" "}
@@ -101,23 +106,52 @@ export default function OnboardingPage() {
       ) : null}
 
       {step === 2 ? (
-        <section className="space-y-4">
-          <h2 className="text-lg font-medium text-slate-900">
-            What is your profession?
+        <section className="space-y-5 rounded-[1.5rem] bg-emerald-50/70 p-5">
+          <h2 className="text-xl font-semibold text-slate-950">
+            What should we personalize?
           </h2>
           <input
             type="text"
             value={studyProfession}
             onChange={(e) => setStudyProfession(e.target.value)}
-            placeholder="e.g., Software Engineer"
-            className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+            placeholder="Profession or study field"
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15"
           />
+          <div>
+            <p className="mb-2 text-sm font-medium text-slate-700">
+              Weakest skills
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {SKILLS.map((skill) => {
+                const active = weakSkills.includes(skill);
+                return (
+                  <button
+                    key={skill}
+                    type="button"
+                    onClick={() =>
+                      setWeakSkills((prev) =>
+                        active ? prev.filter((item) => item !== skill) : [...prev, skill],
+                      )
+                    }
+                    className={[
+                      "rounded-full border px-4 py-2 text-sm font-semibold",
+                      active
+                        ? "border-emerald-800 bg-emerald-900 text-white"
+                        : "border-slate-200 bg-white text-slate-700",
+                    ].join(" ")}
+                  >
+                    {skill}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </section>
       ) : null}
 
       {step === 3 ? (
-        <section className="space-y-4">
-          <h2 className="text-lg font-medium text-slate-900">
+        <section className="space-y-5 rounded-[1.5rem] bg-emerald-50/70 p-5">
+          <h2 className="text-xl font-semibold text-slate-950">
             Why are you taking IELTS?
           </h2>
           <select
@@ -125,11 +159,22 @@ export default function OnboardingPage() {
             onChange={(e) =>
               setExamReason(e.target.value as (typeof REASONS)[number])
             }
-            className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20"
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15"
           >
             {REASONS.map((reason) => (
               <option key={reason} value={reason}>
                 {reason}
+              </option>
+            ))}
+          </select>
+          <select
+            value={examTimeline}
+            onChange={(e) => setExamTimeline(e.target.value)}
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15"
+          >
+            {["Next 4 weeks", "Next 3 months", "Next 6 months", "Not scheduled yet"].map((item) => (
+              <option key={item} value={item}>
+                {item}
               </option>
             ))}
           </select>
@@ -146,7 +191,7 @@ export default function OnboardingPage() {
         type="button"
         onClick={handleNext}
         disabled={isSubmitting || (step === 2 && !studyProfession.trim())}
-        className="w-full rounded-xl bg-brand-purple px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-purple-dark disabled:cursor-not-allowed disabled:opacity-70"
+        className="w-full rounded-2xl bg-emerald-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-70"
       >
         {isSubmitting
           ? "Saving..."

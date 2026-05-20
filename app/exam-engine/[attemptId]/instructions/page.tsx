@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Clock3, ListChecks, TriangleAlert } from "lucide-react";
 
-type Module = "READING" | "LISTENING" | "WRITING";
+type Module = "READING" | "LISTENING" | "WRITING" | "SPEAKING";
 
 type InstructionBlock = {
   duration: string;
@@ -48,12 +48,24 @@ const INSTRUCTIONS: Record<Module, InstructionBlock> = {
     ],
     startPath: "/test-engine/writing",
   },
+  SPEAKING: {
+    duration: "Approx. 11-14 minutes",
+    bullets: [
+      "You will complete an examiner-led speaking flow.",
+      "Use a quiet place and allow microphone permission before starting.",
+      "Answer naturally and speak until the examiner moves you forward.",
+      "Your transcript and audio signals are used for feedback.",
+      "Leaving during the exam may finalize the attempt.",
+    ],
+    startPath: "/dashboard/student/speaking/ai/exam",
+  },
 };
 
 function detectModule(seed: string | null): Module {
   const s = (seed || "").toLowerCase();
   if (s.includes("listening")) return "LISTENING";
   if (s.includes("writing")) return "WRITING";
+  if (s.includes("speaking")) return "SPEAKING";
   return "READING";
 }
 
@@ -77,9 +89,7 @@ export default function ExamInstructionsPage() {
   const task2AttemptId = searchParams.get("task2AttemptId") || "";
   const writingTestAttemptId = searchParams.get("writingTestAttemptId") || "";
 
-  const [moduleType, setModuleType] = useState<Module>(
-    detectModule(moduleHint || attemptId),
-  );
+  const moduleType = useMemo(() => detectModule(moduleHint || attemptId), [moduleHint, attemptId]);
   const error = attemptId ? null : "Attempt ID missing.";
 
   const current = useMemo(() => INSTRUCTIONS[moduleType], [moduleType]);
@@ -123,7 +133,10 @@ export default function ExamInstructionsPage() {
     if (moduleType === "WRITING" && writingTestAttemptId) {
       params.set("writingTestAttemptId", writingTestAttemptId);
     }
-    const url = `${current.startPath}?${params.toString()}`;
+    const url =
+      moduleType === "SPEAKING"
+        ? current.startPath
+        : `${current.startPath}?${params.toString()}`;
     router.push(url);
   }
 
@@ -146,21 +159,12 @@ export default function ExamInstructionsPage() {
 
       <div className="mt-6 rounded-[2rem] bg-white/80 p-6 shadow-[0_24px_75px_-58px_rgba(15,23,42,0.75)]">
         <div className="flex flex-wrap gap-2">
-          {(["READING", "LISTENING", "WRITING"] as Module[]).map((item) => (
-            <button
-              key={item}
-              type="button"
-              onClick={() => setModuleType(item)}
-              className={[
-                "rounded-full border px-4 py-2 text-sm font-semibold transition",
-                moduleType === item
-                  ? "border-emerald-800 bg-emerald-900 text-white"
-                  : "border-slate-200 bg-white text-slate-700 hover:border-emerald-200",
-              ].join(" ")}
-            >
-              {item[0] + item.slice(1).toLowerCase()}
-            </button>
-          ))}
+          <span className="rounded-full border border-emerald-800 bg-emerald-900 px-4 py-2 text-sm font-semibold text-white">
+            {moduleType[0] + moduleType.slice(1).toLowerCase()} instructions
+          </span>
+          <span className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-500">
+            Locked to selected test
+          </span>
         </div>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2">

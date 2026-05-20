@@ -124,6 +124,7 @@ export default function AIInterviewer() {
   >([]);
   const [selectedMode, setSelectedMode] = useState<string>("simulation");
   const [loadingModes, setLoadingModes] = useState(false);
+  const [leavePromptOpen, setLeavePromptOpen] = useState(false);
 
   const {
     isRecording,
@@ -690,6 +691,32 @@ export default function AIInterviewer() {
     }
   }, [processTurnSnapshot, state.pendingRetry]);
 
+  const finalizeAndEvaluateCurrentAttempt = useCallback(async () => {
+    const attemptId = stateRef.current.attemptId;
+    if (!attemptId) return;
+    clearTimers();
+    stopSpeaking();
+    if (isRecording) {
+      await abortRecording();
+    }
+    dispatch({ type: "transition", phase: "evaluating" });
+    await fetch(`/api/speaking/attempt/${attemptId}/finalize`, {
+      method: "POST",
+    });
+    await fetch(`/api/speaking/attempt/${attemptId}/evaluate`, {
+      method: "POST",
+    }).catch(() => undefined);
+    const res = await fetch(`/api/speaking/attempt/${attemptId}/result`, {
+      cache: "no-store",
+    });
+    const data = (await res.json().catch(() => null)) as SpeakingResultResponse | null;
+    if (res.ok && data?.attempt) {
+      hydrateFromResult(data);
+    } else {
+      dispatch({ type: "transition", phase: "complete" });
+    }
+  }, [abortRecording, clearTimers, hydrateFromResult, isRecording, stopSpeaking]);
+
   const phase = state.phase as SessionPhase;
   const currentPrompt = state.currentPrompt;
   const latestTurn = state.turns.length ? state.turns[state.turns.length - 1] : null;
@@ -697,6 +724,30 @@ export default function AIInterviewer() {
   const latestPronProvider = latestTurn?.providerStatus?.pronunciation || null;
   const evalProvider = state.provider || null;
   const evalPronProvider = state.evaluation?.pronunciationSummary?.provider || null;
+
+  useEffect(() => {
+    const activeExam =
+      state.attemptId &&
+      phase !== "idle" &&
+      phase !== "complete" &&
+      phase !== "error";
+    if (!activeExam) return;
+    window.history.pushState({ examGuard: "speaking" }, "", window.location.href);
+    const onPopState = () => {
+      window.history.pushState({ examGuard: "speaking" }, "", window.location.href);
+      setLeavePromptOpen(true);
+    };
+    const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("popstate", onPopState);
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+      window.removeEventListener("beforeunload", onBeforeUnload);
+    };
+  }, [phase, state.attemptId]);
 
   return (
     <section className="space-y-5 rounded-[2rem] border border-slate-200/80 bg-[#f7f8f5] p-4 shadow-[0_24px_80px_-55px_rgba(15,23,42,0.8)]">
@@ -1053,6 +1104,39 @@ export default function AIInterviewer() {
       ) : null}
 
       <p className="text-xs text-slate-500">Attempt status: {state.attemptStatus}</p>
+
+      {leavePromptOpen ? (
+        <div className="fixed inset-0 z-[70] grid place-items-center bg-slate-950/40 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-[2rem] bg-white p-6 shadow-2xl">
+            <h2 className="text-xl font-semibold text-slate-950">
+              Leave speaking exam?
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-slate-600">
+              Leaving now will finalize the speaking attempt and request
+              evaluation from the existing speaking workflow.
+            </p>
+            <div className="mt-6 flex gap-2">
+              <button
+                type="button"
+                onClick={() => setLeavePromptOpen(false)}
+                className="flex-1 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700"
+              >
+                Stay in exam
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setLeavePromptOpen(false);
+                  void finalizeAndEvaluateCurrentAttempt();
+                }}
+                className="flex-1 rounded-2xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white"
+              >
+                Finalize exam
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }

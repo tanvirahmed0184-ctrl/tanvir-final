@@ -110,11 +110,21 @@ export default function ExamLibrarySkillPage() {
       }
       const data = (await res.json().catch(() => null)) as {
         user?: {
+          role?: string;
           subscription?: {
             plan?: string;
           } | null;
         } | null;
       } | null;
+      const role = data?.user?.role;
+      if (role === "ADMIN" || role === "SUPER_ADMIN") {
+        router.replace("/dashboard/admin");
+        return "free";
+      }
+      if (role === "INSTRUCTOR") {
+        router.replace("/dashboard/instructor/availability");
+        return "free";
+      }
       const plan = data?.user?.subscription?.plan;
       const resolved = plan === "pro" || plan === "premium" ? plan : "free";
       setUserPlan(resolved);

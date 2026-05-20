@@ -146,6 +146,7 @@ export default function ListeningTestEngine({
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<EvalPayload | null>(null);
+  const [leavePromptOpen, setLeavePromptOpen] = useState(false);
 
   const [runtimeMode, setRuntimeMode] = useState(normalizeMode(attemptMode));
   const [sessionPhase, setSessionPhase] = useState<SessionPhase>("ready");
@@ -661,6 +662,27 @@ export default function ListeningTestEngine({
     }
   }, [pauseCurrentPlayback, sessionPhase]);
 
+  useEffect(() => {
+    if (loading || result || sessionPhase === "submitted") return;
+    window.history.pushState({ examGuard: "listening" }, "", window.location.href);
+    const onPopState = () => {
+      if (submitting || result || sessionPhase === "submitted") return;
+      window.history.pushState({ examGuard: "listening" }, "", window.location.href);
+      setLeavePromptOpen(true);
+    };
+    const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (submitting || result || sessionPhase === "submitted") return;
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("popstate", onPopState);
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+      window.removeEventListener("beforeunload", onBeforeUnload);
+    };
+  }, [loading, result, sessionPhase, submitting]);
+
   if (loading) {
     return (
       <div className="p-6 text-sm text-slate-600">
@@ -967,6 +989,39 @@ export default function ListeningTestEngine({
           onToggleReview={toggleReview}
         />
       </div>
+
+      {leavePromptOpen ? (
+        <div className="fixed inset-0 z-[70] grid place-items-center bg-slate-950/40 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-[2rem] bg-white p-6 shadow-2xl">
+            <h2 className="text-xl font-semibold text-slate-950">
+              Leave listening exam?
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-slate-600">
+              Leaving now will submit your current answers and run evaluation.
+              Cancel to stay inside the exam.
+            </p>
+            <div className="mt-6 flex gap-2">
+              <button
+                type="button"
+                onClick={() => setLeavePromptOpen(false)}
+                className="flex-1 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700"
+              >
+                Stay in exam
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setLeavePromptOpen(false);
+                  void handleSubmit();
+                }}
+                className="flex-1 rounded-2xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white"
+              >
+                Submit exam
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

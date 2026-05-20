@@ -2,15 +2,6 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-type RoleInput = "STUDENT" | "INSTRUCTOR" | "ADMIN";
-
-function pickRole(value: unknown): RoleInput {
-  if (value === "ADMIN" || value === "INSTRUCTOR" || value === "STUDENT") {
-    return value;
-  }
-  return "STUDENT";
-}
-
 export async function POST(request: Request) {
   try {
     const supabase = await createSupabaseServerClient();
@@ -28,7 +19,6 @@ export async function POST(request: Request) {
       name?: unknown;
     };
 
-    const role = pickRole(body.role);
     const nameFromBody = typeof body.name === "string" ? body.name : null;
     const nameFromMeta =
       typeof authUser.user_metadata?.name === "string"
@@ -54,7 +44,6 @@ export async function POST(request: Request) {
           data: {
             email,
             name: nameFromBody ?? nameFromMeta ?? undefined,
-            role,
             isActive: true,
             lastLoginAt: new Date(),
           },
@@ -62,7 +51,7 @@ export async function POST(request: Request) {
       : await (async () => {
           const existingByEmail = await prisma.user.findUnique({
             where: { email },
-            select: { id: true },
+            select: { id: true, role: true },
           });
 
           if (existingByEmail) {
@@ -71,7 +60,6 @@ export async function POST(request: Request) {
               data: {
                 supabaseId: authUser.id,
                 name: nameFromBody ?? nameFromMeta ?? undefined,
-                role,
                 isActive: true,
                 lastLoginAt: new Date(),
               },
@@ -83,7 +71,7 @@ export async function POST(request: Request) {
               supabaseId: authUser.id,
               email,
               name: nameFromBody ?? nameFromMeta,
-              role,
+              role: "STUDENT",
               isActive: true,
               lastLoginAt: new Date(),
             },

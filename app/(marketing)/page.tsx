@@ -192,22 +192,22 @@ export default function MarketingHomePage() {
   return (
     <div className="w-full overflow-x-hidden">
       {/* ===== HERO SECTION ===== */}
-      <section className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-brand-navy noise-overlay">
-        <div className="absolute inset-0 grid-bg" />
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-purple/20 via-transparent to-brand-navy" />
-        <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] rounded-full bg-brand-purple/10 blur-[120px]" />
-        <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] rounded-full bg-brand-teal/8 blur-[100px]" />
+      <section className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-[#f5f2ea] noise-overlay">
+        <div className="absolute inset-0 grid-bg-light" />
+        <div className="absolute inset-0 bg-gradient-to-b from-emerald-100/70 via-transparent to-[#f5f2ea]" />
+        <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] rounded-full bg-emerald-200/45 blur-[120px]" />
+        <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] rounded-full bg-teal-100/60 blur-[100px]" />
 
         <div className="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-32 lg:pt-40 pb-24">
           <div className="mb-8 animate-fade-up" style={{ animationDelay: "100ms" }}>
-            <span className="inline-flex items-center gap-3 text-sm font-mono text-white/50">
-              <span className="w-8 h-px bg-brand-teal/60" />
+            <span className="inline-flex items-center gap-3 text-sm font-mono text-emerald-900/55">
+              <span className="w-8 h-px bg-emerald-800/40" />
               AI-Powered IELTS Preparation
             </span>
           </div>
 
           <div className="mb-12">
-            <h1 className="text-[clamp(2.5rem,8vw,7rem)] font-display leading-[0.95] tracking-tight text-white animate-fade-up" style={{ animationDelay: "200ms", animationDuration: "1s" }}>
+            <h1 className="text-[clamp(2.5rem,8vw,7rem)] font-display leading-[0.95] tracking-tight text-slate-950 animate-fade-up" style={{ animationDelay: "200ms", animationDuration: "1s" }}>
               <span className="block">The smarter way</span>
               <span className="block">
                 to{" "}
@@ -225,12 +225,12 @@ export default function MarketingHomePage() {
                   </span>
                 </span>
               </span>
-              <span className="block text-white/40">IELTS.</span>
+              <span className="block text-emerald-900/35">IELTS.</span>
             </h1>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-end">
-            <p className="text-lg lg:text-xl text-white/60 leading-relaxed max-w-xl animate-fade-up" style={{ animationDelay: "400ms" }}>
+            <p className="text-lg lg:text-xl text-slate-600 leading-relaxed max-w-xl animate-fade-up" style={{ animationDelay: "400ms" }}>
               Practice all 4 IELTS skills with realistic exam flow, instant AI
               scoring, and personalized feedback designed to move your band
               score faster.
@@ -239,14 +239,14 @@ export default function MarketingHomePage() {
             <div className="flex flex-col sm:flex-row items-start gap-4 animate-fade-up" style={{ animationDelay: "500ms" }}>
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-brand-navy transition-all hover:bg-white/90 hover:shadow-lg hover:shadow-white/10 group"
+                className="inline-flex items-center gap-2 rounded-full bg-emerald-900 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:bg-emerald-800 group"
               >
                 Start Free Today
                 <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
               </Link>
               <Link
                 href="/pricing"
-                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:bg-white/10 hover:border-white/25"
+                className="inline-flex items-center gap-2 rounded-full border border-emerald-900/15 bg-white/70 px-7 py-3.5 text-sm font-semibold text-emerald-950 transition-all hover:bg-white"
               >
                 View Plans
               </Link>
@@ -255,7 +255,7 @@ export default function MarketingHomePage() {
         </div>
 
         {/* Stats marquee */}
-        <div className="relative z-10 border-t border-white/5 mt-auto animate-fade-up" style={{ animationDelay: "700ms" }}>
+        <div className="relative z-10 border-t border-emerald-900/10 mt-auto animate-fade-up" style={{ animationDelay: "700ms" }}>
           <div className="overflow-hidden">
             <div className="flex gap-0 marquee whitespace-nowrap py-5 lg:py-6">
               {[...Array(2)].map((_, setIdx) => (
@@ -263,12 +263,12 @@ export default function MarketingHomePage() {
                   {stats.map((stat) => (
                     <div
                       key={`${stat.label}-${setIdx}`}
-                      className="flex items-baseline gap-2 sm:gap-3 px-6 sm:px-10 border-r border-white/5"
+                      className="flex items-baseline gap-2 sm:gap-3 px-6 sm:px-10 border-r border-emerald-900/10"
                     >
-                      <span className="text-2xl sm:text-3xl lg:text-4xl font-display text-white">
+                      <span className="text-2xl sm:text-3xl lg:text-4xl font-display text-slate-950">
                         {stat.value}
                       </span>
-                      <span className="text-[10px] sm:text-xs text-white/40 font-mono">
+                      <span className="text-[10px] sm:text-xs text-slate-500 font-mono">
                         {stat.label}
                       </span>
                     </div>
